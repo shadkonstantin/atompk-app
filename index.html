@@ -424,6 +424,39 @@
         .specs-table .sl { color: var(--text-dim); width: 45%; font-weight: 500; }
         .specs-table .sv { color: var(--text-secondary); text-align: right; }
 
+        /* Dimensions block */
+        .dims-block {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 2px;
+            margin-bottom: 4px;
+        }
+        .dims-heading {
+            font-size: 0.7rem;
+            color: var(--accent-hover);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 700;
+            margin-bottom: 2px;
+            width: 100%;
+        }
+        .dim-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(240,136,62,0.08);
+            border: 1px solid rgba(240,136,62,0.20);
+            border-radius: 6px;
+            font-size: 0.78rem;
+            color: var(--accent-hover);
+            white-space: nowrap;
+        }
+        .dim-chip-label { color: var(--text-dim); font-size: 0.7rem; }
+        .dim-chip-value { font-weight: 700; }
+
         .list-row-link {
             display: inline-flex;
             align-items: center;
@@ -898,11 +931,28 @@ function buildRow(p, idx) {
     if (p.manufacturer) detailCells += '<div class="detail-cell"><span class="detail-label">Производитель</span><span class="detail-value">'+esc(p.manufacturer)+'</span></div>';
     if (p.status) detailCells += '<div class="detail-cell"><span class="detail-label">Наличие</span><span class="detail-value">'+esc(p.status)+'</span></div>';
 
-    // Specs table
+    // Dimensions from name (keys with "(из названия)")
+    let dimsBlock = '';
+    const dimKeys = Object.keys(p.details||{}).filter(k => k.includes('(из названия)'));
+    if (dimKeys.length) {
+        dimsBlock += '<div class="dims-heading">📏 Размеры</div>';
+        dimKeys.forEach(k => {
+            const label = k.replace(' (из названия)', '');
+            dimsBlock += '<div class="dim-chip"><span class="dim-chip-label">'+esc(label)+'</span><span class="dim-chip-value">'+esc(p.details[k])+'</span></div>';
+        });
+        dimsBlock = '<div class="dims-block">'+dimsBlock+'</div>';
+    }
+
+    // Specs table (detail keys that are NOT dimensions and NOT already shown)
     let specsBlock = '';
-    if (p.details && Object.keys(p.details).length) {
-        let sh = '<div class="specs-heading">Характеристики</div><table class="specs-table">';
-        for (const [k,v] of Object.entries(p.details)) sh += '<tr><td class="sl">'+esc(k)+'</td><td class="sv">'+esc(v)+'</td></tr>';
+    const skipKeys = new Set(['Категория', 'Подкатегория', 'Производитель', 'Наличие', 'Марка', 'Толщина']);
+    // Include Марка and Толщина in specs table if present (site's original data)
+    const specKeys = Object.keys(p.details||{}).filter(k => !k.includes('(из названия)'));
+    if (specKeys.length) {
+        let sh = '<div class="specs-heading">📋 Характеристики</div><table class="specs-table">';
+        specKeys.forEach(k => {
+            sh += '<tr><td class="sl">'+esc(k)+'</td><td class="sv">'+esc(p.details[k])+'</td></tr>';
+        });
         sh += '</table>';
         specsBlock = '<div class="specs-block">'+sh+'</div>';
     }
@@ -921,6 +971,7 @@ function buildRow(p, idx) {
         '<div class="list-row-details">'+
             '<div class="list-row-details-inner">'+
                 detailCells+
+                dimsBlock+
                 specsBlock+
             '</div>'+
             linkHtml+

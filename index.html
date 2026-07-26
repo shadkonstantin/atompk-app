@@ -10,7 +10,8 @@
            ============================================================ */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        :root {
+        /* ---- DARK THEME (default) ---- */
+        :root, [data-theme="dark"] {
             --bg: #0d1117;
             --bg-card: #161b22;
             --bg-card-hover: #1c2333;
@@ -27,11 +28,37 @@
             --orange-bg: rgba(240,136,62,0.10);
             --red: #f85149;
             --red-bg: rgba(248,81,73,0.10);
-            --radius: 10px;
-            --radius-sm: 6px;
+            --header-bg: rgba(13,17,23,0.88);
+            --shimmer-mid: #1f2a35;
             --shadow: 0 1px 3px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.15);
             --shadow-hover: 0 4px 16px rgba(0,0,0,0.35);
+            --radius: 10px;
+            --radius-sm: 6px;
             --transition: 0.2s ease;
+        }
+
+        /* ---- LIGHT THEME ---- */
+        [data-theme="light"] {
+            --bg: #f6f8fa;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f0f2f5;
+            --bg-input: #ffffff;
+            --border: #d0d7de;
+            --border-light: #e3e7eb;
+            --text: #1f2328;
+            --text-secondary: #656d76;
+            --text-dim: #8c959f;
+            --accent: #d16b2c;
+            --accent-hover: #e07a3a;
+            --green: #1a7f37;
+            --green-bg: rgba(26,127,55,0.10);
+            --orange-bg: rgba(209,107,44,0.10);
+            --red: #cf222e;
+            --red-bg: rgba(207,34,46,0.10);
+            --header-bg: rgba(246,248,250,0.88);
+            --shimmer-mid: #d8dee4;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 16px rgba(0,0,0,0.10);
         }
 
         html { scroll-behavior: smooth; }
@@ -52,7 +79,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(13,17,23,0.88);
+            background: var(--header-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
@@ -85,6 +112,29 @@
         .header-stat strong { color: var(--text); font-weight: 600; }
         .stat-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
         .stat-dot--dim { background: var(--text-dim); }
+
+        /* Theme toggle */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--orange-bg);
+        }
 
         /* ============================================================
            CONTROLS
@@ -497,7 +547,7 @@
         .sk-line {
             height: 11px;
             border-radius: 5px;
-            background: linear-gradient(90deg, var(--bg-card) 0%, #1f2a35 40%, var(--bg-card) 70%);
+            background: linear-gradient(90deg, var(--bg-card) 0%, var(--shimmer-mid) 40%, var(--bg-card) 70%);
             background-size: 400px 100%;
             animation: shimmer 1.6s ease-in-out infinite;
         }
@@ -606,6 +656,7 @@
                 <span>Категорий: <strong id="cat-count">—</strong></span>
             </div>
         </div>
+        <button class="theme-toggle" id="theme-toggle" title="Переключить тему" aria-label="Переключить тему">🌙</button>
     </div>
 </header>
 
@@ -991,6 +1042,48 @@ function resetAllFilters() {
     selectCategory('all');
     render();
 }
+
+// =============================================================
+// THEME
+// =============================================================
+(function initTheme() {
+    const toggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    function setThemeIcon(theme) {
+        toggle.textContent = theme === 'light' ? '☀️' : '🌙';
+    }
+
+    const saved = localStorage.getItem('atompk-theme');
+    if (saved) {
+        html.setAttribute('data-theme', saved);
+        setThemeIcon(saved);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        html.setAttribute('data-theme', 'light');
+        setThemeIcon('light');
+    } else {
+        html.setAttribute('data-theme', 'dark');
+        setThemeIcon('dark');
+    }
+
+    toggle.addEventListener('click', () => {
+        const current = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', current);
+        localStorage.setItem('atompk-theme', current);
+        setThemeIcon(current);
+    });
+
+    // Listen for system theme changes
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('atompk-theme')) {
+                const t = e.matches ? 'dark' : 'light';
+                html.setAttribute('data-theme', t);
+                setThemeIcon(t);
+            }
+        });
+    }
+})();
 
 // =============================================================
 // START

@@ -268,221 +268,194 @@
         .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
 
         /* ============================================================
-           GRID
+           LIST LAYOUT
            ============================================================ */
         .container {
             max-width: 1300px;
             margin: 0 auto;
             padding: 0 20px 60px;
         }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
-        }
-
-        /* ============================================================
-           CARD
-           ============================================================ */
-        .card {
-            background: var(--bg-card);
+        .list {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             overflow: hidden;
-            transition: box-shadow var(--transition), border-color var(--transition);
+            background: var(--border-light);
+        }
+
+        /* List row */
+        .list-row {
+            background: var(--bg-card);
+            transition: background var(--transition);
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            box-shadow: var(--shadow);
         }
-        .card:hover {
-            border-color: rgba(240,136,62,0.35);
-            box-shadow: var(--shadow-hover);
-        }
+        .list-row:hover { background: var(--bg-card-hover); }
+        .list-row.expanded { background: var(--bg-card-hover); }
 
-        /* Card image */
-        .card-img {
-            width: 100%;
-            aspect-ratio: 4 / 3;
-            overflow: hidden;
-            background: #111820;
-            border-bottom: 1px solid var(--border-light);
+        .list-row-main {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 12px;
+            padding: 10px 16px;
+            user-select: none;
         }
-        .card-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 10px;
-        }
-        .card-img .img-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-dim);
-            font-size: 0.72rem;
-        }
-        .img-placeholder .ph-icon { font-size: 2.2rem; opacity: 0.25; }
 
-        /* Card body */
-        .card-body {
-            padding: 14px 16px;
+        .list-row-name {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            min-width: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.35;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
-        .card-category {
-            font-size: 0.68rem;
+        .list-row-category {
+            flex-shrink: 0;
+            font-size: 0.72rem;
             color: var(--accent);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.04em;
             font-weight: 700;
+            white-space: nowrap;
         }
-        .card-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            line-height: 1.35;
-            color: var(--text);
-        }
-        .card-subtitle {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: auto;
-        }
-        .card-subtitle-dot {
-            width: 5px; height: 5px;
-            border-radius: 50%;
-            background: var(--accent);
-            opacity: 0.5;
+        .list-row-price {
             flex-shrink: 0;
-        }
-
-        /* Card footer */
-        .card-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 16px;
-            border-top: 1px solid var(--border-light);
-        }
-        .card-price {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--accent-hover);
+            white-space: nowrap;
+            min-width: 90px;
+            text-align: right;
         }
-        .card-price--request {
-            font-size: 0.82rem;
+        .list-row-price--request {
+            font-size: 0.78rem;
             color: var(--text-dim);
             font-weight: 400;
             font-style: italic;
         }
-        .card-status {
-            font-size: 0.72rem;
-            padding: 3px 10px;
-            border-radius: 12px;
+        .list-row-status {
+            flex-shrink: 0;
+            font-size: 0.68rem;
+            padding: 2px 9px;
+            border-radius: 10px;
             font-weight: 600;
             letter-spacing: 0.02em;
-            flex-shrink: 0;
+            white-space: nowrap;
         }
-        .card-status--available { background: var(--green-bg); color: var(--green); }
-        .card-status--low { background: var(--orange-bg); color: var(--accent); }
-        .card-status--none { background: var(--red-bg); color: var(--red); }
+        .list-row-status--available { background: var(--green-bg); color: var(--green); }
+        .list-row-status--low { background: var(--orange-bg); color: var(--accent); }
+        .list-row-status--none { background: var(--red-bg); color: var(--red); }
 
-        /* Expand toggle */
-        .card-expand-toggle {
+        .list-row-toggle {
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            padding: 7px 16px;
-            font-size: 0.72rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
             color: var(--text-dim);
+            font-size: 0.6rem;
+            transition: all var(--transition);
+            background: transparent;
             cursor: pointer;
-            user-select: none;
-            transition: color var(--transition);
         }
-        .card-expand-toggle:hover { color: var(--text-secondary); }
-        .card-expand-arrow {
-            font-size: 0.55rem;
-            transition: transform 0.2s ease;
+        .list-row:hover .list-row-toggle,
+        .list-row.expanded .list-row-toggle {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .list-row-toggle-arrow {
             display: inline-block;
+            transition: transform 0.25s ease;
         }
-        .card.expanded .card-expand-arrow { transform: rotate(180deg); }
+        .list-row.expanded .list-row-toggle-arrow { transform: rotate(180deg); }
 
         /* Expand details */
-        .card-details {
+        .list-row-details {
             max-height: 0;
             overflow: hidden;
-            background: rgba(0,0,0,0.18);
-            border-top: 0 solid var(--border-light);
-            transition: max-height 0.3s ease, padding 0.2s ease, border-top-width 0.2s ease;
+            background: rgba(0,0,0,0.20);
+            transition: max-height 0.35s ease, padding 0.2s ease;
         }
-        .card.expanded .card-details {
-            max-height: 500px;
+        .list-row.expanded .list-row-details {
+            max-height: 600px;
             padding: 12px 16px;
-            border-top-width: 1px;
         }
-        .detail-row {
+        .list-row-details-inner {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 8px;
+        }
+        .detail-cell {
             display: flex;
             justify-content: space-between;
             font-size: 0.78rem;
-            padding: 3px 0;
+            padding: 4px 8px;
+            background: rgba(0,0,0,0.15);
+            border-radius: var(--radius-sm);
             gap: 12px;
         }
-        .detail-label { color: var(--text-dim); }
-        .detail-value { color: var(--text-secondary); text-align: right; }
-        .card-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 6px;
-            font-size: 0.78rem;
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color var(--transition);
-        }
-        .card-link:hover { color: var(--accent-hover); }
+        .detail-label { color: var(--text-dim); flex-shrink: 0; }
+        .detail-value { color: var(--text-secondary); text-align: right; word-break: break-word; }
 
-        /* Specs mini-table */
+        /* Specs sub-table in details */
+        .specs-block {
+            grid-column: 1 / -1;
+            margin-top: 4px;
+        }
         .specs-heading {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--accent);
             text-transform: uppercase;
             letter-spacing: 0.04em;
             font-weight: 700;
             margin-bottom: 4px;
         }
-        .specs-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; margin-bottom: 6px; }
+        .specs-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
         .specs-table tr { border-bottom: 1px solid rgba(255,255,255,0.02); }
         .specs-table tr:last-child { border-bottom: none; }
-        .specs-table td { padding: 3px 0; vertical-align: top; }
+        .specs-table td { padding: 3px 8px; vertical-align: top; }
         .specs-table .sl { color: var(--text-dim); width: 45%; font-weight: 500; }
         .specs-table .sv { color: var(--text-secondary); text-align: right; }
+
+        .list-row-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 0.78rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition);
+        }
+        .list-row-link:hover { color: var(--accent-hover); }
 
         /* ============================================================
            SKELETON
            ============================================================ */
-        .skeleton-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
-        }
-        .skeleton-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px 16px;
+        .skeleton-list {
             display: flex;
             flex-direction: column;
+            gap: 4px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: var(--border-light);
+        }
+        .skeleton-row {
+            background: var(--bg-card);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
             gap: 14px;
+            height: 48px;
         }
         @keyframes shimmer {
             0% { background-position: -400px 0; }
@@ -495,10 +468,9 @@
             background-size: 400px 100%;
             animation: shimmer 1.6s ease-in-out infinite;
         }
-        .sk-line--s { width: 30%; height: 9px; }
-        .sk-line--m { width: 60%; }
-        .sk-line--l { width: 85%; height: 13px; }
-        .sk-line--price { width: 40%; height: 18px; margin-top: auto; }
+        .sk-line--l { flex: 1; }
+        .sk-line--s { width: 90px; flex-shrink: 0; }
+        .sk-line--xs { width: 60px; flex-shrink: 0; }
 
         /* ============================================================
            EMPTY STATE
@@ -530,11 +502,6 @@
            RESPONSIVE
            ============================================================ */
         @media (max-width: 700px) {
-            .grid,
-            .skeleton-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
             .header-inner {
                 flex-wrap: wrap;
                 padding: 10px 14px;
@@ -545,13 +512,40 @@
             .filters-row { flex-direction: column; align-items: stretch; }
             .filter-select { width: 100%; }
             .sort-group { margin-left: 0; justify-content: flex-start; flex-wrap: wrap; }
-            .card-body { padding: 12px; }
-            .card-footer { padding: 8px 12px; }
-            .card-title { font-size: 0.9rem; }
-            .card-price { font-size: 1rem; }
             .chip { font-size: 0.75rem; padding: 5px 11px; }
             .search-input { font-size: 0.88rem; }
             .results-hint { display: none; }
+
+            /* Compact rows on mobile */
+            .list-row-main {
+                padding: 8px 10px;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+            .list-row-name {
+                flex: 1 1 100%;
+                font-size: 0.84rem;
+                white-space: normal;
+            }
+            .list-row-category {
+                font-size: 0.68rem;
+            }
+            .list-row-price {
+                font-size: 0.9rem;
+                min-width: auto;
+            }
+            .list-row-status {
+                font-size: 0.64rem;
+                padding: 2px 7px;
+            }
+            .list-row-toggle {
+                width: 24px;
+                height: 24px;
+                font-size: 0.55rem;
+            }
+            .list-row-details-inner {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Scrollbar */
@@ -634,10 +628,10 @@
     </div>
 </div>
 
-<!-- GRID -->
+<!-- LIST -->
 <div class="container">
-    <div class="skeleton-grid" id="skeleton"></div>
-    <div class="grid" id="grid" style="display:none;"></div>
+    <div class="skeleton-list" id="skeleton"></div>
+    <div class="list" id="list" style="display:none;"></div>
     <div class="empty" id="empty" style="display:none;">
         <div class="empty-icon">🔍</div>
         <h3>Ничего не найдено</h3>
@@ -697,8 +691,8 @@ async function loadData() {
 // =============================================================
 function buildSkeleton() {
     let h = '';
-    for (let i=0; i<6; i++) {
-        h += '<div class="skeleton-card"><div class="sk-line sk-line--s"></div><div class="sk-line sk-line--l"></div><div class="sk-line sk-line--m"></div><div class="sk-line sk-line--s"></div><div class="sk-line sk-line--price"></div></div>';
+    for (let i=0; i<8; i++) {
+        h += '<div class="skeleton-row"><div class="sk-line sk-line--l"></div><div class="sk-line sk-line--s"></div><div class="sk-line sk-line--xs"></div></div>';
     }
     document.getElementById('skeleton').innerHTML = h;
 }
@@ -731,7 +725,7 @@ function init() {
     document.getElementById('total-count-2').textContent = allProducts.length;
 
     document.getElementById('skeleton').style.display = 'none';
-    document.getElementById('grid').style.display = '';
+    document.getElementById('list').style.display = '';
 
     render();
 
@@ -865,7 +859,7 @@ function statusClass(s) {
 // =============================================================
 function render() {
     const filtered = getFiltered();
-    const grid = document.getElementById('grid');
+    const listEl = document.getElementById('list');
     const empty = document.getElementById('empty');
 
     document.getElementById('filtered-count').textContent = filtered.length;
@@ -881,53 +875,56 @@ function render() {
     if (af.length) { hint.style.display=''; hint.textContent='Фильтры: '+af.join(' · '); reset.style.display=''; }
     else { hint.style.display='none'; reset.style.display='none'; }
 
-    if (!filtered.length) { grid.style.display='none'; empty.style.display=''; return; }
+    if (!filtered.length) { listEl.style.display='none'; empty.style.display=''; return; }
     empty.style.display='none';
-    grid.style.display='';
-    grid.innerHTML = filtered.map((p,i)=>buildCard(p,i)).join('');
+    listEl.style.display='';
+    listEl.innerHTML = filtered.map((p,i)=>buildRow(p,i)).join('');
 
-    grid.querySelectorAll('.card').forEach(card=>{
-        card.addEventListener('click', e=>{ if (!e.target.closest('a')) card.classList.toggle('expanded'); });
+    listEl.querySelectorAll('.list-row').forEach(row=>{
+        row.addEventListener('click', e=>{ if (!e.target.closest('a')) row.classList.toggle('expanded'); });
     });
 }
 
-function buildCard(p, idx) {
+function buildRow(p, idx) {
     const sc = statusClass(p.status);
     const sl = p.status || 'В наличии';
     const pn = parsePrice(p.price);
-    const pd = pn>0 ? '<span class="card-price">'+esc(p.price)+'</span>' : '<span class="card-price card-price--request">по запросу</span>';
+    const pd = pn>0 ? '<span class="list-row-price">'+esc(p.price)+'</span>' : '<span class="list-row-price list-row-price--request">по запросу</span>';
 
-    const pi = p.detail_image || p.image || '';
-    const ib = pi
-        ? '<div class="card-img"><img src="'+esc(pi)+'" alt="'+esc(p.name)+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div class=&quot;img-placeholder&quot;><span class=&quot;ph-icon&quot;>📷</span><span>Нет фото</span></div>\'"></div>'
-        : '<div class="card-img"><div class="img-placeholder"><span class="ph-icon">📷</span><span>Нет фото</span></div></div>';
+    // Details grid
+    let detailCells = '';
+    if (p.category) detailCells += '<div class="detail-cell"><span class="detail-label">Категория</span><span class="detail-value">'+esc(p.category)+'</span></div>';
+    if (p.subcategory) detailCells += '<div class="detail-cell"><span class="detail-label">Подкатегория</span><span class="detail-value">'+esc(p.subcategory)+'</span></div>';
+    if (p.manufacturer) detailCells += '<div class="detail-cell"><span class="detail-label">Производитель</span><span class="detail-value">'+esc(p.manufacturer)+'</span></div>';
+    if (p.status) detailCells += '<div class="detail-cell"><span class="detail-label">Наличие</span><span class="detail-value">'+esc(p.status)+'</span></div>';
 
-    let sh = '';
+    // Specs table
+    let specsBlock = '';
     if (p.details && Object.keys(p.details).length) {
-        sh = '<div class="specs-heading">Характеристики</div><table class="specs-table">';
+        let sh = '<div class="specs-heading">Характеристики</div><table class="specs-table">';
         for (const [k,v] of Object.entries(p.details)) sh += '<tr><td class="sl">'+esc(k)+'</td><td class="sv">'+esc(v)+'</td></tr>';
         sh += '</table>';
+        specsBlock = '<div class="specs-block">'+sh+'</div>';
     }
 
+    const linkHtml = p.link ? '<a class="list-row-link" href="'+esc(p.link)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ atompk.ru</a>' : '';
+
     return ''+
-    '<div class="card">'+
-        ib+
-        '<div class="card-body">'+
-            '<div class="card-category">'+esc(p.category)+(p.subcategory?' · '+esc(p.subcategory):'')+'</div>'+
-            '<div class="card-title">'+esc(p.name)+'</div>'+
-            (p.manufacturer?'<div class="card-subtitle"><span class="card-subtitle-dot"></span>'+esc(p.manufacturer)+'</div>':'')+
+    '<div class="list-row">'+
+        '<div class="list-row-main">'+
+            '<div class="list-row-name">'+esc(p.name)+'</div>'+
+            '<div class="list-row-category">'+(p.subcategory?esc(p.subcategory):esc(p.category||''))+'</div>'+
+            pd+
+            '<span class="list-row-status list-row-status--'+sc+'">'+esc(sl)+'</span>'+
+            '<div class="list-row-toggle"><span class="list-row-toggle-arrow">▼</span></div>'+
         '</div>'+
-        '<div class="card-expand-toggle"><span>Подробнее</span><span class="card-expand-arrow">▼</span></div>'+
-        '<div class="card-details">'+
-            sh+
-            (sh?'<div style="margin-top:6px;"></div>':'')+
-            '<div class="detail-row"><span class="detail-label">Категория</span><span class="detail-value">'+esc(p.category)+'</span></div>'+
-            (p.subcategory?'<div class="detail-row"><span class="detail-label">Подкатегория</span><span class="detail-value">'+esc(p.subcategory)+'</span></div>':'')+
-            (p.manufacturer?'<div class="detail-row"><span class="detail-label">Производитель</span><span class="detail-value">'+esc(p.manufacturer)+'</span></div>':'')+
-            (p.status?'<div class="detail-row"><span class="detail-label">Наличие</span><span class="detail-value">'+esc(p.status)+'</span></div>':'')+
-            (p.link?'<a class="card-link" href="'+esc(p.link)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ atompk.ru</a>':'')+
+        '<div class="list-row-details">'+
+            '<div class="list-row-details-inner">'+
+                detailCells+
+                specsBlock+
+            '</div>'+
+            linkHtml+
         '</div>'+
-        '<div class="card-footer">'+pd+'<span class="card-status card-status--'+sc+'">'+esc(sl)+'</span></div>'+
     '</div>';
 }
 

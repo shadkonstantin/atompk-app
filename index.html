@@ -354,7 +354,8 @@
         .list-row.expanded { background: var(--bg-card-hover); }
 
         .list-row-main {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 130px 100px 85px 28px;
             align-items: center;
             gap: 12px;
             padding: 10px 16px;
@@ -364,8 +365,6 @@
         }
 
         .list-row-name {
-            flex: 1;
-            min-width: 0;
             font-size: 0.9rem;
             font-weight: 600;
             color: var(--text);
@@ -375,21 +374,20 @@
             white-space: nowrap;
         }
         .list-row-category {
-            flex-shrink: 0;
             font-size: 0.72rem;
             color: var(--accent);
             text-transform: uppercase;
             letter-spacing: 0.04em;
             font-weight: 700;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .list-row-price {
-            flex-shrink: 0;
             font-size: 1rem;
             font-weight: 700;
             color: var(--accent-hover);
             white-space: nowrap;
-            min-width: 90px;
             text-align: right;
         }
         .list-row-price--request {
@@ -399,20 +397,19 @@
             font-style: italic;
         }
         .list-row-status {
-            flex-shrink: 0;
             font-size: 0.68rem;
             padding: 2px 9px;
             border-radius: 10px;
             font-weight: 600;
             letter-spacing: 0.02em;
             white-space: nowrap;
+            text-align: center;
         }
         .list-row-status--available { background: var(--green-bg); color: var(--green); }
         .list-row-status--low { background: var(--orange-bg); color: var(--accent); }
         .list-row-status--none { background: var(--red-bg); color: var(--red); }
 
         .list-row-toggle {
-            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -616,9 +613,10 @@
 
             /* Compact rows on mobile */
             .list-row-main {
+                display: flex;
+                flex-wrap: wrap;
                 padding: 8px 10px;
                 gap: 8px;
-                flex-wrap: wrap;
             }
             .list-row-name {
                 flex: 1 1 100%;
@@ -626,17 +624,20 @@
                 white-space: normal;
             }
             .list-row-category {
+                flex-shrink: 0;
                 font-size: 0.68rem;
             }
             .list-row-price {
+                flex-shrink: 0;
                 font-size: 0.9rem;
-                min-width: auto;
             }
             .list-row-status {
+                flex-shrink: 0;
                 font-size: 0.64rem;
                 padding: 2px 7px;
             }
             .list-row-toggle {
+                flex-shrink: 0;
                 width: 24px;
                 height: 24px;
                 font-size: 0.55rem;

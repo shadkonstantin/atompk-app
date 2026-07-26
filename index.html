@@ -42,7 +42,7 @@
             --transition: 0.2s cubic-bezier(.4,0,.2,1);
         }
 
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -51,6 +51,7 @@
             line-height: 1.5;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
         /* Metal texture background */
@@ -427,6 +428,7 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 24px 60px;
+            overflow-x: hidden;
         }
         .grid {
             display: grid;
@@ -556,7 +558,6 @@
         .card-details {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.35s cubic-bezier(.4,0,.2,1), padding 0.35s ease;
             background: rgba(0,0,0,0.2);
             border-top: 0px solid var(--border-light);
             transition: max-height 0.35s cubic-bezier(.4,0,.2,1), padding 0.2s ease, border-top-width 0.2s ease;
@@ -773,8 +774,6 @@
             .chip { font-size: 0.75rem; padding: 6px 12px; }
             .search-input { font-size: 0.9rem; }
             .results-hint { display: none; }
-            .card-details { display: none; }
-            .card-expand-hint { display: none; }
             .card {
                 /* Simpler cards on mobile */
             }
@@ -1309,11 +1308,11 @@ function render() {
     // Build cards
     grid.innerHTML = filtered.map((p, i) => buildCard(p, i)).join('');
 
-    // Attach expand handlers
-    grid.querySelectorAll('.card-expand-hint').forEach(hint => {
-        hint.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const card = hint.closest('.card');
+    // Attach expand handlers — click on hint OR anywhere on the card
+    grid.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            // Don't toggle if user clicked a real link inside the card
+            if (e.target.closest('a')) return;
             card.classList.toggle('expanded');
         });
     });

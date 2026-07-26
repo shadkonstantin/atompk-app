@@ -70,6 +70,7 @@
             line-height: 1.5;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
         /* ============================================================
@@ -83,15 +84,17 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
+            overflow: hidden;
         }
         .header-inner {
-            max-width: 1300px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 12px 20px;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 12px;
+            overflow: hidden;
         }
         .logo {
             display: flex;
@@ -126,7 +129,7 @@
             color: var(--text-secondary);
             cursor: pointer;
             font-size: 1.1rem;
-            transition: all var(--transition);
+            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
             flex-shrink: 0;
             line-height: 1;
         }
@@ -140,9 +143,10 @@
            CONTROLS
            ============================================================ */
         .controls {
-            max-width: 1300px;
-            margin: 20px auto 0;
-            padding: 0 20px;
+            max-width: 800px;
+            margin: 16px auto 0;
+            padding: 0 16px;
+            overflow: hidden;
         }
 
         /* Search */
@@ -212,6 +216,7 @@
             flex-wrap: wrap;
             gap: 6px;
             margin-bottom: 10px;
+            overflow: hidden;
         }
         .chip {
             padding: 6px 14px;
@@ -221,7 +226,7 @@
             cursor: pointer;
             background: transparent;
             color: var(--text-secondary);
-            transition: all var(--transition);
+            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
             white-space: nowrap;
             user-select: none;
             display: flex;
@@ -245,6 +250,7 @@
             gap: 8px;
             align-items: center;
             margin-bottom: 10px;
+            overflow: hidden;
         }
         .filter-select {
             padding: 8px 32px 8px 12px;
@@ -282,7 +288,7 @@
             color: var(--text-secondary);
             cursor: pointer;
             font-size: 0.78rem;
-            transition: all var(--transition);
+            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
             white-space: nowrap;
             font-family: inherit;
         }
@@ -301,6 +307,7 @@
             padding: 6px 0 10px;
             font-size: 0.8rem;
             color: var(--text-dim);
+            overflow: hidden;
         }
         .results-bar strong { color: var(--text); font-weight: 600; }
         .results-hint { font-size: 0.74rem; color: var(--text-dim); }
@@ -312,7 +319,7 @@
             color: var(--text-dim);
             cursor: pointer;
             font-size: 0.76rem;
-            transition: all var(--transition);
+            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
             font-family: inherit;
         }
         .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
@@ -321,14 +328,15 @@
            LIST LAYOUT
            ============================================================ */
         .container {
-            max-width: 1300px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 0 20px 60px;
+            padding: 0 16px 40px;
+            overflow: hidden;
         }
         .list {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1px;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             overflow: hidden;
@@ -340,6 +348,7 @@
             background: var(--bg-card);
             transition: background var(--transition);
             cursor: pointer;
+            overflow: hidden;
         }
         .list-row:hover { background: var(--bg-card-hover); }
         .list-row.expanded { background: var(--bg-card-hover); }
@@ -350,6 +359,8 @@
             gap: 12px;
             padding: 10px 16px;
             user-select: none;
+            overflow: hidden;
+            min-height: 48px;
         }
 
         .list-row-name {
@@ -411,7 +422,7 @@
             border: 1px solid var(--border);
             color: var(--text-dim);
             font-size: 0.6rem;
-            transition: all var(--transition);
+            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
             background: transparent;
             cursor: pointer;
         }
@@ -431,16 +442,16 @@
             max-height: 0;
             overflow: hidden;
             background: rgba(0,0,0,0.20);
-            transition: max-height 0.35s ease, padding 0.2s ease;
         }
         .list-row.expanded .list-row-details {
-            max-height: 600px;
-            padding: 12px 16px;
+            max-height: none;
+            padding: 14px 16px;
         }
         .list-row-details-inner {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 8px;
+            overflow: hidden;
         }
         .detail-cell {
             display: flex;
@@ -450,6 +461,7 @@
             background: rgba(0,0,0,0.15);
             border-radius: var(--radius-sm);
             gap: 12px;
+            overflow: hidden;
         }
         .detail-label { color: var(--text-dim); flex-shrink: 0; }
         .detail-value { color: var(--text-secondary); text-align: right; word-break: break-word; }
@@ -467,7 +479,7 @@
             font-weight: 700;
             margin-bottom: 4px;
         }
-        .specs-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
+        .specs-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; overflow: hidden; }
         .specs-table tr { border-bottom: 1px solid rgba(255,255,255,0.02); }
         .specs-table tr:last-child { border-bottom: none; }
         .specs-table td { padding: 3px 8px; vertical-align: top; }
@@ -482,6 +494,7 @@
             gap: 6px;
             margin-top: 2px;
             margin-bottom: 4px;
+            overflow: hidden;
         }
         .dims-heading {
             font-size: 0.7rem;
@@ -524,9 +537,9 @@
            SKELETON
            ============================================================ */
         .skeleton-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1px;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             overflow: hidden;
@@ -539,6 +552,7 @@
             align-items: center;
             gap: 14px;
             height: 48px;
+            overflow: hidden;
         }
         @keyframes shimmer {
             0% { background-position: -400px 0; }
@@ -577,6 +591,7 @@
             font-size: 0.75rem;
             border-top: 1px solid var(--border);
             margin-top: 20px;
+            overflow: hidden;
         }
         .footer a { color: var(--accent); text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
@@ -587,11 +602,11 @@
         @media (max-width: 700px) {
             .header-inner {
                 flex-wrap: wrap;
-                padding: 10px 14px;
+                padding: 10px 12px;
             }
-            .header-stats { gap: 14px; }
-            .controls { padding: 0 14px; margin-top: 14px; }
-            .container { padding: 0 14px 40px; }
+            .header-stats { gap: 12px; font-size: 0.74rem; }
+            .controls { padding: 0 12px; margin-top: 12px; }
+            .container { padding: 0 12px 32px; }
             .filters-row { flex-direction: column; align-items: stretch; }
             .filter-select { width: 100%; }
             .sort-group { margin-left: 0; justify-content: flex-start; flex-wrap: wrap; }

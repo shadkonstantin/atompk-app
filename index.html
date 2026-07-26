@@ -595,10 +595,6 @@
     <div class="header-inner">
         <a href="#" class="logo" onclick="location.reload()">
             <div class="logo-icon"><img src="atompk_logo.png" alt="АтомПромКомплекс"></div>
-            <div class="logo-text">
-                <span class="logo-title">АтомПромКомплекс</span>
-                <span class="logo-subtitle">каталог металлопроката</span>
-            </div>
         </a>
         <div class="header-stats">
             <div class="header-stat">
@@ -943,11 +939,10 @@ function buildRow(p, idx) {
         dimsBlock = '<div class="dims-block">'+dimsBlock+'</div>';
     }
 
-    // Specs table (detail keys that are NOT dimensions and NOT already shown)
+    // Specs table (characteristics from site)
     let specsBlock = '';
-    const skipKeys = new Set(['Категория', 'Подкатегория', 'Производитель', 'Наличие', 'Марка', 'Толщина']);
-    // Include Марка and Толщина in specs table if present (site's original data)
     const specKeys = Object.keys(p.details||{}).filter(k => !k.includes('(из названия)'));
+
     if (specKeys.length) {
         let sh = '<div class="specs-heading">📋 Характеристики</div><table class="specs-table">';
         specKeys.forEach(k => {
@@ -955,6 +950,8 @@ function buildRow(p, idx) {
         });
         sh += '</table>';
         specsBlock = '<div class="specs-block">'+sh+'</div>';
+    } else {
+        specsBlock = '<div class="specs-block"><span style="color:var(--text-dim);font-size:0.78rem;">Характеристики не указаны</span></div>';
     }
 
     const linkHtml = p.link ? '<a class="list-row-link" href="'+esc(p.link)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ atompk.ru</a>' : '';

@@ -136,16 +136,14 @@
             cursor: pointer;
         }
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--accent), #d47030);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
+            width: auto;
+            height: 44px;
             flex-shrink: 0;
-            box-shadow: 0 2px 12px var(--accent-glow);
+        }
+        .logo-icon img {
+            height: 100%;
+            width: auto;
+            display: block;
         }
         .logo-text {
             display: flex;
@@ -564,7 +562,7 @@
             transition: max-height 0.35s cubic-bezier(.4,0,.2,1), padding 0.2s ease, border-top-width 0.2s ease;
         }
         .card.expanded .card-details {
-            max-height: 200px;
+            max-height: 600px;
             padding: 14px 18px;
             border-top-width: 1px;
         }
@@ -589,6 +587,80 @@
             transition: color var(--transition);
         }
         .card-link:hover { color: var(--accent-light); }
+
+        /* Product image in card */
+        .card-image {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            background: var(--bg-input);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 8px;
+            transition: transform 0.3s ease;
+        }
+        .card:hover .card-image img {
+            transform: scale(1.04);
+        }
+        .card-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+        }
+        .card-image-placeholder .ph-icon {
+            font-size: 2.5rem;
+            opacity: 0.3;
+        }
+
+        /* Specs table in expanded details */
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 0.78rem;
+        }
+        .specs-table tr {
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .specs-table tr:last-child {
+            border-bottom: none;
+        }
+        .specs-table td {
+            padding: 5px 0;
+            vertical-align: top;
+        }
+        .specs-table .spec-label {
+            color: var(--text-dim);
+            width: 45%;
+            font-weight: 500;
+        }
+        .specs-table .spec-value {
+            color: var(--text-secondary);
+            text-align: right;
+        }
+        .specs-heading {
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
         .card-expand-hint {
             display: flex;
             align-items: center;
@@ -727,7 +799,7 @@
 <header class="header">
     <div class="header-inner">
         <a href="#" class="logo" onclick="location.reload()">
-            <div class="logo-icon">⚙</div>
+            <div class="logo-icon"><img src="atompk_logo.png" alt="АтомПромКомплекс"></div>
             <div class="logo-text">
                 <span class="logo-title">АтомПромКомплекс</span>
                 <span class="logo-subtitle">каталог металлопроката</span>
@@ -1257,8 +1329,25 @@ function buildCard(p, index) {
 
     const animationDelay = Math.min(index * 0.03, 0.6);
 
+    // Картинка товара или placeholder
+    const productImg = p.detail_image || p.image || '';
+    const imageBlock = productImg
+        ? `<div class="card-image"><img src="${escHtml(productImg)}" alt="${escHtml(p.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'card-image-placeholder\\'><span class=\\'ph-icon\\'>📷</span><span>Нет фото</span></div>'"></div>`
+        : `<div class="card-image"><div class="card-image-placeholder"><span class="ph-icon">📷</span><span>Нет фото</span></div></div>`;
+
+    // Таблица характеристик (если есть)
+    let specsHtml = '';
+    if (p.details && Object.keys(p.details).length > 0) {
+        specsHtml = '<div class="specs-heading">📋 Характеристики</div><table class="specs-table">';
+        for (const [key, value] of Object.entries(p.details)) {
+            specsHtml += `<tr><td class="spec-label">${escHtml(key)}</td><td class="spec-value">${escHtml(value)}</td></tr>`;
+        }
+        specsHtml += '</table>';
+    }
+
     return `
     <div class="card card-enter" style="animation-delay:${animationDelay}s;" data-index="${index}">
+        ${imageBlock}
         <div class="card-body">
             <div class="card-header-row">
                 <div class="card-category-icon">${getCatIcon(p.category)}</div>
@@ -1275,15 +1364,14 @@ function buildCard(p, index) {
             <span class="card-expand-arrow">▼</span>
         </div>
         <div class="card-details">
-            <div class="detail-row">
+            ${specsHtml}
+            <div class="detail-row" style="margin-top:${specsHtml ? '10px' : '0'}">
                 <span class="detail-label">Категория</span>
                 <span class="detail-value">${escHtml(p.category)}</span>
             </div>
             ${p.subcategory ? `<div class="detail-row"><span class="detail-label">Подкатегория</span><span class="detail-value">${escHtml(p.subcategory)}</span></div>` : ''}
             ${p.manufacturer ? `<div class="detail-row"><span class="detail-label">Производитель</span><span class="detail-value">${escHtml(p.manufacturer)}</span></div>` : ''}
             ${p.status ? `<div class="detail-row"><span class="detail-label">Наличие</span><span class="detail-value">${escHtml(p.status)}</span></div>` : ''}
-            ${p.specs && p.specs.dimensions ? `<div class="detail-row"><span class="detail-label">Размеры</span><span class="detail-value">${escHtml(p.specs.dimensions)}</span></div>` : ''}
-            ${p.specs && p.specs.steel_grade ? `<div class="detail-row"><span class="detail-label">Марка стали</span><span class="detail-value">${escHtml(p.specs.steel_grade)}</span></div>` : ''}
             ${p.link ? `<a class="card-link" href="${escHtml(p.link)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ Открыть на atompk.ru</a>` : ''}
         </div>
         <div class="card-footer">

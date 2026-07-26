@@ -5,327 +5,870 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Каталог металлопроката — АтомПромКомплекс</title>
     <style>
-        /* ===== RESET & BASE ===== */
+        /* ============================================================
+           RESET & DESIGN TOKENS
+           ============================================================ */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg: #0d1117;
-            --bg-card: #161b22;
-            --bg-card-hover: #1c2333;
-            --bg-input: #21262d;
-            --border: #30363d;
-            --text: #e6edf3;
-            --text-dim: #8b949e;
+            --bg-base: #0a0e14;
+            --bg-surface: #11161d;
+            --bg-card: #161c26;
+            --bg-card-hover: #1c2430;
+            --bg-input: #1a2029;
+            --bg-dropdown: #141a23;
+            --border: #262e3a;
+            --border-light: #2d3643;
+            --text: #e4ecf5;
+            --text-secondary: #99a8bb;
+            --text-dim: #5d6d80;
             --accent: #f0883e;
-            --accent-glow: rgba(240, 136, 62, 0.2);
+            --accent-light: #f5a062;
+            --accent-glow: rgba(240, 136, 62, 0.18);
+            --accent-glow-strong: rgba(240, 136, 62, 0.35);
             --green: #3fb950;
+            --green-bg: rgba(63, 185, 80, 0.12);
+            --orange-bg: rgba(240, 136, 62, 0.12);
             --red: #f85149;
-            --radius: 10px;
+            --red-bg: rgba(248, 81, 73, 0.12);
+            --chip-bg: #1a2230;
+            --chip-active-bg: rgba(240, 136, 62, 0.15);
+            --chip-active-border: #f0883e;
+            --radius: 8px;
+            --radius-lg: 12px;
             --radius-sm: 6px;
+            --shadow-card: 0 1px 3px rgba(0,0,0,0.4);
+            --shadow-card-hover: 0 4px 20px rgba(240,136,62,0.1);
+            --transition: 0.2s cubic-bezier(.4,0,.2,1);
         }
 
         html { scroll-behavior: smooth; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: var(--bg);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-base);
             color: var(--text);
             line-height: 1.5;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ===== HEADER ===== */
+        /* Metal texture background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px);
+        }
+
+        /* ============================================================
+           ANIMATIONS
+           ============================================================ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes shimmer {
+            0% { background-position: -400px 0; }
+            100% { background-position: 400px 0; }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-enter {
+            animation: fadeInUp 0.35s ease-out both;
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
         .header {
-            background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
-            border-bottom: 1px solid var(--border);
-            padding: 20px 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(20px);
+            background: rgba(10,14,20,0.92);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-bottom: 1px solid rgba(240,136,62,0.15);
+            padding: 0;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.4;
         }
         .header-inner {
-            max-width: 1320px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 14px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 12px;
         }
         .logo {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 12px;
             text-decoration: none;
-            letter-spacing: -0.02em;
+            color: var(--text);
+            cursor: pointer;
         }
-        .logo span { color: var(--text-dim); font-weight: 400; }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #d47030);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            box-shadow: 0 2px 12px var(--accent-glow);
+        }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .logo-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--accent);
+            line-height: 1.2;
+        }
+        .logo-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 0.03em;
+        }
         .header-stats {
             display: flex;
-            gap: 24px;
-            font-size: 0.85rem;
-            color: var(--text-dim);
+            gap: 20px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
         }
-        .header-stats strong { color: var(--accent); }
-
-        /* ===== SEARCH & FILTER BAR ===== */
-        .controls {
-            max-width: 1320px;
-            margin: 30px auto 20px;
-            padding: 0 20px;
+        .header-stat {
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
             align-items: center;
+            gap: 6px;
+        }
+        .header-stat-icon {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 6px var(--accent);
+        }
+        .header-stat strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* ============================================================
+           CONTROLS BAR
+           ============================================================ */
+        .controls-bar {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 24px 0;
+        }
+
+        /* --- Search --- */
+        .search-section {
+            position: relative;
+            margin-bottom: 14px;
         }
         .search-wrapper {
-            flex: 1 1 300px;
             position: relative;
         }
-        .search-wrapper svg {
+        .search-icon {
             position: absolute;
-            left: 14px;
+            left: 16px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-dim);
             pointer-events: none;
+            transition: color var(--transition);
+            z-index: 2;
         }
         .search-input {
             width: 100%;
-            padding: 12px 16px 12px 42px;
+            padding: 13px 18px 13px 46px;
             background: var(--bg-input);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             color: var(--text);
             font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all var(--transition);
+            font-family: inherit;
         }
+        .search-input::placeholder { color: var(--text-dim); }
         .search-input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
+        .search-input:focus ~ .search-icon,
+        .search-input:focus + .search-icon { color: var(--accent); }
+
+        /* Autocomplete dropdown */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: var(--bg-dropdown);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 50;
+            display: none;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            animation: slideDown 0.15s ease-out;
+        }
+        .autocomplete-dropdown.active { display: block; }
+        .autocomplete-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background var(--transition);
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+        }
+        .autocomplete-item:last-child { border-bottom: none; }
+        .autocomplete-item:hover,
+        .autocomplete-item.active {
+            background: rgba(240,136,62,0.08);
+            color: var(--text);
+        }
+        .autocomplete-item strong {
+            color: var(--accent);
+            font-weight: 500;
+        }
+        .autocomplete-cat {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        /* --- Chip filters --- */
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .chip {
+            padding: 7px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            background: var(--chip-bg);
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            white-space: nowrap;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .chip:hover {
+            border-color: var(--text-dim);
+            color: var(--text);
+        }
+        .chip.active {
+            background: var(--chip-active-bg);
+            border-color: var(--chip-active-border);
+            color: var(--accent);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+        .chip-count {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            font-weight: 500;
+        }
+        .chip.active .chip-count { opacity: 1; }
+
+        /* --- Secondary filters row --- */
+        .filters-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .filter-group {
+            position: relative;
+        }
         .filter-select {
-            padding: 12px 36px 12px 14px;
+            padding: 9px 36px 9px 14px;
             background: var(--bg-input);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             color: var(--text);
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             cursor: pointer;
             outline: none;
             appearance: none;
             -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%235d6d80' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 14px center;
-            min-width: 200px;
+            background-position: right 12px center;
+            min-width: 180px;
+            transition: all var(--transition);
+            font-family: inherit;
         }
         .filter-select:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
-        .count-badge {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 12px 18px;
-            font-size: 0.9rem;
+        .filter-select option {
+            background: var(--bg-dropdown);
+            color: var(--text);
+        }
+
+        /* Sort */
+        .sort-group {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sort-label {
+            font-size: 0.82rem;
             color: var(--text-dim);
             white-space: nowrap;
         }
-        .count-badge strong { color: var(--text); }
-
-        /* ===== GRID ===== */
-        .container {
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 0 20px 60px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-            gap: 16px;
-        }
-
-        /* ===== CARD ===== */
-        .card {
-            background: var(--bg-card);
+        .sort-btn {
+            padding: 7px 12px;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 20px;
-            transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg-input);
+            color: var(--text-secondary);
             cursor: pointer;
+            font-size: 0.82rem;
+            transition: all var(--transition);
+            white-space: nowrap;
+            font-family: inherit;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-            text-decoration: none;
-            color: inherit;
+            align-items: center;
+            gap: 5px;
         }
-        .card:hover {
-            transform: translateY(-2px);
+        .sort-btn:hover { border-color: var(--text-dim); color: var(--text); }
+        .sort-btn.active {
+            background: var(--chip-active-bg);
             border-color: var(--accent);
-            box-shadow: 0 8px 25px var(--accent-glow);
-            background: var(--bg-card-hover);
-        }
-        .card-category {
-            font-size: 0.78rem;
             color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            font-weight: 600;
         }
-        .card-title {
-            font-size: 1.05rem;
-            font-weight: 600;
-            line-height: 1.35;
-            color: var(--text);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        .sort-dir {
+            font-size: 0.7rem;
         }
-        .card-meta {
+
+        /* Results line */
+        .results-line {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
             font-size: 0.82rem;
             color: var(--text-dim);
         }
-        .card-meta-item {
+        .results-count strong { color: var(--text); font-weight: 600; }
+        .results-hint {
+            font-size: 0.75rem;
+            font-style: italic;
+        }
+        .reset-btn {
+            padding: 4px 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.78rem;
+            transition: all var(--transition);
+            font-family: inherit;
+        }
+        .reset-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ============================================================
+           GRID
+           ============================================================ */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 14px;
+        }
+
+        /* ============================================================
+           CARD
+           ============================================================ */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            animation-fill-mode: both;
+        }
+        .card:hover {
+            border-color: rgba(240,136,62,0.4);
+            box-shadow: var(--shadow-card-hover);
+            transform: translateY(-2px);
+            background: var(--bg-card-hover);
+        }
+        .card:hover::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: var(--radius-lg);
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(240,136,62,0.06), transparent 50%);
+        }
+        .card-body {
+            padding: 16px 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .card-header-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .card-category-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: rgba(240,136,62,0.1);
             display: flex;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
         }
-        .card-meta-item svg { opacity: 0.6; }
+        .card-category {
+            font-size: 0.7rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        .card-subcategory {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 0.03em;
+        }
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--text);
+            flex: 1;
+        }
+        .card-manufacturer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .card-manufacturer-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0.5;
+        }
         .card-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: auto;
-            padding-top: 12px;
-            border-top: 1px solid var(--border);
+            padding: 12px 18px;
+            border-top: 1px solid var(--border-light);
+            background: rgba(0,0,0,0.15);
         }
         .card-price {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: var(--accent);
+            color: var(--accent-light);
+            letter-spacing: -0.01em;
+        }
+        .card-price--request {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-weight: 400;
+            font-style: italic;
         }
         .card-status {
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             padding: 4px 10px;
             border-radius: 20px;
             font-weight: 600;
+            letter-spacing: 0.02em;
         }
-        .card-status--available { background: rgba(63, 185, 80, 0.15); color: var(--green); }
-        .card-status--low { background: rgba(240, 136, 62, 0.15); color: var(--accent); }
-        .card-status--none { background: rgba(248, 81, 73, 0.15); color: var(--red); }
+        .card-status--available { background: var(--green-bg); color: var(--green); }
+        .card-status--low { background: var(--orange-bg); color: var(--accent); }
+        .card-status--none { background: var(--red-bg); color: var(--red); }
 
-        /* ===== EMPTY STATE ===== */
+        /* Expandable details */
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s cubic-bezier(.4,0,.2,1), padding 0.35s ease;
+            background: rgba(0,0,0,0.2);
+            border-top: 0px solid var(--border-light);
+            transition: max-height 0.35s cubic-bezier(.4,0,.2,1), padding 0.2s ease, border-top-width 0.2s ease;
+        }
+        .card.expanded .card-details {
+            max-height: 200px;
+            padding: 14px 18px;
+            border-top-width: 1px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            padding: 4px 0;
+            gap: 12px;
+        }
+        .detail-label { color: var(--text-dim); }
+        .detail-value { color: var(--text-secondary); text-align: right; }
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition);
+        }
+        .card-link:hover { color: var(--accent-light); }
+        .card-expand-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px 18px 0;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: color var(--transition);
+            user-select: none;
+        }
+        .card-expand-hint:hover { color: var(--text-secondary); }
+        .card-expand-arrow {
+            transition: transform 0.25s ease;
+            display: inline-block;
+            font-size: 0.6rem;
+        }
+        .card.expanded .card-expand-arrow { transform: rotate(180deg); }
+
+        /* ============================================================
+           SKELETON LOADER
+           ============================================================ */
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 14px;
+        }
+        .skeleton-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .skeleton-line {
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, var(--bg-card) 0%, #1f2a38 40%, var(--bg-card) 70%);
+            background-size: 400px 100%;
+            animation: shimmer 1.6s ease-in-out infinite;
+        }
+        .skeleton-line--sm { width: 35%; height: 10px; }
+        .skeleton-line--md { width: 65%; }
+        .skeleton-line--lg { width: 90%; height: 14px; }
+        .skeleton-line--price { width: 45%; height: 20px; margin-top: auto; }
+
+        /* ============================================================
+           EMPTY STATE
+           ============================================================ */
         .empty {
             text-align: center;
-            padding: 60px 20px;
+            padding: 80px 20px;
             color: var(--text-dim);
+            animation: fadeIn 0.3s ease;
         }
-        .empty svg { opacity: 0.3; margin-bottom: 16px; }
-        .empty h3 { font-size: 1.2rem; color: var(--text); margin-bottom: 8px; }
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+        .empty h3 {
+            font-size: 1.15rem;
+            color: var(--text);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .empty p {
+            font-size: 0.88rem;
+            margin-bottom: 16px;
+        }
 
-        /* ===== FOOTER ===== */
+        /* ============================================================
+           FOOTER
+           ============================================================ */
         .footer {
             text-align: center;
-            padding: 30px 20px;
+            padding: 24px 20px;
             color: var(--text-dim);
-            font-size: 0.82rem;
-            border-top: 1px solid var(--border);
+            font-size: 0.78rem;
+            border-top: 1px solid rgba(255,255,255,0.04);
             margin-top: 20px;
         }
         .footer a { color: var(--accent); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
 
-        /* ===== LOADING ===== */
-        .loading {
-            text-align: center;
-            padding: 80px 20px;
-        }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 16px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+            .skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+            .filters-row { flex-direction: column; align-items: stretch; }
+            .filter-select { width: 100%; min-width: unset; }
+            .sort-group { margin-left: 0; justify-content: flex-start; }
             .header-inner { flex-direction: column; align-items: flex-start; }
-            .controls { flex-direction: column; }
-            .filter-select { width: 100%; }
-            .card { padding: 16px; }
         }
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .skeleton-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .container { padding: 0 12px 40px; }
+            .controls-bar { padding: 14px 12px 0; }
+            .header-inner { padding: 10px 12px; }
+            .card-body { padding: 12px; }
+            .card-footer { padding: 10px 12px; }
+            .card-title { font-size: 0.88rem; }
+            .card-price { font-size: 1rem; }
+            .chip { font-size: 0.75rem; padding: 6px 12px; }
+            .search-input { font-size: 0.9rem; }
+            .results-hint { display: none; }
+            .card-details { display: none; }
+            .card-expand-hint { display: none; }
+            .card {
+                /* Simpler cards on mobile */
+            }
+        }
+        @media (max-width: 380px) {
             .grid { grid-template-columns: 1fr; }
+            .skeleton-grid { grid-template-columns: 1fr; }
         }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
     </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
 <header class="header">
     <div class="header-inner">
-        <a href="#" class="logo" onclick="location.reload()">⚙️ АтомПромКомплекс <span>| каталог</span></a>
+        <a href="#" class="logo" onclick="location.reload()">
+            <div class="logo-icon">⚙</div>
+            <div class="logo-text">
+                <span class="logo-title">АтомПромКомплекс</span>
+                <span class="logo-subtitle">каталог металлопроката</span>
+            </div>
+        </a>
         <div class="header-stats">
-            <span>Товаров: <strong id="total-count">—</strong></span>
-            <span>Категорий: <strong id="cat-count">—</strong></span>
+            <div class="header-stat">
+                <span class="header-stat-icon"></span>
+                <span>Товаров: <strong id="total-count">—</strong></span>
+            </div>
+            <div class="header-stat">
+                <span class="header-stat-icon" style="background:#5d6d80;box-shadow:none;"></span>
+                <span>Категорий: <strong id="cat-count">—</strong></span>
+            </div>
         </div>
     </div>
 </header>
 
-<!-- CONTROLS -->
-<div class="controls">
-    <div class="search-wrapper">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
-        </svg>
-        <input type="text" class="search-input" id="search" placeholder="Поиск по названию товара..."
-               autocomplete="off">
+<!-- ============================================================
+     CONTROLS
+     ============================================================ -->
+<div class="controls-bar">
+    <!-- Search with autocomplete -->
+    <div class="search-section">
+        <div class="search-wrapper">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
+            </svg>
+            <input type="text" class="search-input" id="search"
+                   placeholder="Поиск по названию, категории, производителю…"
+                   autocomplete="off">
+            <div class="autocomplete-dropdown" id="autocomplete"></div>
+        </div>
     </div>
-    <select class="filter-select" id="filter-category">
-        <option value="all">Все категории</option>
-    </select>
-    <div class="count-badge">Найдено: <strong id="filtered-count">0</strong></div>
+
+    <!-- Chip filters -->
+    <div class="chip-row" id="chip-row">
+        <button class="chip active" data-cat="all">
+            <span>📋</span> Все товары
+            <span class="chip-count" id="chip-all">—</span>
+        </button>
+    </div>
+
+    <!-- Secondary filters -->
+    <div class="filters-row">
+        <div class="filter-group">
+            <select class="filter-select" id="filter-subcategory">
+                <option value="all">Все подкатегории</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <select class="filter-select" id="filter-manufacturer">
+                <option value="all">Все производители</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <select class="filter-select" id="filter-available">
+                <option value="all">Любое наличие</option>
+                <option value="available">В наличии</option>
+                <option value="low">Мало / Очень мало</option>
+            </select>
+        </div>
+
+        <!-- Sort -->
+        <div class="sort-group">
+            <span class="sort-label">Сорт.:</span>
+            <button class="sort-btn active" data-sort="default">умолч.</button>
+            <button class="sort-btn" data-sort="price-asc">цена ↑</button>
+            <button class="sort-btn" data-sort="price-desc">цена ↓</button>
+            <button class="sort-btn" data-sort="name">название</button>
+        </div>
+    </div>
+
+    <!-- Results line -->
+    <div class="results-line">
+        <span class="results-count">Показано: <strong id="filtered-count">0</strong> из <span id="total-count-2">—</span></span>
+        <span class="results-hint" id="filters-active" style="display:none;"></span>
+        <button class="reset-btn" id="reset-btn" onclick="resetAllFilters()" style="display:none;">✕ Сбросить</button>
+    </div>
 </div>
 
-<!-- GRID -->
+<!-- ============================================================
+     GRID + SKELETON
+     ============================================================ -->
 <div class="container">
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <p>Загрузка каталога...</p>
+    <!-- Skeleton loader -->
+    <div class="skeleton-grid" id="skeleton">
+        <!-- 6 skeleton cards -->
     </div>
+
+    <!-- Product grid -->
     <div class="grid" id="grid" style="display:none;"></div>
+
+    <!-- Empty state -->
     <div class="empty" id="empty" style="display:none;">
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
-        </svg>
+        <div class="empty-icon">🔍</div>
         <h3>Ничего не найдено</h3>
-        <p>Попробуйте изменить поисковый запрос или фильтр</p>
+        <p>Попробуйте изменить поисковый запрос или фильтры</p>
+        <button class="reset-btn" onclick="resetAllFilters()" style="font-size:0.88rem;padding:8px 16px;">Сбросить все фильтры</button>
     </div>
 </div>
 
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
 <footer class="footer">
-    Данные с сайта <a href="https://atompk.ru" target="_blank">atompk.ru</a> —
+    Данные с сайта <a href="https://atompk.ru" target="_blank" rel="noopener">atompk.ru</a> —
     АтомПромКомплекс, Екатеринбург
 </footer>
 
+<!-- ============================================================
+     SCRIPT
+     ============================================================ -->
 <script>
-// ===== APPLICATION STATE =====
+// =============================================================
+// STATE
+// =============================================================
 let allProducts = [];
 let categories = new Set();
+let subcategories = new Set();
+let manufacturers = new Set();
+let activeCategory = 'all';
+let activeSort = 'default';
+let debounceTimer = null;
 
-// ===== LOAD DATA =====
+// =============================================================
+// CATEGORY ICONS
+// =============================================================
+const CAT_ICONS = {
+    'Листовой прокат': '📐',
+    'Сортовой прокат': '🔩',
+    'Трубы': '🔧',
+};
+
+function getCatIcon(cat) {
+    return CAT_ICONS[cat] || '📦';
+}
+
+// =============================================================
+// LOAD DATA
+// =============================================================
 async function loadData() {
     try {
         const resp = await fetch('atompk_products.json');
@@ -333,69 +876,355 @@ async function loadData() {
         allProducts = await resp.json();
         init();
     } catch (err) {
-        document.getElementById('loading').innerHTML =
-            `<p style="color:var(--red)">Ошибка загрузки данных: ${err.message}</p>
-             <p style="color:var(--text-dim);font-size:0.85rem;">Убедитесь, что файл atompk_products.json находится рядом</p>`;
+        document.getElementById('skeleton').innerHTML = `
+            <div class="empty" style="grid-column:1/-1;">
+                <div class="empty-icon">⚠️</div>
+                <h3>Ошибка загрузки данных</h3>
+                <p>${escHtml(err.message)}</p>
+            </div>`;
     }
 }
 
-// ===== INIT =====
-function init() {
-    // Собираем категории
-    categories = new Set(allProducts.map(p => p.category).filter(Boolean).sort());
-
-    // Заполняем селект
-    const select = document.getElementById('filter-category');
-    categories.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
-        select.appendChild(opt);
-    });
-
-    // Хедер
-    document.getElementById('total-count').textContent = allProducts.length;
-    document.getElementById('cat-count').textContent = categories.size;
-
-    // Скрываем загрузку
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('grid').style.display = '';
-
-    render();
-
-    // Слушатели
-    document.getElementById('search').addEventListener('input', render);
-    document.getElementById('filter-category').addEventListener('change', render);
+// =============================================================
+// BUILD SKELETON
+// =============================================================
+function buildSkeleton() {
+    const skel = document.getElementById('skeleton');
+    let html = '';
+    for (let i = 0; i < 6; i++) {
+        html += `
+            <div class="skeleton-card">
+                <div class="skeleton-line skeleton-line--sm"></div>
+                <div class="skeleton-line skeleton-line--lg"></div>
+                <div class="skeleton-line skeleton-line--md"></div>
+                <div class="skeleton-line skeleton-line--sm"></div>
+                <div class="skeleton-line skeleton-line--price"></div>
+            </div>`;
+    }
+    skel.innerHTML = html;
 }
 
-// ===== STATUS CLASS =====
+// =============================================================
+// INIT
+// =============================================================
+function init() {
+    // Collect unique values
+    categories = new Set(allProducts.map(p => p.category).filter(Boolean));
+    subcategories = new Set(allProducts.map(p => p.subcategory).filter(Boolean));
+    manufacturers = new Set(allProducts.map(p => p.manufacturer).filter(Boolean));
+
+    // Build chip filters
+    const chipRow = document.getElementById('chip-row');
+    const sortedCats = [...categories].sort();
+    sortedCats.forEach(cat => {
+        const count = allProducts.filter(p => p.category === cat).length;
+        const btn = document.createElement('button');
+        btn.className = 'chip';
+        btn.dataset.cat = cat;
+        btn.innerHTML = `<span>${getCatIcon(cat)}</span> ${escHtml(cat)} <span class="chip-count">${count}</span>`;
+        btn.addEventListener('click', () => selectCategory(cat));
+        chipRow.appendChild(btn);
+    });
+    document.getElementById('chip-all').textContent =
+        `Все товары ${allProducts.length}`;
+
+    // Populate filter dropdowns
+    populateSelect('filter-subcategory', [...subcategories].sort());
+    populateSelect('filter-manufacturer', [...manufacturers].sort());
+
+    // Header stats
+    document.getElementById('total-count').textContent = allProducts.length;
+    document.getElementById('cat-count').textContent = categories.size;
+    document.getElementById('total-count-2').textContent = allProducts.length;
+
+    // Hide skeleton, show grid
+    document.getElementById('skeleton').style.display = 'none';
+    document.getElementById('grid').style.display = '';
+
+    // Render
+    render();
+
+    // Event listeners
+    document.getElementById('search').addEventListener('input', onSearchInput);
+    document.getElementById('search').addEventListener('focus', onSearchFocus);
+    document.getElementById('search').addEventListener('keydown', onSearchKeydown);
+    document.getElementById('filter-subcategory').addEventListener('change', render);
+    document.getElementById('filter-manufacturer').addEventListener('change', render);
+    document.getElementById('filter-available').addEventListener('change', render);
+
+    // Sort buttons
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeSort = btn.dataset.sort;
+            render();
+        });
+    });
+
+    // Close autocomplete on outside click
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-wrapper')) {
+            document.getElementById('autocomplete').classList.remove('active');
+        }
+    });
+}
+
+// =============================================================
+// HELPERS
+// =============================================================
+function populateSelect(id, options) {
+    const sel = document.getElementById(id);
+    options.forEach(opt => {
+        const el = document.createElement('option');
+        el.value = opt;
+        el.textContent = opt;
+        sel.appendChild(el);
+    });
+}
+
+function escHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 function getStatusClass(status) {
     const s = (status || '').toLowerCase();
-    if (s.includes('много') || s.includes('есть') || s.includes('достаточно')) return 'available';
+    if (s.includes('в наличии') || s.includes('есть') || s.includes('достаточно') || s.includes('много')) return 'available';
     if (s.includes('мало')) return 'low';
     return 'none';
 }
 
-// ===== RENDER =====
-function render() {
+function parsePrice(priceStr) {
+    if (!priceStr) return 0;
+    const cleaned = priceStr.replace(/[^\d]/g, '');
+    const num = parseInt(cleaned, 10);
+    return isNaN(num) ? 0 : num;
+}
+
+// =============================================================
+// FILTERING
+// =============================================================
+function getFilteredProducts() {
     const query = (document.getElementById('search').value || '').toLowerCase().trim();
-    const catFilter = document.getElementById('filter-category').value;
+    const subcat = document.getElementById('filter-subcategory').value;
+    const manuf = document.getElementById('filter-manufacturer').value;
+    const avail = document.getElementById('filter-available').value;
 
     let filtered = allProducts;
 
-    if (catFilter !== 'all') {
-        filtered = filtered.filter(p => p.category === catFilter);
+    // Category chip
+    if (activeCategory !== 'all') {
+        filtered = filtered.filter(p => p.category === activeCategory);
     }
 
+    // Subcategory
+    if (subcat !== 'all') {
+        filtered = filtered.filter(p => p.subcategory === subcat);
+    }
+
+    // Manufacturer
+    if (manuf !== 'all') {
+        filtered = filtered.filter(p => p.manufacturer === manuf);
+    }
+
+    // Availability
+    if (avail === 'available') {
+        filtered = filtered.filter(p => {
+            const s = (p.status || '').toLowerCase();
+            return s.includes('в наличии') || s.includes('есть') || s.includes('достаточно') || s.includes('много');
+        });
+    } else if (avail === 'low') {
+        filtered = filtered.filter(p => {
+            const s = (p.status || '').toLowerCase();
+            return s.includes('мало');
+        });
+    }
+
+    // Search query
     if (query) {
-        filtered = filtered.filter(p => p.name.toLowerCase().includes(query));
+        filtered = filtered.filter(p => {
+            const haystack = [p.name, p.category, p.subcategory, p.manufacturer, p.status]
+                .filter(Boolean).join(' ').toLowerCase();
+            return haystack.includes(query);
+        });
     }
 
-    document.getElementById('filtered-count').textContent = filtered.length;
+    // Sort
+    filtered = sortProducts(filtered);
 
+    return filtered;
+}
+
+function sortProducts(products) {
+    const arr = [...products];
+    switch (activeSort) {
+        case 'price-asc':
+            arr.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+            break;
+        case 'price-desc':
+            arr.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+            break;
+        case 'name':
+            arr.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+            break;
+        default:
+            // Default: keep original order (category grouping)
+            break;
+    }
+    return arr;
+}
+
+// =============================================================
+// CATEGORY CHIP SELECTION
+// =============================================================
+function selectCategory(cat) {
+    activeCategory = cat;
+    document.querySelectorAll('#chip-row .chip').forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.cat === cat);
+    });
+    render();
+}
+
+// =============================================================
+// AUTOCOMPLETE
+// =============================================================
+function onSearchFocus() {
+    const query = (document.getElementById('search').value || '').toLowerCase().trim();
+    if (query.length >= 2) showAutocomplete(query);
+}
+
+function onSearchInput() {
+    clearTimeout(debounceTimer);
+    const query = (document.getElementById('search').value || '').toLowerCase().trim();
+
+    if (query.length >= 2) {
+        showAutocomplete(query);
+    } else {
+        document.getElementById('autocomplete').classList.remove('active');
+    }
+
+    debounceTimer = setTimeout(() => render(), 150);
+}
+
+function showAutocomplete(query) {
+    const dropdown = document.getElementById('autocomplete');
+    const filtered = allProducts.filter(p => {
+        const haystack = [p.name, p.category, p.subcategory, p.manufacturer]
+            .filter(Boolean).join(' ').toLowerCase();
+        return haystack.includes(query);
+    });
+
+    // Dedupe by name, take top 6
+    const seen = new Set();
+    const unique = [];
+    for (const p of filtered) {
+        if (!seen.has(p.name) && unique.length < 8) {
+            seen.add(p.name);
+            unique.push(p);
+        }
+    }
+
+    if (unique.length === 0) {
+        dropdown.classList.remove('active');
+        return;
+    }
+
+    dropdown.innerHTML = unique.map(p => {
+        const name = highlightMatch(p.name, query);
+        return `
+            <div class="autocomplete-item" data-name="${escHtml(p.name)}">
+                <span>${getCatIcon(p.category)}</span>
+                <span>${name}</span>
+                <span class="autocomplete-cat">${escHtml(p.category)}</span>
+            </div>`;
+    }).join('');
+
+    dropdown.classList.add('active');
+
+    // Click handlers
+    dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.getElementById('search').value = item.dataset.name;
+            dropdown.classList.remove('active');
+            render();
+        });
+    });
+}
+
+function highlightMatch(text, query) {
+    const idx = text.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return escHtml(text);
+    return escHtml(text.slice(0, idx)) +
+        '<strong>' + escHtml(text.slice(idx, idx + query.length)) + '</strong>' +
+        escHtml(text.slice(idx + query.length));
+}
+
+function onSearchKeydown(e) {
+    const dropdown = document.getElementById('autocomplete');
+    if (!dropdown.classList.contains('active')) return;
+
+    const items = dropdown.querySelectorAll('.autocomplete-item');
+    let activeIdx = -1;
+    items.forEach((item, i) => { if (item.classList.contains('active')) activeIdx = i; });
+
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeIdx = Math.min(activeIdx + 1, items.length - 1);
+        items.forEach((item, i) => item.classList.toggle('active', i === activeIdx));
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIdx = Math.max(activeIdx - 1, 0);
+        items.forEach((item, i) => item.classList.toggle('active', i === activeIdx));
+    } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (activeIdx >= 0 && items[activeIdx]) {
+            document.getElementById('search').value = items[activeIdx].dataset.name;
+            dropdown.classList.remove('active');
+            render();
+        }
+    } else if (e.key === 'Escape') {
+        dropdown.classList.remove('active');
+    }
+}
+
+// =============================================================
+// RENDER
+// =============================================================
+function render() {
+    const filtered = getFilteredProducts();
     const grid = document.getElementById('grid');
     const empty = document.getElementById('empty');
 
+    // Counts
+    document.getElementById('filtered-count').textContent = filtered.length;
+    document.getElementById('total-count-2').textContent = allProducts.length;
+
+    // Active filters hint
+    const activeFilters = [];
+    if (activeCategory !== 'all') activeFilters.push(activeCategory);
+    if (document.getElementById('filter-subcategory').value !== 'all')
+        activeFilters.push(document.getElementById('filter-subcategory').value);
+    if (document.getElementById('filter-manufacturer').value !== 'all')
+        activeFilters.push(document.getElementById('filter-manufacturer').value);
+    if (document.getElementById('filter-available').value !== 'all') {
+        activeFilters.push(document.getElementById('filter-available').selectedOptions[0].textContent);
+    }
+
+    const hintEl = document.getElementById('filters-active');
+    const resetBtn = document.getElementById('reset-btn');
+    if (activeFilters.length > 0) {
+        hintEl.style.display = '';
+        hintEl.textContent = 'Фильтры: ' + activeFilters.join(' · ');
+        resetBtn.style.display = '';
+    } else {
+        hintEl.style.display = 'none';
+        resetBtn.style.display = 'none';
+    }
+
+    // Empty state
     if (filtered.length === 0) {
         grid.style.display = 'none';
         empty.style.display = '';
@@ -405,37 +1234,88 @@ function render() {
     empty.style.display = 'none';
     grid.style.display = '';
 
-    grid.innerHTML = filtered.map(p => {
-        const statusClass = getStatusClass(p.status);
-        const statusLabel = p.status || '—';
-        const priceDisplay = p.price ? `<span class="card-price">${p.price}</span>` : '<span class="card-price" style="color:var(--text-dim)">по запросу</span>';
+    // Build cards
+    grid.innerHTML = filtered.map((p, i) => buildCard(p, i)).join('');
 
-        return `
-        <a class="card" href="${p.link || '#'}" target="_blank" title="Открыть на atompk.ru">
-            <div class="card-category">${escHtml(p.category || '')} ${p.subcategory ? '→ ' + escHtml(p.subcategory) : ''}</div>
+    // Attach expand handlers
+    grid.querySelectorAll('.card-expand-hint').forEach(hint => {
+        hint.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const card = hint.closest('.card');
+            card.classList.toggle('expanded');
+        });
+    });
+}
+
+function buildCard(p, index) {
+    const statusClass = getStatusClass(p.status);
+    const statusLabel = p.status || 'В наличии';
+    const priceNum = parsePrice(p.price);
+    const priceDisplay = priceNum > 0
+        ? `<span class="card-price">${escHtml(p.price)}</span>`
+        : `<span class="card-price card-price--request">по запросу</span>`;
+
+    const animationDelay = Math.min(index * 0.03, 0.6);
+
+    return `
+    <div class="card card-enter" style="animation-delay:${animationDelay}s;" data-index="${index}">
+        <div class="card-body">
+            <div class="card-header-row">
+                <div class="card-category-icon">${getCatIcon(p.category)}</div>
+                <div>
+                    <div class="card-category">${escHtml(p.category)}</div>
+                    ${p.subcategory ? `<div class="card-subcategory">${escHtml(p.subcategory)}</div>` : ''}
+                </div>
+            </div>
             <div class="card-title">${escHtml(p.name)}</div>
-            <div class="card-meta">
-                ${p.manufacturer ? `<div class="card-meta-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-                    ${escHtml(p.manufacturer)}
-                </div>` : ''}
+            ${p.manufacturer ? `<div class="card-manufacturer"><span class="card-manufacturer-dot"></span>${escHtml(p.manufacturer)}</div>` : ''}
+        </div>
+        <div class="card-expand-hint">
+            <span>Подробнее</span>
+            <span class="card-expand-arrow">▼</span>
+        </div>
+        <div class="card-details">
+            <div class="detail-row">
+                <span class="detail-label">Категория</span>
+                <span class="detail-value">${escHtml(p.category)}</span>
             </div>
-            <div class="card-footer">
-                ${priceDisplay}
-                <span class="card-status card-status--${statusClass}">${statusLabel || 'В наличии'}</span>
-            </div>
-        </a>`;
-    }).join('');
+            ${p.subcategory ? `<div class="detail-row"><span class="detail-label">Подкатегория</span><span class="detail-value">${escHtml(p.subcategory)}</span></div>` : ''}
+            ${p.manufacturer ? `<div class="detail-row"><span class="detail-label">Производитель</span><span class="detail-value">${escHtml(p.manufacturer)}</span></div>` : ''}
+            ${p.status ? `<div class="detail-row"><span class="detail-label">Наличие</span><span class="detail-value">${escHtml(p.status)}</span></div>` : ''}
+            ${p.specs && p.specs.dimensions ? `<div class="detail-row"><span class="detail-label">Размеры</span><span class="detail-value">${escHtml(p.specs.dimensions)}</span></div>` : ''}
+            ${p.specs && p.specs.steel_grade ? `<div class="detail-row"><span class="detail-label">Марка стали</span><span class="detail-value">${escHtml(p.specs.steel_grade)}</span></div>` : ''}
+            ${p.link ? `<a class="card-link" href="${escHtml(p.link)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ Открыть на atompk.ru</a>` : ''}
+        </div>
+        <div class="card-footer">
+            ${priceDisplay}
+            <span class="card-status card-status--${statusClass}">${escHtml(statusLabel)}</span>
+        </div>
+    </div>`;
 }
 
-// ===== HELPERS =====
-function escHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+// =============================================================
+// RESET ALL FILTERS
+// =============================================================
+function resetAllFilters() {
+    document.getElementById('search').value = '';
+    document.getElementById('filter-subcategory').value = 'all';
+    document.getElementById('filter-manufacturer').value = 'all';
+    document.getElementById('filter-available').value = 'all';
+    document.getElementById('autocomplete').classList.remove('active');
+
+    // Reset sort
+    activeSort = 'default';
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.sort-btn[data-sort="default"]').classList.add('active');
+
+    selectCategory('all');
+    render();
 }
 
-// ===== START =====
+// =============================================================
+// STARTUP
+// =============================================================
+buildSkeleton();
 loadData();
 </script>
 

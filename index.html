@@ -747,6 +747,31 @@
             opacity: 1;
         }
 
+        /* Variant-level cart button in variants table */
+        .variant-cart-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            line-height: 1;
+            padding: 0;
+            font-family: inherit;
+        }
+        .variant-cart-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
+        .variants-table th.th-cart { width: 44px; text-align: center; }
+
         /* ============================================================
            MODAL
            ============================================================ */
@@ -1512,7 +1537,7 @@
         <div class="cart-empty-state">
             <div class="cart-empty-icon">🛒</div>
             <p>Корзина пуста</p>
-            <p style="font-size:0.72rem;color:var(--text-dim);margin-top:4px;">Нажимайте <span style="color:var(--accent);">+</span> в строках товаров, чтобы добавлять позиции</p>
+            <p style="font-size:0.72rem;color:var(--text-dim);margin-top:4px;">Нажимайте <span style="color:var(--accent);">🛒</span> в таблице вариантов раскроя, чтобы добавить нужный размер</p>
         </div>
     </div>
     <div class="cart-panel-footer" id="cart-panel-footer" style="display:none;">
@@ -2113,20 +2138,25 @@ function buildRow(p, idx, globalIdx) {
     let variantsHTML = '';
     if (variants.length) {
         let rows = '';
-        variants.forEach(v => {
+        variants.forEach((v, vi) => {
             const vPrice = v.price || '—';
             const vStock = (v.stock !== undefined && v.stock !== null) ? String(v.stock) + ' т' : '—';
-            const vCut = v.cut_length ? String(v.cut_length) + ' м' : '—';
+            const vCut = v.cut_length ? String(v.cut_length) : '—';
             rows += '<tr>' +
-                '<td>' + esc(vCut) + '</td>' +
+                '<td>' + esc(vCut) + (v.cut_length ? ' м' : '') + '</td>' +
                 '<td class="td-mono td-right">' + esc(vPrice) + '</td>' +
                 '<td class="td-mono td-right">' + esc(vStock) + '</td>' +
+                '<td style="text-align:center;"><button class="variant-cart-btn" title="Добавить в корзину"' +
+                ' data-vname="' + esc(p.name) + '"' +
+                ' data-vcut="' + esc(String(v.cut_length || '')) + '"' +
+                ' data-vprice="' + esc(String(vPrice)) + '"' +
+                '>🛒</button></td>' +
                 '</tr>';
         });
         variantsHTML = '<div class="variants-block">' +
             '<div class="variants-heading">📋 Варианты раскроя</div>' +
             '<table class="variants-table">' +
-            '<thead><tr><th>Раскрой</th><th class="th-right">Цена</th><th class="th-right">Остаток</th></tr></thead>' +
+            '<thead><tr><th>Раскрой</th><th class="th-right">Цена</th><th class="th-right">Остаток</th><th class="th-cart"></th></tr></thead>' +
             '<tbody>' + rows + '</tbody>' +
             '</table></div>';
     }
@@ -2155,7 +2185,7 @@ function buildRow(p, idx, globalIdx) {
         '<div class="list-row-subcat">' + (p.subcategory ? esc(p.subcategory) : esc(p.category || '')) + '</div>' +
         pd +
         '<span class="list-row-status list-row-status--' + sc + '">' + esc(sl) + '</span>' +
-        '<button class="list-row-cart-add" onclick="event.stopPropagation();event.preventDefault();addToCart(' + globalIdx + ')" title="Добавить в корзину">+</button>' +
+        '<button class="list-row-cart-add" onclick="event.stopPropagation();event.preventDefault();var r=this.closest(\'.list-row\');r.classList.toggle(\'expanded\');afterToggle(r)" title="Варианты раскроя">+</button>' +
         '<button class="list-row-info" onclick="event.stopPropagation();openModal(' + globalIdx + ')" title="Подробнее">ℹ</button>' +
         '<div class="list-row-carat"><span class="carat-arrow">▼</span></div>' +
         '</div>' +
@@ -2309,7 +2339,8 @@ function closeModal() {
 })();
 
 // =============================================================
-// CART — localStorage-based shopping cart
+// CART — localStorage-based shopping cart (variant-oriented)
+// Cart item: { key, name, cut_length, price, price_str, qty }
 // =============================================================
 const CART_KEY = 'atompk-cart';
 
@@ -2319,6 +2350,8 @@ function loadCart() {
     try {
         const raw = localStorage.getItem(CART_KEY);
         cart = raw ? JSON.parse(raw) : [];
+        // Migrate old cart format (no cut_length) — drop old entries
+        cart = cart.filter(c => c.key !== undefined);
     } catch (e) { cart = []; }
 }
 function saveCart() {
@@ -2327,35 +2360,28 @@ function saveCart() {
     updateCartCount();
 }
 
-function getCartKey(name, globalIdx) {
-    // Use product name as key — more stable than index across reloads
-    return name;
+function getCartKey(name, cutLength) {
+    return name + '||' + (cutLength || '');
 }
 
-function addToCart(globalIdx) {
-    const p = allProducts[globalIdx];
-    if (!p) return;
-    const key = getCartKey(p.name, globalIdx);
+function addVariantToCart(name, cutLength, priceStr) {
+    const key = getCartKey(name, cutLength);
     const existing = cart.find(c => c.key === key);
     if (existing) {
         existing.qty += 1;
     } else {
         cart.push({
             key: key,
-            name: p.name,
-            price: parsePrice(p),
-            price_str: p.price || 'по запросу',
+            name: name,
+            cut_length: cutLength || '',
+            price: parsePrice(priceStr),
+            price_str: priceStr || 'по запросу',
             qty: 1
         });
     }
     saveCart();
     bumpBadge();
     renderCart();
-
-    // Brief visual feedback — open cart panel briefly
-    if (!document.getElementById('cart-panel').classList.contains('open')) {
-        // Just bump the icon, don't auto-open
-    }
 }
 
 function removeFromCart(key) {
@@ -2437,7 +2463,7 @@ function renderCart() {
     const footer = document.getElementById('cart-panel-footer');
 
     if (cart.length === 0) {
-        body.innerHTML = '<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Корзина пуста</p><p style="font-size:0.72rem;color:var(--text-dim);margin-top:4px;">Нажимайте <span style="color:var(--accent);">+</span> в строках товаров, чтобы добавлять позиции</p></div>';
+        body.innerHTML = '<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Корзина пуста</p><p style="font-size:0.72rem;color:var(--text-dim);margin-top:4px;">Нажимайте <span style="color:var(--accent);">🛒</span> в таблице вариантов раскроя, чтобы добавить нужный размер</p></div>';
         footer.style.display = 'none';
         return;
     }
@@ -2447,17 +2473,20 @@ function renderCart() {
 
     body.innerHTML = cart.map((item, i) => {
         const itemTotal = item.price > 0 ? item.price * item.qty : 0;
+        const cutInfo = item.cut_length ? '<div style="font-size:0.72rem;color:var(--text-dim);margin-bottom:2px;">📐 Раскрой: ' + esc(item.cut_length) + '</div>' : '';
+        const escKey = esc(item.key).replace(/'/g, "\\'");
         return '<div class="cart-item">' +
             '<div class="cart-item-info">' +
             '<div class="cart-item-name">' + esc(item.name) + '</div>' +
+            cutInfo +
             '<div class="cart-item-price">' + esc(item.price_str) + (item.qty > 1 ? ' × ' + item.qty + ' = ' + formatPrice(itemTotal) : '') + '</div>' +
             '</div>' +
             '<div class="cart-item-right">' +
-            '<button class="cart-item-remove" onclick="removeFromCart(\'' + esc(item.key).replace(/'/g, "\\'") + '\')" title="Удалить">🗑</button>' +
+            '<button class="cart-item-remove" onclick="removeFromCart(\'' + escKey + '\')" title="Удалить">🗑</button>' +
             '<div class="cart-item-controls">' +
-            '<button class="cart-qty-btn" onclick="updateCartQty(\'' + esc(item.key).replace(/'/g, "\\'") + '\', -1)">−</button>' +
+            '<button class="cart-qty-btn" onclick="updateCartQty(\'' + escKey + '\', -1)">−</button>' +
             '<span class="cart-qty-value">' + item.qty + '</span>' +
-            '<button class="cart-qty-btn" onclick="updateCartQty(\'' + esc(item.key).replace(/'/g, "\\'") + '\', 1)">+</button>' +
+            '<button class="cart-qty-btn" onclick="updateCartQty(\'' + escKey + '\', 1)">+</button>' +
             '</div>' +
             '</div>' +
             '</div>';
@@ -2473,6 +2502,7 @@ function sendOrder() {
     cart.forEach((item, i) => {
         const itemTotal = item.price > 0 ? item.price * item.qty : 0;
         text += (i + 1) + '. ' + item.name + '\n';
+        if (item.cut_length) text += '   Раскрой: ' + item.cut_length + '\n';
         text += '   Цена: ' + item.price_str;
         if (item.qty > 1) text += ' × ' + item.qty + ' = ' + formatPrice(itemTotal);
         text += '\n';
@@ -2484,10 +2514,6 @@ function sendOrder() {
     // Send via Telegram WebApp if available
     if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.sendData === 'function') {
         window.Telegram.WebApp.sendData(text);
-        // Optionally clear cart after sending
-        // clearCart();
-        // renderCart();
-        // closeCart();
     } else {
         // Fallback: show in alert for testing outside Telegram
         alert('Telegram WebApp не обнаружен.\n\nТекст заявки:\n\n' + text);
@@ -2508,6 +2534,18 @@ function sendOrder() {
         if (e.key === 'Escape' && document.getElementById('cart-panel').classList.contains('open')) {
             closeCart();
         }
+    });
+
+    // Delegate variant cart button clicks (variant-level add-to-cart)
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.variant-cart-btn');
+        if (!btn) return;
+        e.stopPropagation();
+        e.preventDefault();
+        const name = btn.dataset.vname;
+        const cut = btn.dataset.vcut;
+        const price = btn.dataset.vprice;
+        if (name) addVariantToCart(name, cut, price);
     });
 })();
 

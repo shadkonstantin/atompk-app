@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог металлопроката — АтомПромКомплекс</title>
+    <style>
+        /* ============================================================
+           RESET & DESIGN TOKENS
+           ============================================================ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        /* ---- DARK THEME (default) ---- */
+        :root, [data-theme="dark"] {
+            --bg: #0d1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #1c2333;
+            --bg-input: #1a1f2b;
+            --border: #30363d;
+            --border-light: #272e36;
+            --text: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #5c6670;
+            --accent: #f0883e;
+            --accent-hover: #f5a062;
+            --green: #3fb950;
+            --green-bg: rgba(63,185,80,0.10);
+            --orange-bg: rgba(240,136,62,0.10);
+            --red: #f85149;
+            --red-bg: rgba(248,81,73,0.10);
+            --header-bg: rgba(13,17,23,0.88);
+            --shimmer-mid: #1f2a35;
+            --shadow: 0 1px 3px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.15);
+            --shadow-hover: 0 4px 16px rgba(0,0,0,0.35);
+            --radius: 10px;
+            --radius-sm: 6px;
+            --transition: 0.2s ease;
+        }
+
+        /* ---- LIGHT THEME ---- */
+        [data-theme="light"] {
+            --bg: #f6f8fa;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f0f2f5;
+            --bg-input: #ffffff;
+            --border: #d0d7de;
+            --border-light: #e3e7eb;
+            --text: #1f2328;
+            --text-secondary: #656d76;
+            --text-dim: #8c959f;
+            --accent: #d16b2c;
+            --accent-hover: #e07a3a;
+            --green: #1a7f37;
+            --green-bg: rgba(26,127,55,0.10);
+            --orange-bg: rgba(209,107,44,0.10);
+            --red: #cf222e;
+            --red-bg: rgba(207,34,46,0.10);
+            --header-bg: rgba(246,248,250,0.88);
+            --shimmer-mid: #d8dee4;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 16px rgba(0,0,0,0.10);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--header-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .header-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            overflow: hidden;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .logo-icon { height: 38px; flex-shrink: 0; }
+        .logo-icon img { height: 100%; width: auto; display: block; }
+        .logo-text { display: flex; flex-direction: column; }
+        .logo-title { font-size: 1.1rem; font-weight: 700; color: var(--accent); line-height: 1.2; }
+        .logo-subtitle { font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.02em; }
+        .header-stats { display: flex; gap: 20px; font-size: 0.82rem; color: var(--text-secondary); flex-shrink: 0; }
+        .header-stat { display: flex; align-items: center; gap: 8px; }
+        .header-stat strong { color: var(--text); font-weight: 600; }
+        .stat-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+        .stat-dot--dim { background: var(--text-dim); }
+
+        /* Theme toggle */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--orange-bg);
+        }
+
+        /* ============================================================
+           CONTROLS
+           ============================================================ */
+        .controls {
+            max-width: 800px;
+            margin: 16px auto 0;
+            padding: 0 16px;
+            overflow: hidden;
+        }
+
+        /* Search */
+        .search-wrap {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            pointer-events: none;
+            z-index: 2;
+        }
+        .search-input {
+            width: 100%;
+            padding: 11px 16px 11px 42px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-size: 0.92rem;
+            outline: none;
+            transition: border-color var(--transition);
+            font-family: inherit;
+        }
+        .search-input::placeholder { color: var(--text-dim); }
+        .search-input:focus { border-color: var(--accent); }
+
+        /* Autocomplete */
+        .autocomplete {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0; right: 0;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            max-height: 280px;
+            overflow-y: auto;
+            z-index: 50;
+            display: none;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+        .autocomplete.show { display: block; }
+        .autocomplete-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            transition: background var(--transition);
+        }
+        .autocomplete-item:last-child { border-bottom: none; }
+        .autocomplete-item:hover,
+        .autocomplete-item.active { background: rgba(240,136,62,0.08); color: var(--text); }
+        .autocomplete-item strong { color: var(--accent); font-weight: 600; }
+        .autocomplete-cat { font-size: 0.68rem; color: var(--text-dim); margin-left: auto; flex-shrink: 0; }
+
+        /* Chips */
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .chip {
+            padding: 6px 14px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-secondary);
+            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
+            white-space: nowrap;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: inherit;
+        }
+        .chip:hover { border-color: var(--text-dim); color: var(--text); }
+        .chip.active {
+            background: rgba(240,136,62,0.12);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .chip-count { font-size: 0.68rem; opacity: 0.55; font-weight: 500; }
+        .chip.active .chip-count { opacity: 1; }
+
+        /* Filters row */
+        .filters-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .filter-select {
+            padding: 8px 32px 8px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-size: 0.82rem;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            font-family: inherit;
+            transition: border-color var(--transition);
+        }
+        .filter-select:focus { border-color: var(--accent); }
+        .filter-select option { background: var(--bg-input); color: var(--text); }
+
+        /* Sort */
+        .sort-group {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sort-label { font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; }
+        .sort-btn {
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.78rem;
+            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .sort-btn:hover { border-color: var(--text-dim); color: var(--text); }
+        .sort-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(240,136,62,0.08);
+        }
+
+        /* Results bar */
+        .results-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 0 10px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            overflow: hidden;
+        }
+        .results-bar strong { color: var(--text); font-weight: 600; }
+        .results-hint { font-size: 0.74rem; color: var(--text-dim); }
+        .reset-btn {
+            padding: 4px 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.76rem;
+            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
+            font-family: inherit;
+        }
+        .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ============================================================
+           LIST LAYOUT
+           ============================================================ */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 16px 40px;
+            overflow: hidden;
+        }
+        .list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: var(--border-light);
+        }
+
+        /* List row */
+        .list-row {
+            background: var(--bg-card);
+            transition: background var(--transition);
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .list-row:hover { background: var(--bg-card-hover); }
+        .list-row.expanded { background: var(--bg-card-hover); }
+
+        .list-row-main {
+            display: grid;
+            grid-template-columns: 1fr 130px 100px 85px 28px;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            user-select: none;
+            overflow: hidden;
+            min-height: 48px;
+        }
+
+        .list-row-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.35;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .list-row-category {
+            font-size: 0.72rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .list-row-price {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-hover);
+            white-space: nowrap;
+            text-align: right;
+        }
+        .list-row-price--request {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            font-weight: 400;
+            font-style: italic;
+        }
+        .list-row-status {
+            font-size: 0.68rem;
+            padding: 2px 9px;
+            border-radius: 10px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            text-align: center;
+        }
+        .list-row-status--available { background: var(--green-bg); color: var(--green); }
+        .list-row-status--low { background: var(--orange-bg); color: var(--accent); }
+        .list-row-status--none { background: var(--red-bg); color: var(--red); }
+
+        .list-row-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.6rem;
+            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
+            background: transparent;
+            cursor: pointer;
+        }
+        .list-row:hover .list-row-toggle,
+        .list-row.expanded .list-row-toggle {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .list-row-toggle-arrow {
+            display: inline-block;
+            transition: transform 0.25s ease;
+        }
+        .list-row.expanded .list-row-toggle-arrow { transform: rotate(180deg); }
+
+        /* Expand details */
+        .list-row-details {
+            max-height: 0;
+            overflow: hidden;
+            background: rgba(0,0,0,0.20);
+        }
+        .list-row.expanded .list-row-details {
+            max-height: none;
+            padding: 14px 16px;
+        }
+        .list-row-details-inner {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
+            overflow: hidden;
+        }
+        .detail-cell {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            padding: 4px 8px;
+            background: rgba(0,0,0,0.15);
+            border-radius: var(--radius-sm);
+            gap: 12px;
+            overflow: hidden;
+        }
+        .detail-label { color: var(--text-dim); flex-shrink: 0; }
+        .detail-value { color: var(--text-secondary); text-align: right; word-break: break-word; }
+
+        /* Specs sub-table in details */
+        .specs-block {
+            grid-column: 1 / -1;
+            margin-top: 4px;
+        }
+        .specs-heading {
+            font-size: 0.7rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .specs-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; overflow: hidden; }
+        .specs-table tr { border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .specs-table tr:last-child { border-bottom: none; }
+        .specs-table td { padding: 3px 8px; vertical-align: top; }
+        .specs-table .sl { color: var(--text-dim); width: 45%; font-weight: 500; }
+        .specs-table .sv { color: var(--text-secondary); text-align: right; }
+
+        /* Dimensions block */
+        .dims-block {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 2px;
+            margin-bottom: 4px;
+            overflow: hidden;
+        }
+        .dims-heading {
+            font-size: 0.7rem;
+            color: var(--accent-hover);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 700;
+            margin-bottom: 2px;
+            width: 100%;
+        }
+        .dim-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(240,136,62,0.08);
+            border: 1px solid rgba(240,136,62,0.20);
+            border-radius: 6px;
+            font-size: 0.78rem;
+            color: var(--accent-hover);
+            white-space: nowrap;
+        }
+        .dim-chip-label { color: var(--text-dim); font-size: 0.7rem; }
+        .dim-chip-value { font-weight: 700; }
+
+        .list-row-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 0.78rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition);
+        }
+        .list-row-link:hover { color: var(--accent-hover); }
+
+        /* ============================================================
+           SKELETON
+           ============================================================ */
+        .skeleton-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: var(--border-light);
+        }
+        .skeleton-row {
+            background: var(--bg-card);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            height: 48px;
+            overflow: hidden;
+        }
+        @keyframes shimmer {
+            0% { background-position: -400px 0; }
+            100% { background-position: 400px 0; }
+        }
+        .sk-line {
+            height: 11px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, var(--bg-card) 0%, var(--shimmer-mid) 40%, var(--bg-card) 70%);
+            background-size: 400px 100%;
+            animation: shimmer 1.6s ease-in-out infinite;
+        }
+        .sk-line--l { flex: 1; }
+        .sk-line--s { width: 90px; flex-shrink: 0; }
+        .sk-line--xs { width: 60px; flex-shrink: 0; }
+
+        /* ============================================================
+           EMPTY STATE
+           ============================================================ */
+        .empty {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-dim);
+        }
+        .empty-icon { font-size: 3.5rem; margin-bottom: 14px; opacity: 0.25; }
+        .empty h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 6px; font-weight: 600; }
+        .empty p { font-size: 0.85rem; margin-bottom: 14px; }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            border-top: 1px solid var(--border);
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 700px) {
+            .header-inner {
+                flex-wrap: wrap;
+                padding: 10px 12px;
+            }
+            .header-stats { gap: 12px; font-size: 0.74rem; }
+            .controls { padding: 0 12px; margin-top: 12px; }
+            .container { padding: 0 12px 32px; }
+            .filters-row { flex-direction: column; align-items: stretch; }
+            .filter-select { width: 100%; }
+            .sort-group { margin-left: 0; justify-content: flex-start; flex-wrap: wrap; }
+            .chip { font-size: 0.75rem; padding: 5px 11px; }
+            .search-input { font-size: 0.88rem; }
+            .results-hint { display: none; }
+
+            /* Compact rows on mobile */
+            .list-row-main {
+                display: flex;
+                flex-wrap: wrap;
+                padding: 8px 10px;
+                gap: 8px;
+            }
+            .list-row-name {
+                flex: 1 1 100%;
+                font-size: 0.84rem;
+                white-space: normal;
+            }
+            .list-row-category {
+                flex-shrink: 0;
+                font-size: 0.68rem;
+            }
+            .list-row-price {
+                flex-shrink: 0;
+                font-size: 0.9rem;
+            }
+            .list-row-status {
+                flex-shrink: 0;
+                font-size: 0.64rem;
+                padding: 2px 7px;
+            }
+            .list-row-toggle {
+                flex-shrink: 0;
+                width: 24px;
+                height: 24px;
+                font-size: 0.55rem;
+            }
+            .list-row-details-inner {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-inner">
+        <a href="#" class="logo" onclick="location.reload()">
+            <div class="logo-icon"><img src="atompk_logo.png" alt="АтомПромКомплекс"></div>
+        </a>
+        <div class="header-stats">
+            <div class="header-stat">
+                <span class="stat-dot"></span>
+                <span>Товаров: <strong id="total-count">—</strong></span>
+            </div>
+            <div class="header-stat">
+                <span class="stat-dot stat-dot--dim"></span>
+                <span>Категорий: <strong id="cat-count">—</strong></span>
+            </div>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" title="Переключить тему" aria-label="Переключить тему">🌙</button>
+    </div>
+</header>
+
+<!-- CONTROLS -->
+<div class="controls">
+    <div class="search-wrap">
+        <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
+        </svg>
+        <input type="text" class="search-input" id="search"
+               placeholder="Поиск по названию, категории, производителю…"
+               autocomplete="off">
+        <div class="autocomplete" id="autocomplete"></div>
+    </div>
+
+    <div class="chip-row" id="chip-row">
+        <button class="chip active" data-cat="all">
+            📋 Все
+            <span class="chip-count" id="chip-all">—</span>
+        </button>
+    </div>
+
+    <div class="filters-row">
+        <select class="filter-select" id="filter-subcategory">
+            <option value="all">Все подкатегории</option>
+        </select>
+        <select class="filter-select" id="filter-manufacturer">
+            <option value="all">Все производители</option>
+        </select>
+        <select class="filter-select" id="filter-available">
+            <option value="all">Любое наличие</option>
+            <option value="available">В наличии</option>
+            <option value="low">Мало</option>
+        </select>
+
+        <div class="sort-group">
+            <span class="sort-label">Сорт.:</span>
+            <button class="sort-btn active" data-sort="default">умолч.</button>
+            <button class="sort-btn" data-sort="price-asc">цена ↑</button>
+            <button class="sort-btn" data-sort="price-desc">цена ↓</button>
+            <button class="sort-btn" data-sort="name">назв.</button>
+        </div>
+    </div>
+
+    <div class="results-bar">
+        <span>Показано: <strong id="filtered-count">0</strong> из <span id="total-count-2">—</span></span>
+        <span class="results-hint" id="filters-active" style="display:none;"></span>
+        <button class="reset-btn" id="reset-btn" onclick="resetAllFilters()" style="display:none;">✕ Сбросить</button>
+    </div>
+</div>
+
+<!-- LIST -->
+<div class="container">
+    <div class="skeleton-list" id="skeleton"></div>
+    <div class="list" id="list" style="display:none;"></div>
+    <div class="empty" id="empty" style="display:none;">
+        <div class="empty-icon">🔍</div>
+        <h3>Ничего не найдено</h3>
+        <p>Попробуйте изменить запрос или фильтры</p>
+        <button class="reset-btn" onclick="resetAllFilters()" style="font-size:0.85rem;padding:7px 14px;">Сбросить все фильтры</button>
+    </div>
+</div>
+
+<footer class="footer">
+    Данные из 1С (CommerceML) — <a href="https://atompk.ru" target="_blank" rel="noopener">atompk.ru</a> —
+    АтомПромКомплекс, Екатеринбург
+</footer>
+
+<script>
+// =============================================================
+// STATE
+// =============================================================
+let allProducts = [];
+let categories = new Set();
+let subcategories = new Set();
+let manufacturers = new Set();
+let activeCategory = 'all';
+let activeSort = 'default';
+let debounceTimer = null;
+
+const CAT_ICONS = {
+    'Листовой прокат': '📐',
+    'Сортовой прокат': '🔩',
+    'Трубы': '🔧',
+};
+function catIcon(cat) { return CAT_ICONS[cat] || '📦'; }
+
+function esc(str) {
+    if (!str) return '';
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+}
+
+// =============================================================
+// LOAD
+// =============================================================
+async function loadData() {
+    try {
+        const r = await fetch('atompk_products.json');
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        allProducts = await r.json();
+        init();
+    } catch (e) {
+        document.getElementById('skeleton').innerHTML =
+            '<div class="empty" style="grid-column:1/-1;"><div class="empty-icon">⚠️</div><h3>Ошибка загрузки</h3><p>'+esc(e.message)+'</p></div>';
+    }
+}
+
+// =============================================================
+// SKELETON
+// =============================================================
+function buildSkeleton() {
+    let h = '';
+    for (let i=0; i<8; i++) {
+        h += '<div class="skeleton-row"><div class="sk-line sk-line--l"></div><div class="sk-line sk-line--s"></div><div class="sk-line sk-line--xs"></div></div>';
+    }
+    document.getElementById('skeleton').innerHTML = h;
+}
+
+// =============================================================
+// INIT
+// =============================================================
+function init() {
+    categories = new Set(allProducts.map(p=>p.category).filter(Boolean));
+    subcategories = new Set(allProducts.map(p=>p.subcategory).filter(Boolean));
+    manufacturers = new Set(allProducts.map(p=>p.manufacturer).filter(Boolean));
+
+    const chipRow = document.getElementById('chip-row');
+    [...categories].sort().forEach(cat => {
+        const n = allProducts.filter(p=>p.category===cat).length;
+        const b = document.createElement('button');
+        b.className = 'chip';
+        b.dataset.cat = cat;
+        b.innerHTML = catIcon(cat)+' '+esc(cat)+' <span class="chip-count">'+n+'</span>';
+        b.addEventListener('click', ()=>selectCategory(cat));
+        chipRow.appendChild(b);
+    });
+    document.getElementById('chip-all').textContent = 'Все товары '+allProducts.length;
+
+    popSelect('filter-subcategory', [...subcategories].sort());
+    popSelect('filter-manufacturer', [...manufacturers].sort());
+
+    document.getElementById('total-count').textContent = allProducts.length;
+    document.getElementById('cat-count').textContent = categories.size;
+    document.getElementById('total-count-2').textContent = allProducts.length;
+
+    document.getElementById('skeleton').style.display = 'none';
+    document.getElementById('list').style.display = '';
+
+    render();
+
+    document.getElementById('search').addEventListener('input', onSearch);
+    document.getElementById('search').addEventListener('focus', onSearchFocus);
+    document.getElementById('search').addEventListener('keydown', onSearchKey);
+    document.getElementById('filter-subcategory').addEventListener('change', render);
+    document.getElementById('filter-manufacturer').addEventListener('change', render);
+    document.getElementById('filter-available').addEventListener('change', render);
+
+    document.querySelectorAll('.sort-btn').forEach(b=>{
+        b.addEventListener('click', ()=>{
+            document.querySelectorAll('.sort-btn').forEach(x=>x.classList.remove('active'));
+            b.classList.add('active');
+            activeSort = b.dataset.sort;
+            render();
+        });
+    });
+
+    document.addEventListener('click', e=>{
+        if (!e.target.closest('.search-wrap')) document.getElementById('autocomplete').classList.remove('show');
+    });
+}
+
+function popSelect(id, opts) {
+    const s = document.getElementById(id);
+    opts.forEach(o=>{ const e=document.createElement('option'); e.value=o; e.textContent=o; s.appendChild(e); });
+}
+
+// =============================================================
+// FILTERING & SORTING
+// =============================================================
+function parsePrice(p) {
+    if (!p) return 0;
+    // Use price_raw (integer) from XML if available, fallback to string parsing
+    if (p.price_raw) return p.price_raw;
+    const s = (typeof p === 'string') ? p : (p.price || '');
+    const n = parseInt(String(s).replace(/[^\d]/g,''),10);
+    return isNaN(n)?0:n;
+}
+
+function getFiltered() {
+    const q = (document.getElementById('search').value||'').toLowerCase().trim();
+    const sc = document.getElementById('filter-subcategory').value;
+    const mf = document.getElementById('filter-manufacturer').value;
+    const av = document.getElementById('filter-available').value;
+
+    let f = allProducts;
+    if (activeCategory!=='all') f = f.filter(p=>p.category===activeCategory);
+    if (sc!=='all') f = f.filter(p=>p.subcategory===sc);
+    if (mf!=='all') f = f.filter(p=>p.manufacturer===mf);
+    if (av==='available') {
+        f = f.filter(p => p.stock_raw >= 1);
+    } else if (av==='low') {
+        f = f.filter(p => p.stock_raw > 0 && p.stock_raw < 1);
+    }
+    if (q) {
+        f = f.filter(p=>[p.name,p.category,p.subcategory,p.manufacturer].filter(Boolean).join(' ').toLowerCase().includes(q));
+    }
+
+    // Sort
+    const arr = [...f];
+    switch(activeSort) {
+        case 'price-asc': arr.sort((a,b)=>parsePrice(a.price)-parsePrice(b.price)); break;
+        case 'price-desc': arr.sort((a,b)=>parsePrice(b.price)-parsePrice(a.price)); break;
+        case 'name': arr.sort((a,b)=>a.name.localeCompare(b.name,'ru')); break;
+    }
+    return arr;
+}
+
+// =============================================================
+// CATEGORY
+// =============================================================
+function selectCategory(cat) {
+    activeCategory = cat;
+    document.querySelectorAll('#chip-row .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat===cat));
+    render();
+}
+
+// =============================================================
+// AUTOCOMPLETE
+// =============================================================
+function onSearchFocus() {
+    const q = (document.getElementById('search').value||'').toLowerCase().trim();
+    if (q.length>=2) showAC(q);
+}
+function onSearch() {
+    clearTimeout(debounceTimer);
+    const q = (document.getElementById('search').value||'').toLowerCase().trim();
+    if (q.length>=2) showAC(q);
+    else document.getElementById('autocomplete').classList.remove('show');
+    debounceTimer = setTimeout(()=>render(),150);
+}
+function showAC(q) {
+    const dd = document.getElementById('autocomplete');
+    const f = allProducts.filter(p=>[p.name,p.category,p.subcategory,p.manufacturer].filter(Boolean).join(' ').toLowerCase().includes(q));
+    const seen = new Set();
+    const u = [];
+    for (const p of f) { if (!seen.has(p.name)&&u.length<8) { seen.add(p.name); u.push(p); } }
+    if (!u.length) { dd.classList.remove('show'); return; }
+    dd.innerHTML = u.map(p=>{
+        const idx = p.name.toLowerCase().indexOf(q);
+        const name = idx>=0 ? esc(p.name.slice(0,idx))+'<strong>'+esc(p.name.slice(idx,idx+q.length))+'</strong>'+esc(p.name.slice(idx+q.length)) : esc(p.name);
+        return '<div class="autocomplete-item" data-name="'+esc(p.name)+'"><span>'+catIcon(p.category)+'</span><span>'+name+'</span><span class="autocomplete-cat">'+esc(p.category)+'</span></div>';
+    }).join('');
+    dd.classList.add('show');
+    dd.querySelectorAll('.autocomplete-item').forEach(it=>{
+        it.addEventListener('click',()=>{ document.getElementById('search').value=it.dataset.name; dd.classList.remove('show'); render(); });
+    });
+}
+function onSearchKey(e) {
+    const dd = document.getElementById('autocomplete');
+    if (!dd.classList.contains('show')) return;
+    const items = dd.querySelectorAll('.autocomplete-item');
+    let ai = -1; items.forEach((it,i)=>{if(it.classList.contains('active'))ai=i;});
+    if (e.key==='ArrowDown') { e.preventDefault(); ai=Math.min(ai+1,items.length-1); items.forEach((it,i)=>it.classList.toggle('active',i===ai)); }
+    else if (e.key==='ArrowUp') { e.preventDefault(); ai=Math.max(ai-1,0); items.forEach((it,i)=>it.classList.toggle('active',i===ai)); }
+    else if (e.key==='Enter') { e.preventDefault(); if (ai>=0&&items[ai]){document.getElementById('search').value=items[ai].dataset.name;dd.classList.remove('show');render();} }
+    else if (e.key==='Escape') dd.classList.remove('show');
+}
+
+// =============================================================
+// STATUS
+// =============================================================
+function statusClass(s) {
+    const st = (s||'').toLowerCase();
+    if (st.includes('нет')||st.includes('отсутствует')) return 'none';
+    if (st.includes('мало')) return 'low';
+    return 'available';
+}
+
+// =============================================================
+// RENDER
+// =============================================================
+function render() {
+    const filtered = getFiltered();
+    const listEl = document.getElementById('list');
+    const empty = document.getElementById('empty');
+
+    document.getElementById('filtered-count').textContent = filtered.length;
+    document.getElementById('total-count-2').textContent = allProducts.length;
+
+    const af = [];
+    if (activeCategory!=='all') af.push(activeCategory);
+    if (document.getElementById('filter-subcategory').value!=='all') af.push(document.getElementById('filter-subcategory').value);
+    if (document.getElementById('filter-manufacturer').value!=='all') af.push(document.getElementById('filter-manufacturer').value);
+    if (document.getElementById('filter-available').value!=='all') af.push(document.getElementById('filter-available').selectedOptions[0].textContent);
+    const hint = document.getElementById('filters-active');
+    const reset = document.getElementById('reset-btn');
+    if (af.length) { hint.style.display=''; hint.textContent='Фильтры: '+af.join(' · '); reset.style.display=''; }
+    else { hint.style.display='none'; reset.style.display='none'; }
+
+    if (!filtered.length) { listEl.style.display='none'; empty.style.display=''; return; }
+    empty.style.display='none';
+    listEl.style.display='';
+    listEl.innerHTML = filtered.map((p,i)=>buildRow(p,i)).join('');
+
+    listEl.querySelectorAll('.list-row').forEach(row=>{
+        row.addEventListener('click', e=>{ if (!e.target.closest('a')) row.classList.toggle('expanded'); });
+    });
+}
+
+function buildRow(p, idx) {
+    const sc = statusClass(p.status);
+    const sl = p.status || 'В наличии';
+    const pn = parsePrice(p);
+    const pd = pn>0 ? '<span class="list-row-price">'+esc(p.price)+'</span>' : '<span class="list-row-price list-row-price--request">по запросу</span>';
+
+    // Specs table — show ALL fields from details dict
+    const detailKeys = Object.keys(p.details||{}).filter(k => p.details[k]);
+    let specsBlock = '';
+    if (detailKeys.length) {
+        let sh = '<div class="specs-heading">📋 Характеристики</div><table class="specs-table">';
+        detailKeys.forEach(k => {
+            sh += '<tr><td class="sl">'+esc(k)+'</td><td class="sv">'+esc(String(p.details[k]))+'</td></tr>';
+        });
+        sh += '</table>';
+        specsBlock = '<div class="specs-block">'+sh+'</div>';
+    } else {
+        specsBlock = '<div class="specs-block"><span style="color:var(--text-dim);font-size:0.78rem;">Характеристики не указаны</span></div>';
+    }
+
+    const linkHtml = p.link ? '<a class="list-row-link" href="'+esc(p.link)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ atompk.ru</a>' : '';
+
+    return ''+
+    '<div class="list-row">'+
+        '<div class="list-row-main">'+
+            '<div class="list-row-name">'+esc(p.name)+'</div>'+
+            '<div class="list-row-category">'+(p.subcategory?esc(p.subcategory):esc(p.category||''))+'</div>'+
+            pd+
+            '<span class="list-row-status list-row-status--'+sc+'">'+esc(sl)+'</span>'+
+            '<div class="list-row-toggle"><span class="list-row-toggle-arrow">▼</span></div>'+
+        '</div>'+
+        '<div class="list-row-details">'+
+            '<div class="list-row-details-inner">'+
+                specsBlock+
+            '</div>'+
+            linkHtml+
+        '</div>'+
+    '</div>';
+}
+
+// =============================================================
+// RESET
+// =============================================================
+function resetAllFilters() {
+    document.getElementById('search').value='';
+    document.getElementById('filter-subcategory').value='all';
+    document.getElementById('filter-manufacturer').value='all';
+    document.getElementById('filter-available').value='all';
+    document.getElementById('autocomplete').classList.remove('show');
+    activeSort='default';
+    document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.sort-btn[data-sort="default"]').classList.add('active');
+    selectCategory('all');
+    render();
+}
+
+// =============================================================
+// THEME
+// =============================================================
+(function initTheme() {
+    const toggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    function setThemeIcon(theme) {
+        toggle.textContent = theme === 'light' ? '☀️' : '🌙';
+    }
+
+    const saved = localStorage.getItem('atompk-theme');
+    if (saved) {
+        html.setAttribute('data-theme', saved);
+        setThemeIcon(saved);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        html.setAttribute('data-theme', 'light');
+        setThemeIcon('light');
+    } else {
+        html.setAttribute('data-theme', 'dark');
+        setThemeIcon('dark');
+    }
+
+    toggle.addEventListener('click', () => {
+        const current = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', current);
+        localStorage.setItem('atompk-theme', current);
+        setThemeIcon(current);
+    });
+
+    // Listen for system theme changes
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('atompk-theme')) {
+                const t = e.matches ? 'dark' : 'light';
+                html.setAttribute('data-theme', t);
+                setThemeIcon(t);
+            }
+        });
+    }
+})();
+
+// =============================================================
+// START
+// =============================================================
+buildSkeleton();
+loadData();
+</script>
+</body>
+</html>

@@ -126,9 +126,10 @@
         /* Search in header */
         .header-search {
             flex: 1;
-            width: 100%;
+            max-width: 100%;
             position: relative;
             min-width: 180px;
+            overflow: hidden;
         }
         .header-search input {
             width: 100%;
@@ -177,17 +178,29 @@
 
         .sidebar-toggle {
             display: flex; align-items: center; justify-content: center;
-            width: 32px; height: 32px;
+            width: 36px; height: 36px;
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius);
             background: transparent;
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 1.1rem;
             transition: all var(--transition);
+            padding: 0;
+        }
+        .sidebar-toggle svg { width: 18px; height: 18px; }
+        .sidebar-toggle svg line {
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            transition: all 0.25s ease;
+            transform-origin: center;
         }
         .sidebar-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
         .sidebar-toggle.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        /* Burger → X animation on active */
+        .sidebar-toggle.active svg line:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+        .sidebar-toggle.active svg line:nth-child(2) { opacity: 0; }
+        .sidebar-toggle.active svg line:nth-child(3) { transform: translateY(-4px) rotate(-45deg); }
 
         .theme-toggle {
             display: flex; align-items: center; justify-content: center;
@@ -628,7 +641,8 @@
         .variants-table th:nth-child(1) { width: 120px; }
         .variants-table th:nth-child(2) { width: 100px; }
         .variants-table th:nth-child(3) { width: 90px; }
-        .variants-table th:nth-child(4) { /* ГОСТ — auto */ }
+        .variants-table th:nth-child(4) { max-width: 200px; }
+        .variants-table td:nth-child(4) { max-width: 200px; }
         .variants-table th.th-right { text-align: right; }
         .variants-table td {
             padding: 6px 8px;
@@ -827,7 +841,7 @@
 <!-- HEADER -->
 <header class="header">
     <div class="header-inner">
-        <button class="sidebar-toggle" id="sidebar-toggle" title="Фильтры" aria-label="Показать/скрыть фильтры">☰</button>
+        <button class="sidebar-toggle" id="sidebar-toggle" title="Фильтры" aria-label="Показать/скрыть фильтры"><svg viewBox="0 0 18 14"><line x1="1" y1="1" x2="17" y2="1"/><line x1="1" y1="7" x2="17" y2="7"/><line x1="1" y1="13" x2="17" y2="13"/></svg></button>
 
         <div class="logo" onclick="location.reload()">
             <div class="logo-icon"><img src="atompk_logo.png" alt="AtomPK"></div>

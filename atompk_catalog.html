@@ -3,65 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог металлопроката — АтомПромКомплекс</title>
+    <title>Каталог металлопроката</title>
     <style>
         /* ============================================================
-           RESET & DESIGN TOKENS
+           RESET & DESIGN TOKENS — INDUSTRIAL DARK THEME
            ============================================================ */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* ---- DARK THEME (default) ---- */
         :root, [data-theme="dark"] {
-            --bg: #0d1117;
-            --bg-card: #161b22;
-            --bg-card-hover: #1c2333;
-            --bg-input: #1a1f2b;
-            --border: #30363d;
-            --border-light: #272e36;
-            --text: #e6edf3;
-            --text-secondary: #8b949e;
-            --text-dim: #5c6670;
-            --accent: #f0883e;
-            --accent-hover: #f5a062;
-            --green: #3fb950;
-            --green-bg: rgba(63,185,80,0.10);
-            --orange-bg: rgba(240,136,62,0.10);
-            --red: #f85149;
-            --red-bg: rgba(248,81,73,0.10);
-            --header-bg: rgba(13,17,23,0.88);
-            --shimmer-mid: #1f2a35;
-            --shadow: 0 1px 3px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.15);
-            --shadow-hover: 0 4px 16px rgba(0,0,0,0.35);
-            --radius: 10px;
-            --radius-sm: 6px;
-            --transition: 0.2s ease;
+            --bg:            #0a0e14;
+            --bg-panel:      #10151c;
+            --bg-card:       #141b24;
+            --bg-card-alt:   #181f2a;
+            --bg-card-hover: #1c2533;
+            --bg-input:      #111820;
+            --border:        #263040;
+            --border-light:  #1e2a36;
+            --border-strong: #324050;
+            --text:          #e2e8f0;
+            --text-secondary:#94a3b8;
+            --text-dim:      #5a6a7e;
+            --accent:        #f0883e;
+            --accent-hover:  #f5a062;
+            --accent-dim:    rgba(240,136,62,0.15);
+            --green:         #22c55e;
+            --green-bg:      rgba(34,197,94,0.12);
+            --orange-bg:     rgba(240,136,62,0.12);
+            --red:           #ef4444;
+            --red-bg:        rgba(239,68,68,0.12);
+            --blue:          #60a5fa;
+            --blue-bg:       rgba(96,165,250,0.10);
+            --header-bg:     rgba(10,14,20,0.92);
+            --detail-expand-bg: rgba(0,0,0,0.15);
+            --shadow:        0 4px 20px rgba(0,0,0,0.4);
+            --shadow-sm:     0 1px 3px rgba(0,0,0,0.3);
+            --radius:        8px;
+            --radius-sm:     5px;
+            --transition:    0.18s ease;
+            --font-mono:     'SF Mono','Cascadia Code','JetBrains Mono','Fira Code','Consolas',monospace;
         }
 
-        /* ---- LIGHT THEME ---- */
         [data-theme="light"] {
-            --bg: #f6f8fa;
-            --bg-card: #ffffff;
-            --bg-card-hover: #f0f2f5;
-            --bg-input: #ffffff;
-            --border: #d0d7de;
-            --border-light: #e3e7eb;
-            --text: #1f2328;
-            --text-secondary: #656d76;
-            --text-dim: #8c959f;
-            --accent: #d16b2c;
-            --accent-hover: #e07a3a;
-            --green: #1a7f37;
-            --green-bg: rgba(26,127,55,0.10);
-            --orange-bg: rgba(209,107,44,0.10);
-            --red: #cf222e;
-            --red-bg: rgba(207,34,46,0.10);
-            --header-bg: rgba(246,248,250,0.88);
-            --shimmer-mid: #d8dee4;
-            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-            --shadow-hover: 0 4px 16px rgba(0,0,0,0.10);
+            --bg:            #f1f5f9;
+            --bg-panel:      #ffffff;
+            --bg-card:       #ffffff;
+            --bg-card-alt:   #f8fafc;
+            --bg-card-hover: #eef2f7;
+            --bg-input:      #ffffff;
+            --border:        #d9dfe8;
+            --border-light:  #e8ecf1;
+            --border-strong: #c4cdd8;
+            --text:          #1e293b;
+            --text-secondary:#64748b;
+            --text-dim:      #94a3b8;
+            --accent:        #d16b2c;
+            --accent-hover:  #e67a38;
+            --accent-dim:    rgba(209,107,44,0.12);
+            --green:         #16a34a;
+            --green-bg:      rgba(22,163,74,0.10);
+            --orange-bg:     rgba(209,107,44,0.10);
+            --red:           #dc2626;
+            --red-bg:        rgba(220,38,38,0.10);
+            --blue:          #3b82f6;
+            --blue-bg:       rgba(59,130,246,0.08);
+            --header-bg:     rgba(241,245,249,0.92);
+            --detail-expand-bg: rgba(0,0,0,0.04);
+            --shadow:        0 4px 20px rgba(0,0,0,0.08);
+            --shadow-sm:     0 1px 3px rgba(0,0,0,0.06);
         }
 
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -74,229 +85,334 @@
         }
 
         /* ============================================================
-           HEADER
+           SCROLLBAR
+           ============================================================ */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+        /* ============================================================
+           HEADER — compact single row
            ============================================================ */
         .header {
             position: sticky;
-            top: 0;
-            z-index: 100;
+            top: 0; z-index: 200;
             background: var(--header-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border-bottom: 1px solid var(--border);
-            overflow: hidden;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.15);
         }
         .header-inner {
-            max-width: 900px;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 10px 16px;
+            padding: 8px 16px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: 12px;
-            overflow: hidden;
         }
+
+        /* Logo */
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--text);
-            cursor: pointer;
             flex-shrink: 0;
+            cursor: pointer;
         }
-        .logo-icon { height: 38px; flex-shrink: 0; }
+        .logo-icon { height: 32px; flex-shrink: 0; }
         .logo-icon img { height: 100%; width: auto; display: block; }
-        .logo-text { display: flex; flex-direction: column; }
-        .logo-title { font-size: 1.1rem; font-weight: 700; color: var(--accent); line-height: 1.2; }
-        .logo-subtitle { font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.02em; }
-        .header-stats { display: flex; gap: 20px; font-size: 0.82rem; color: var(--text-secondary); flex-shrink: 0; }
-        .header-stat { display: flex; align-items: center; gap: 8px; }
-        .header-stat strong { color: var(--text); font-weight: 600; }
-        .stat-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-        .stat-dot--dim { background: var(--text-dim); }
 
-        /* Theme toggle */
-        .theme-toggle {
+        /* Search in header */
+        .header-search {
+            flex: 1;
+            width: 100%;
+            position: relative;
+            min-width: 180px;
+        }
+        .header-search input {
+            width: 100%;
+            padding: 8px 14px 8px 38px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color var(--transition), box-shadow var(--transition);
+            font-family: inherit;
+        }
+        .header-search input::placeholder { color: var(--text-dim); }
+        .header-search input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+
+        /* Stats + theme */
+        .header-actions {
             display: flex;
             align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
+            gap: 14px;
+            flex-shrink: 0;
+        }
+        .header-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.76rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .header-stat strong { font-family: var(--font-mono); color: var(--accent); font-weight: 700; font-size: 0.82rem; }
+        .stat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+        .stat-dot--dim { background: var(--text-dim); }
+
+        .sidebar-toggle {
+            display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all var(--transition);
+        }
+        .sidebar-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+        .sidebar-toggle.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+        .theme-toggle {
+            display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px;
             border: 1px solid var(--border);
             border-radius: 50%;
             background: transparent;
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 1.1rem;
-            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
-            flex-shrink: 0;
+            font-size: 0.95rem;
+            transition: all var(--transition);
             line-height: 1;
         }
-        .theme-toggle:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: var(--orange-bg);
-        }
+        .theme-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 
-        /* ============================================================
-           CONTROLS
-           ============================================================ */
-        .controls {
-            max-width: 900px;
-            margin: 16px auto 0;
-            padding: 0 16px;
-            overflow: hidden;
-        }
-
-        /* Search */
-        .search-wrap {
-            position: relative;
-            margin-bottom: 12px;
-        }
-        .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-dim);
-            pointer-events: none;
-            z-index: 2;
-        }
-        .search-input {
-            width: 100%;
-            padding: 11px 16px 11px 42px;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            color: var(--text);
-            font-size: 0.92rem;
-            outline: none;
-            transition: border-color var(--transition);
-            font-family: inherit;
-        }
-        .search-input::placeholder { color: var(--text-dim); }
-        .search-input:focus { border-color: var(--accent); }
-
-        /* Autocomplete */
+        /* Autocomplete dropdown */
         .autocomplete {
             position: absolute;
             top: calc(100% + 4px);
             left: 0; right: 0;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
+            background: var(--bg-panel);
+            border: 1px solid var(--border-strong);
             border-radius: var(--radius);
-            max-height: 280px;
+            max-height: 320px;
             overflow-y: auto;
-            z-index: 50;
+            z-index: 300;
             display: none;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            box-shadow: var(--shadow);
         }
         .autocomplete.show { display: block; }
         .autocomplete-item {
             padding: 10px 14px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--text-secondary);
             display: flex;
             align-items: center;
             gap: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border-light);
             transition: background var(--transition);
         }
         .autocomplete-item:last-child { border-bottom: none; }
-        .autocomplete-item:hover,
-        .autocomplete-item.active { background: rgba(240,136,62,0.08); color: var(--text); }
+        .autocomplete-item:hover, .autocomplete-item.active { background: var(--accent-dim); color: var(--text); }
         .autocomplete-item strong { color: var(--accent); font-weight: 600; }
-        .autocomplete-cat { font-size: 0.68rem; color: var(--text-dim); margin-left: auto; flex-shrink: 0; }
+        .autocomplete-cat { font-size: 0.66rem; color: var(--text-dim); margin-left: auto; flex-shrink: 0; }
 
-        /* Chips */
-        .chip-row {
+        /* ============================================================
+           LAYOUT: sidebar + main
+           ============================================================ */
+        .app-layout {
+            max-width: 1300px;
+            margin: 0 auto;
             display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 10px;
-            overflow: hidden;
+            min-height: calc(100vh - 53px);
+            overflow-x: hidden;
         }
-        .chip {
-            padding: 6px 14px;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            background: transparent;
-            color: var(--text-secondary);
-            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
-            white-space: nowrap;
-            user-select: none;
+
+        /* ---- SIDEBAR ---- */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border);
+            padding: 16px 14px;
+            overflow-y: auto;
+            position: sticky;
+            top: 53px;
+            height: calc(100vh - 53px);
+            transition: transform 0.25s ease, opacity 0.25s ease;
+            z-index: 100;
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+            opacity: 0;
+            position: fixed;
+            width: 260px;
+            top: 53px;
+            left: 0;
+            bottom: 0;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-section { margin-bottom: 20px; }
+        .sidebar-heading {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            font-weight: 700;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-family: inherit;
+            gap: 6px;
         }
-        .chip:hover { border-color: var(--text-dim); color: var(--text); }
-        .chip.active {
-            background: rgba(240,136,62,0.12);
-            border-color: var(--accent);
+        .sidebar-heading::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Category list in sidebar */
+        .sidebar-cats {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .sidebar-cat {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+            background: transparent;
+            font-family: inherit;
+            text-align: left;
+            width: 100%;
+        }
+        .sidebar-cat:hover {
+            background: var(--bg-card);
+            color: var(--text);
+        }
+        .sidebar-cat.active {
+            background: var(--accent-dim);
+            border-color: rgba(240,136,62,0.25);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .sidebar-cat-icon { font-size: 1.1rem; flex-shrink: 0; }
+        .sidebar-cat-count {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            background: var(--bg-card);
+            padding: 2px 7px;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        .sidebar-cat.active .sidebar-cat-count {
+            background: rgba(240,136,62,0.15);
             color: var(--accent);
         }
-        .chip-count { font-size: 0.68rem; opacity: 0.55; font-weight: 500; }
-        .chip.active .chip-count { opacity: 1; }
 
-        /* Filters row */
-        .filters-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 10px;
-            overflow: hidden;
+        /* Filter selects in sidebar */
+        .sidebar-select-label {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+            font-weight: 500;
         }
-        .filter-select {
-            padding: 8px 32px 8px 12px;
+        .sidebar-select {
+            width: 100%;
+            padding: 7px 28px 7px 10px;
             background: var(--bg-input);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             color: var(--text);
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             cursor: pointer;
             outline: none;
             appearance: none;
             -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 10px center;
             font-family: inherit;
             transition: border-color var(--transition);
+            margin-bottom: 8px;
         }
-        .filter-select:focus { border-color: var(--accent); }
-        .filter-select option { background: var(--bg-input); color: var(--text); }
+        .sidebar-select:focus { border-color: var(--accent); }
+        .sidebar-select option { background: var(--bg-panel); color: var(--text); }
 
-        /* Sort */
-        .sort-group {
-            margin-left: auto;
+        /* Sort in sidebar */
+        .sidebar-sorts {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            flex-direction: column;
+            gap: 3px;
         }
-        .sort-label { font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; }
-        .sort-btn {
+        .sidebar-sort {
             padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            color: var(--text-secondary);
+            background: transparent;
+            border: 1px solid transparent;
+            font-family: inherit;
+            text-align: left;
+            width: 100%;
+        }
+        .sidebar-sort:hover { background: var(--bg-card); color: var(--text); }
+        .sidebar-sort.active {
+            background: var(--accent-dim);
+            border-color: rgba(240,136,62,0.25);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .sidebar-reset {
+            width: 100%;
+            padding: 7px 12px;
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             background: transparent;
-            color: var(--text-secondary);
+            color: var(--text-dim);
             cursor: pointer;
-            font-size: 0.78rem;
-            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
-            white-space: nowrap;
+            font-size: 0.76rem;
+            transition: all var(--transition);
             font-family: inherit;
+            margin-top: 6px;
         }
-        .sort-btn:hover { border-color: var(--text-dim); color: var(--text); }
-        .sort-btn.active {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(240,136,62,0.08);
+        .sidebar-reset:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+
+        /* ---- MAIN CONTENT ---- */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            padding: 16px;
+            overflow-x: hidden;
         }
 
         /* Results bar */
@@ -304,68 +420,83 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 6px 0 10px;
-            font-size: 0.8rem;
+            padding: 0 4px 12px;
+            font-size: 0.78rem;
             color: var(--text-dim);
-            overflow: hidden;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-        .results-bar strong { color: var(--text); font-weight: 600; }
-        .results-hint { font-size: 0.74rem; color: var(--text-dim); }
-        .reset-btn {
-            padding: 4px 10px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: transparent;
-            color: var(--text-dim);
+        .results-bar strong { color: var(--accent); font-weight: 700; font-family: var(--font-mono); }
+        .results-filters {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            font-size: 0.72rem;
+        }
+        .results-filter-tag {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 8px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(240,136,62,0.2);
+            border-radius: 12px;
+            color: var(--accent);
+            font-weight: 500;
             cursor: pointer;
-            font-size: 0.76rem;
-            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
-            font-family: inherit;
+            transition: all var(--transition);
         }
-        .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .results-filter-tag:hover { background: rgba(240,136,62,0.2); }
+        .results-filter-tag .tag-x { font-size: 0.7rem; opacity: 0.6; }
 
         /* ============================================================
-           LIST LAYOUT
+           PRODUCT LIST — zebra, industrial
            ============================================================ */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 16px 40px;
-            overflow: hidden;
-        }
         .list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1px;
+            display: flex;
+            flex-direction: column;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             overflow: hidden;
-            background: var(--border-light);
         }
 
-        /* List row */
-        .list-row {
-            background: var(--bg-card);
-            transition: background var(--transition);
-            cursor: pointer;
-            overflow: hidden;
+        /* List header row */
+        .list-header {
+            display: grid;
+            grid-template-columns: 1fr 130px 110px 90px 24px;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-strong);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+            font-weight: 700;
         }
-        .list-row:hover { background: var(--bg-card-hover); }
-        .list-row.expanded { background: var(--bg-card-hover); }
+        .list-header-cell { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .list-header-cell--right { text-align: right; }
+
+        /* Zebra rows */
+        .list-row {
+            cursor: pointer;
+            transition: background var(--transition);
+            overflow: hidden;
+            position: relative;
+        }
+        .list-row:nth-child(even) { background: var(--bg-card); }
+        .list-row:nth-child(odd)  { background: var(--bg-card-alt); }
+        .list-row:hover { background: var(--bg-card-hover) !important; }
+        .list-row.expanded { background: var(--bg-card-hover) !important; }
 
         .list-row-main {
             display: grid;
-            grid-template-columns: 1fr 95px 110px 90px 85px 28px;
+            grid-template-columns: 1fr 130px 110px 90px 24px;
             align-items: center;
-            gap: 10px;
-            padding: 10px 16px;
+            gap: 12px;
+            padding: 12px 16px;
             user-select: none;
-            overflow: hidden;
-            min-height: 48px;
+            min-height: 46px;
         }
 
         .list-row-name {
-            font-size: 0.88rem;
+            font-size: 0.87rem;
             font-weight: 600;
             color: var(--text);
             line-height: 1.35;
@@ -373,18 +504,18 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .list-row-category {
-            font-size: 0.7rem;
-            color: var(--accent);
+        .list-row-subcat {
+            font-size: 0.68rem;
+            color: var(--blue);
             text-transform: uppercase;
-            letter-spacing: 0.04em;
-            font-weight: 700;
+            letter-spacing: 0.03em;
+            font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            text-align: center;
         }
         .list-row-price {
+            font-family: var(--font-mono);
             font-size: 0.95rem;
             font-weight: 700;
             color: var(--accent-hover);
@@ -392,30 +523,15 @@
             text-align: right;
         }
         .list-row-price--request {
-            font-size: 0.75rem;
+            font-size: 0.74rem;
             color: var(--text-dim);
             font-weight: 400;
             font-style: italic;
-        }
-        .list-row-grade {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .list-row-stock {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-family: inherit;
         }
         .list-row-status {
             font-size: 0.66rem;
-            padding: 2px 8px;
+            padding: 3px 9px;
             border-radius: 10px;
             font-weight: 600;
             letter-spacing: 0.02em;
@@ -423,145 +539,180 @@
             text-align: center;
         }
         .list-row-status--available { background: var(--green-bg); color: var(--green); }
-        .list-row-status--low { background: var(--orange-bg); color: var(--accent); }
-        .list-row-status--none { background: var(--red-bg); color: var(--red); }
+        .list-row-status--low       { background: var(--orange-bg); color: var(--accent); }
+        .list-row-status--none      { background: var(--red-bg); color: var(--red); }
 
-        .list-row-toggle {
+        .list-row-carat {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
+            width: 24px; height: 24px;
             border-radius: 50%;
             border: 1px solid var(--border);
             color: var(--text-dim);
-            font-size: 0.6rem;
-            transition: color var(--transition), background-color var(--transition), border-color var(--transition), opacity var(--transition);
+            font-size: 0.55rem;
+            transition: all var(--transition);
             background: transparent;
             cursor: pointer;
+            flex-shrink: 0;
         }
-        .list-row:hover .list-row-toggle,
-        .list-row.expanded .list-row-toggle {
+        .list-row:hover .list-row-carat,
+        .list-row.expanded .list-row-carat {
             border-color: var(--accent);
             color: var(--accent);
+            background: var(--accent-dim);
         }
-        .list-row-toggle-arrow {
+        .carat-arrow {
             display: inline-block;
-            transition: transform 0.25s ease;
+            transition: transform 0.3s ease;
         }
-        .list-row.expanded .list-row-toggle-arrow { transform: rotate(180deg); }
+        .list-row.expanded .carat-arrow { transform: rotate(180deg); }
 
-        /* Expand details */
+        /* Expand details — smooth animation */
         .list-row-details {
             max-height: 0;
             overflow: hidden;
-            background: rgba(0,0,0,0.20);
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            background: var(--detail-expand-bg);
         }
         .list-row.expanded .list-row-details {
-            max-height: none;
-            padding: 12px 16px;
+            /* max-height set by JS for smooth animation */
+            padding: 0 16px;
         }
 
-        /* Variants table */
+        .list-row-details-inner {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
+            padding: 14px 0;
+        }
+
+        /* Variants table — bordered industrial */
+        .variants-block {
+            grid-column: 1 / -1;
+        }
         .variants-heading {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--accent);
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.06em;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         .variants-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-sm);
             overflow: hidden;
+            table-layout: fixed;
         }
+        .variants-table thead { background: var(--bg-panel); }
         .variants-table th {
+            padding: 6px 8px;
             text-align: left;
-            padding: 6px 10px;
-            color: var(--text-dim);
-            font-weight: 600;
-            font-size: 0.72rem;
+            font-size: 0.66rem;
             text-transform: uppercase;
-            letter-spacing: 0.03em;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-strong);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
+        .variants-table th:nth-child(1) { width: 120px; }
+        .variants-table th:nth-child(2) { width: 100px; }
+        .variants-table th:nth-child(3) { width: 90px; }
+        .variants-table th:nth-child(4) { /* ГОСТ — auto */ }
+        .variants-table th.th-right { text-align: right; }
         .variants-table td {
-            padding: 7px 10px;
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
             vertical-align: top;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .variants-table tr:last-child td { border-bottom: none; }
-        .variants-table .vt-cut { color: var(--accent-hover); font-weight: 600; white-space: nowrap; }
-        .variants-table .vt-price { color: var(--text); font-weight: 600; white-space: nowrap; text-align: right; }
-        .variants-table .vt-stock { color: var(--text-secondary); white-space: nowrap; text-align: right; }
-        .variants-table .vt-gost { color: var(--text-dim); font-size: 0.74rem; word-break: break-word; }
+        .variants-table td.td-mono { font-family: var(--font-mono); color: var(--accent-hover); font-weight: 600; white-space: nowrap; }
+        .variants-table td.td-right { text-align: right; }
 
-        /* Meta row below variants */
-        .variants-meta {
+        .detail-chips {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 10px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(255,255,255,0.04);
-            font-size: 0.74rem;
-            color: var(--text-dim);
+            gap: 8px;
+            grid-column: 1 / -1;
+            margin-top: 6px;
         }
-        .variants-meta-item { display: flex; gap: 6px; }
-        .variants-meta-label { font-weight: 500; }
-        .variants-meta-value { color: var(--text-secondary); }
+        .detail-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            font-size: 0.74rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .detail-chip-label { color: var(--text-dim); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.03em; }
+        .detail-chip-value { font-family: var(--font-mono); color: var(--text); font-weight: 600; font-size: 0.76rem; }
 
         .list-row-link {
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            margin-top: 8px;
-            font-size: 0.78rem;
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.76rem;
             color: var(--accent);
             text-decoration: none;
             font-weight: 500;
-            transition: color var(--transition);
+            margin-top: 10px;
+            margin-bottom: 12px;
+            transition: all var(--transition);
         }
-        .list-row-link:hover { color: var(--accent-hover); }
+        .list-row-link:hover { border-color: var(--accent); background: var(--accent-dim); }
 
         /* ============================================================
            SKELETON
            ============================================================ */
         .skeleton-list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1px;
+            display: flex;
+            flex-direction: column;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            overflow: hidden;
-            background: var(--border-light);
-        }
-        .skeleton-row {
-            background: var(--bg-card);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            height: 48px;
             overflow: hidden;
         }
         @keyframes shimmer {
             0% { background-position: -400px 0; }
             100% { background-position: 400px 0; }
         }
+        .sk-row {
+            padding: 12px 16px;
+            display: grid;
+            grid-template-columns: 1fr 90px 80px;
+            gap: 14px;
+            height: 46px;
+            align-items: center;
+        }
+        .sk-row:nth-child(even) { background: var(--bg-card); }
+        .sk-row:nth-child(odd)  { background: var(--bg-card-alt); }
         .sk-line {
-            height: 11px;
-            border-radius: 5px;
-            background: linear-gradient(90deg, var(--bg-card) 0%, var(--shimmer-mid) 40%, var(--bg-card) 70%);
+            height: 10px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--border-light) 0%, var(--border) 40%, var(--border-light) 70%);
             background-size: 400px 100%;
             animation: shimmer 1.6s ease-in-out infinite;
         }
-        .sk-line--l { flex: 1; }
-        .sk-line--m { width: 100px; flex-shrink: 0; }
-        .sk-line--s { width: 70px; flex-shrink: 0; }
-        .sk-line--xs { width: 50px; flex-shrink: 0; }
 
         /* ============================================================
            EMPTY STATE
@@ -571,86 +722,104 @@
             padding: 80px 20px;
             color: var(--text-dim);
         }
-        .empty-icon { font-size: 3.5rem; margin-bottom: 14px; opacity: 0.25; }
+        .empty-icon { font-size: 3rem; margin-bottom: 14px; opacity: 0.2; }
         .empty h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 6px; font-weight: 600; }
-        .empty p { font-size: 0.85rem; margin-bottom: 14px; }
+        .empty p { font-size: 0.82rem; margin-bottom: 14px; }
 
         /* ============================================================
            FOOTER
            ============================================================ */
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: 16px;
             color: var(--text-dim);
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             border-top: 1px solid var(--border);
-            margin-top: 20px;
-            overflow: hidden;
         }
         .footer a { color: var(--accent); text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
 
         /* ============================================================
-           RESPONSIVE
+           RESPONSIVE — mobile
            ============================================================ */
-        @media (max-width: 700px) {
-            .header-inner {
-                flex-wrap: wrap;
-                padding: 10px 12px;
+        @media (max-width: 860px) {
+            .sidebar {
+                position: fixed;
+                left: 0; top: 53px; bottom: 0; z-index: 150;
+                transform: translateX(-100%);
+                box-shadow: var(--shadow);
+                transition: transform 0.25s ease;
             }
-            .header-stats { gap: 12px; font-size: 0.74rem; }
-            .controls { padding: 0 12px; margin-top: 12px; }
-            .container { padding: 0 12px 32px; }
-            .filters-row { flex-direction: column; align-items: stretch; }
-            .filter-select { width: 100%; }
-            .sort-group { margin-left: 0; justify-content: flex-start; flex-wrap: wrap; }
-            .chip { font-size: 0.75rem; padding: 5px 11px; }
-            .search-input { font-size: 0.88rem; }
-            .results-hint { display: none; }
+            .sidebar.open {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed; inset: 0; top: 53px; z-index: 140;
+                background: rgba(0,0,0,0.5);
+                backdrop-filter: blur(2px);
+            }
+            .sidebar-overlay.show { display: block; }
+            .main-content { padding: 10px; }
 
+            .header-search { max-width: none; }
+            .header-stat { display: none; }
+
+            .list-header { display: none; }
             .list-row-main {
                 display: flex;
                 flex-wrap: wrap;
                 padding: 8px 10px;
-                gap: 8px;
+                gap: 6px;
+                position: relative;
             }
-            .list-row-name {
-                flex: 1 1 100%;
-                font-size: 0.82rem;
-                white-space: normal;
-            }
-            .list-row-category {
-                flex-shrink: 0;
-                font-size: 0.66rem;
-            }
-            .list-row-price {
-                flex-shrink: 0;
-                font-size: 0.85rem;
-            }
-            .list-row-grade { flex-shrink: 0; font-size: 0.72rem; }
-            .list-row-stock { flex-shrink: 0; font-size: 0.72rem; }
-            .list-row-status {
-                flex-shrink: 0;
-                font-size: 0.62rem;
-                padding: 2px 7px;
-            }
-            .list-row-toggle {
-                flex-shrink: 0;
-                width: 24px;
-                height: 24px;
-                font-size: 0.55rem;
+            .list-row-name { flex: 1 1 100%; font-size: 0.82rem; white-space: normal; padding-right: 28px; }
+            .list-row-subcat { font-size: 0.66rem; }
+            .list-row-price { font-size: 0.88rem; }
+            .list-row-status { font-size: 0.62rem; padding: 2px 7px; }
+            .list-row-carat {
+                position: absolute;
+                right: 8px; top: 50%;
+                transform: translateY(-50%);
+                width: 22px; height: 22px;
             }
 
-            .variants-table { font-size: 0.74rem; }
-            .variants-table th,
-            .variants-table td { padding: 5px 6px; }
+            .list-row-details-inner {
+                grid-template-columns: 1fr;
+                padding: 8px 0;
+            }
+
+            /* Swipe indicator */
+            .list-row {
+                touch-action: pan-y;
+                transition: transform 0.2s ease;
+            }
+            .swipe-action {
+                position: absolute;
+                top: 0; bottom: 0;
+                width: 80px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.7rem;
+                font-weight: 700;
+                color: #fff;
+                opacity: 0;
+                transition: opacity 0.15s ease;
+                pointer-events: none;
+                z-index: 5;
+            }
+            .swipe-action--left  { left: 0; background: var(--accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+            .swipe-action--right { right: 0; background: var(--green); border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+        /* Wider screens — show sidebar pin toggle */
+        @media (min-width: 861px) {
+            .sidebar { position: sticky; }
+            .sidebar-overlay { display: none !important; }
+            .sidebar-toggle { display: flex; }
+        }
     </style>
 </head>
 <body>
@@ -658,86 +827,118 @@
 <!-- HEADER -->
 <header class="header">
     <div class="header-inner">
-        <a href="#" class="logo" onclick="location.reload()">
-            <div class="logo-icon"><img src="atompk_logo.png" alt="АтомПромКомплекс"></div>
-        </a>
-        <div class="header-stats">
+        <button class="sidebar-toggle" id="sidebar-toggle" title="Фильтры" aria-label="Показать/скрыть фильтры">☰</button>
+
+        <div class="logo" onclick="location.reload()">
+            <div class="logo-icon"><img src="atompk_logo.png" alt="AtomPK"></div>
+        </div>
+
+        <div class="header-search" id="header-search-wrap">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
+            </svg>
+            <input type="text" id="search"
+                   placeholder="Поиск..."
+                   autocomplete="off">
+            <div class="autocomplete" id="autocomplete"></div>
+        </div>
+
+        <div class="header-actions">
             <div class="header-stat">
                 <span class="stat-dot"></span>
-                <span>Номенклатур: <strong id="total-count">—</strong></span>
+                <span>Товаров <strong id="total-count">—</strong></span>
             </div>
             <div class="header-stat">
                 <span class="stat-dot stat-dot--dim"></span>
-                <span>Категорий: <strong id="cat-count">—</strong></span>
+                <span>Категорий <strong id="cat-count">—</strong></span>
             </div>
+            <button class="theme-toggle" id="theme-toggle" title="Переключить тему" aria-label="Переключить тему">🌙</button>
         </div>
-        <button class="theme-toggle" id="theme-toggle" title="Переключить тему" aria-label="Переключить тему">🌙</button>
     </div>
 </header>
 
-<!-- CONTROLS -->
-<div class="controls">
-    <div class="search-wrap">
-        <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
-        </svg>
-        <input type="text" class="search-input" id="search"
-               placeholder="Поиск по названию, категории, марке, раскрою, ГОСТ…"
-               autocomplete="off">
-        <div class="autocomplete" id="autocomplete"></div>
-    </div>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    <div class="chip-row" id="chip-row">
-        <button class="chip active" data-cat="all">
-            📋 Все
-            <span class="chip-count" id="chip-all">—</span>
-        </button>
-    </div>
-
-    <div class="filters-row">
-        <select class="filter-select" id="filter-subcategory">
-            <option value="all">Все подкатегории</option>
-        </select>
-        <select class="filter-select" id="filter-manufacturer">
-            <option value="all">Все производители</option>
-        </select>
-        <select class="filter-select" id="filter-available">
-            <option value="all">Любое наличие</option>
-            <option value="available">В наличии</option>
-            <option value="low">Мало</option>
-        </select>
-
-        <div class="sort-group">
-            <span class="sort-label">Сорт.:</span>
-            <button class="sort-btn active" data-sort="default">умолч.</button>
-            <button class="sort-btn" data-sort="price-asc">цена ↑</button>
-            <button class="sort-btn" data-sort="price-desc">цена ↓</button>
-            <button class="sort-btn" data-sort="name">назв.</button>
+<!-- MAIN LAYOUT -->
+<div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-heading">Категории</div>
+            <div class="sidebar-cats" id="sidebar-cats">
+                <button class="sidebar-cat active" data-cat="all">
+                    <span>📋</span><span>Все товары</span>
+                    <span class="sidebar-cat-count" id="sidebar-cat-all">—</span>
+                </button>
+            </div>
         </div>
-    </div>
 
-    <div class="results-bar">
-        <span>Показано: <strong id="filtered-count">0</strong> из <span id="total-count-2">—</span></span>
-        <span class="results-hint" id="filters-active" style="display:none;"></span>
-        <button class="reset-btn" id="reset-btn" onclick="resetAllFilters()" style="display:none;">✕ Сбросить</button>
-    </div>
-</div>
+        <div class="sidebar-section">
+            <div class="sidebar-heading">Фильтры</div>
+            <div class="sidebar-select-label">Подкатегория</div>
+            <select class="sidebar-select" id="filter-subcategory">
+                <option value="all">Все подкатегории</option>
+            </select>
 
-<!-- LIST -->
-<div class="container">
-    <div class="skeleton-list" id="skeleton"></div>
-    <div class="list" id="list" style="display:none;"></div>
-    <div class="empty" id="empty" style="display:none;">
-        <div class="empty-icon">🔍</div>
-        <h3>Ничего не найдено</h3>
-        <p>Попробуйте изменить запрос или фильтры</p>
-        <button class="reset-btn" onclick="resetAllFilters()" style="font-size:0.85rem;padding:7px 14px;">Сбросить все фильтры</button>
-    </div>
+            <div class="sidebar-select-label">Производитель</div>
+            <select class="sidebar-select" id="filter-manufacturer">
+                <option value="all">Все производители</option>
+            </select>
+
+            <div class="sidebar-select-label">Наличие</div>
+            <select class="sidebar-select" id="filter-available">
+                <option value="all">Любое наличие</option>
+                <option value="available">✓ В наличии</option>
+                <option value="low">⚠ Мало</option>
+            </select>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-heading">Сортировка</div>
+            <div class="sidebar-sorts" id="sidebar-sorts">
+                <button class="sidebar-sort active" data-sort="default">По умолчанию</button>
+                <button class="sidebar-sort" data-sort="price-asc">Цена ↑ (дешёвые сначала)</button>
+                <button class="sidebar-sort" data-sort="price-desc">Цена ↓ (дорогие сначала)</button>
+                <button class="sidebar-sort" data-sort="name">По названию</button>
+            </div>
+        </div>
+
+        <button class="sidebar-reset" id="reset-btn-sidebar" style="display:none;" onclick="resetAllFilters()">
+            ✕ Сбросить все фильтры
+        </button>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+        <div class="results-bar">
+            <span>Показано <strong id="filtered-count">0</strong> из <span id="total-count-2">—</span></span>
+            <div class="results-filters" id="filters-active"></div>
+        </div>
+
+        <div class="skeleton-list" id="skeleton"></div>
+        <div class="list" id="list" style="display:none;">
+            <div class="list-header">
+                <span class="list-header-cell">Наименование</span>
+                <span class="list-header-cell">Подкатегория</span>
+                <span class="list-header-cell list-header-cell--right">Цена</span>
+                <span class="list-header-cell" style="text-align:center;">Наличие</span>
+                <span></span>
+            </div>
+        </div>
+        <div class="empty" id="empty" style="display:none;">
+            <div class="empty-icon">📦</div>
+            <h3>Ничего не найдено</h3>
+            <p>Попробуйте изменить запрос или сбросить фильтры</p>
+            <button class="sidebar-reset" onclick="resetAllFilters()" style="width:auto;display:inline-block;padding:8px 16px;">
+                Сбросить все фильтры
+            </button>
+        </div>
+    </main>
 </div>
 
 <footer class="footer">
-    Данные из 1С (CommerceML) — <a href="https://atompk.ru" target="_blank" rel="noopener">atompk.ru</a> —
-    АтомПромКомплекс, Екатеринбург
+    Данные из 1С (CommerceML) · <a href="https://atompk.ru" target="_blank" rel="noopener">atompk.ru</a> ·
+    Екатеринбург
 </footer>
 
 <script>
@@ -767,6 +968,38 @@ function esc(str) {
 }
 
 // =============================================================
+// SIDEBAR TOGGLE
+// =============================================================
+(function initSidebar() {
+    const btn = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    btn.addEventListener('click', () => {
+        const isOpen = sidebar.classList.toggle('open');
+        btn.classList.toggle('active', isOpen);
+        if (overlay) overlay.classList.toggle('show', isOpen);
+    });
+
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            btn.classList.remove('active');
+            overlay.classList.remove('show');
+        });
+    }
+
+    // Close sidebar on Escape
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open');
+            btn.classList.remove('active');
+            if (overlay) overlay.classList.remove('show');
+        }
+    });
+})();
+
+// =============================================================
 // LOAD
 // =============================================================
 async function loadData() {
@@ -777,7 +1010,7 @@ async function loadData() {
         init();
     } catch (e) {
         document.getElementById('skeleton').innerHTML =
-            '<div class="empty" style="grid-column:1/-1;"><div class="empty-icon">⚠️</div><h3>Ошибка загрузки</h3><p>'+esc(e.message)+'</p></div>';
+            '<div class="empty"><div class="empty-icon">⚠️</div><h3>Ошибка загрузки</h3><p>'+esc(e.message)+'</p></div>';
     }
 }
 
@@ -786,8 +1019,8 @@ async function loadData() {
 // =============================================================
 function buildSkeleton() {
     let h = '';
-    for (let i=0; i<8; i++) {
-        h += '<div class="skeleton-row"><div class="sk-line sk-line--l"></div><div class="sk-line sk-line--m"></div><div class="sk-line sk-line--s"></div><div class="sk-line sk-line--xs"></div></div>';
+    for (let i = 0; i < 8; i++) {
+        h += '<div class="sk-row"><div class="sk-line"></div><div class="sk-line"></div><div class="sk-line"></div></div>';
     }
     document.getElementById('skeleton').innerHTML = h;
 }
@@ -796,21 +1029,23 @@ function buildSkeleton() {
 // INIT
 // =============================================================
 function init() {
-    categories = new Set(allProducts.map(p=>p.category).filter(Boolean));
-    subcategories = new Set(allProducts.map(p=>p.subcategory).filter(Boolean));
-    manufacturers = new Set(allProducts.map(p=>p.manufacturer).filter(Boolean));
+    categories = new Set(allProducts.map(p => p.category).filter(Boolean));
+    subcategories = new Set(allProducts.map(p => p.subcategory).filter(Boolean));
+    manufacturers = new Set(allProducts.map(p => p.manufacturer).filter(Boolean));
 
-    const chipRow = document.getElementById('chip-row');
+    // Populate sidebar categories
+    const sidebarCats = document.getElementById('sidebar-cats');
     [...categories].sort().forEach(cat => {
-        const n = allProducts.filter(p=>p.category===cat).length;
-        const b = document.createElement('button');
-        b.className = 'chip';
-        b.dataset.cat = cat;
-        b.innerHTML = catIcon(cat)+' '+esc(cat)+' <span class="chip-count">'+n+'</span>';
-        b.addEventListener('click', ()=>selectCategory(cat));
-        chipRow.appendChild(b);
+        const n = allProducts.filter(p => p.category === cat).length;
+        const btn = document.createElement('button');
+        btn.className = 'sidebar-cat';
+        btn.dataset.cat = cat;
+        btn.innerHTML = '<span class="sidebar-cat-icon">' + catIcon(cat) + '</span><span>' + esc(cat) +
+            '</span><span class="sidebar-cat-count">' + n + '</span>';
+        btn.addEventListener('click', () => selectCategory(cat));
+        sidebarCats.appendChild(btn);
     });
-    document.getElementById('chip-all').textContent = 'Все '+allProducts.length;
+    document.getElementById('sidebar-cat-all').textContent = allProducts.length;
 
     popSelect('filter-subcategory', [...subcategories].sort());
     popSelect('filter-manufacturer', [...manufacturers].sort());
@@ -824,6 +1059,7 @@ function init() {
 
     render();
 
+    // Event listeners
     document.getElementById('search').addEventListener('input', onSearch);
     document.getElementById('search').addEventListener('focus', onSearchFocus);
     document.getElementById('search').addEventListener('keydown', onSearchKey);
@@ -831,70 +1067,128 @@ function init() {
     document.getElementById('filter-manufacturer').addEventListener('change', render);
     document.getElementById('filter-available').addEventListener('change', render);
 
-    document.querySelectorAll('.sort-btn').forEach(b=>{
-        b.addEventListener('click', ()=>{
-            document.querySelectorAll('.sort-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('#sidebar-sorts .sidebar-sort').forEach(b => {
+        b.addEventListener('click', () => {
+            document.querySelectorAll('#sidebar-sorts .sidebar-sort').forEach(x => x.classList.remove('active'));
             b.classList.add('active');
             activeSort = b.dataset.sort;
             render();
         });
     });
 
-    document.addEventListener('click', e=>{
-        if (!e.target.closest('.search-wrap')) document.getElementById('autocomplete').classList.remove('show');
+    document.addEventListener('click', e => {
+        if (!e.target.closest('#header-search-wrap')) document.getElementById('autocomplete').classList.remove('show');
     });
+
+    // Init swipe on mobile
+    initSwipe();
 }
 
 function popSelect(id, opts) {
     const s = document.getElementById(id);
-    opts.forEach(o=>{ const e=document.createElement('option'); e.value=o; e.textContent=o; s.appendChild(e); });
+    opts.forEach(o => {
+        const e = document.createElement('option');
+        e.value = o;
+        e.textContent = o;
+        s.appendChild(e);
+    });
+}
+
+// =============================================================
+// SWIPE (mobile)
+// =============================================================
+function initSwipe() {
+    if (!('ontouchstart' in window)) return;
+    const list = document.getElementById('list');
+
+    list.addEventListener('touchstart', function(e) {
+        const row = e.target.closest('.list-row');
+        if (!row) return;
+        const touch = e.touches[0];
+        row._swipeX = touch.clientX;
+        row._swipeStart = touch.clientX;
+        row._swipeTime = Date.now();
+        row.style.transition = 'none';
+    }, { passive: true });
+
+    list.addEventListener('touchmove', function(e) {
+        const row = e.target.closest('.list-row');
+        if (!row || row._swipeX === undefined) return;
+        const dx = e.touches[0].clientX - row._swipeX;
+        const absDx = Math.abs(dx);
+        // Only horizontal swipes
+        if (absDx > 10) {
+            e.preventDefault();
+            const clamped = Math.max(-120, Math.min(120, e.touches[0].clientX - row._swipeStart));
+            row.style.transform = 'translateX(' + clamped + 'px)';
+
+            // Show action hints
+            const actionLeft = row.querySelector('.swipe-action--left');
+            const actionRight = row.querySelector('.swipe-action--right');
+            if (clamped > 50 && actionRight) actionRight.style.opacity = '1';
+            else if (actionRight) actionRight.style.opacity = '0';
+            if (clamped < -50 && actionLeft) actionLeft.style.opacity = '1';
+            else if (actionLeft) actionLeft.style.opacity = '0';
+        }
+    }, { passive: false });
+
+    list.addEventListener('touchend', function(e) {
+        const row = e.target.closest('.list-row');
+        if (!row || row._swipeX === undefined) return;
+        row.style.transition = 'transform 0.25s ease';
+        const dx = row._swipeStart !== undefined ? (row._swipeStart - row._swipeStart) : 0;
+        const absDx = Math.abs(row.style.transform ? parseInt(row.style.transform.replace(/[^-\d]/g, '')) || 0 : 0);
+
+        if (absDx > 60) {
+            // Trigger action: expand
+            row.classList.toggle('expanded');
+            afterToggle(row);
+        }
+        row.style.transform = 'translateX(0)';
+        const al = row.querySelector('.swipe-action--left');
+        const ar = row.querySelector('.swipe-action--right');
+        if (al) al.style.opacity = '0';
+        if (ar) ar.style.opacity = '0';
+        row._swipeX = undefined;
+        row._swipeStart = undefined;
+    });
 }
 
 // =============================================================
 // FILTERING & SORTING
 // =============================================================
 function parsePrice(p) {
+    if (!p) return 0;
     if (p.price_raw) return p.price_raw;
-    return 0;
+    const s = (typeof p === 'string') ? p : (p.price || '');
+    const n = parseInt(String(s).replace(/[^\d]/g, ''), 10);
+    return isNaN(n) ? 0 : n;
 }
 
 function getFiltered() {
-    const q = (document.getElementById('search').value||'').toLowerCase().trim();
+    const q = (document.getElementById('search').value || '').toLowerCase().trim();
     const sc = document.getElementById('filter-subcategory').value;
     const mf = document.getElementById('filter-manufacturer').value;
     const av = document.getElementById('filter-available').value;
 
     let f = allProducts;
-    if (activeCategory!=='all') f = f.filter(p=>p.category===activeCategory);
-    if (sc!=='all') f = f.filter(p=>p.subcategory===sc);
-    if (mf!=='all') f = f.filter(p=>p.manufacturer===mf);
-    if (av==='available') {
+    if (activeCategory !== 'all') f = f.filter(p => p.category === activeCategory);
+    if (sc !== 'all') f = f.filter(p => p.subcategory === sc);
+    if (mf !== 'all') f = f.filter(p => p.manufacturer === mf);
+    if (av === 'available') {
         f = f.filter(p => p.stock_raw >= 1);
-    } else if (av==='low') {
+    } else if (av === 'low') {
         f = f.filter(p => p.stock_raw > 0 && p.stock_raw < 1);
     }
     if (q) {
-        f = f.filter(p => {
-            // Search in name, category, subcategory, grade, manufacturer
-            const mainFields = [p.name, p.category, p.subcategory, p.grade, p.manufacturer].filter(Boolean).join(' ').toLowerCase();
-            if (mainFields.includes(q)) return true;
-            // Also search in variant details: cut_length, gost
-            if (p.variants && p.variants.length) {
-                return p.variants.some(v =>
-                    (v.cut_length||'').toLowerCase().includes(q) ||
-                    (v.gost||'').toLowerCase().includes(q)
-                );
-            }
-            return false;
-        });
+        f = f.filter(p => [p.name, p.category, p.subcategory, p.manufacturer].filter(Boolean).join(' ').toLowerCase().includes(q));
     }
 
-    // Sort
     const arr = [...f];
-    switch(activeSort) {
-        case 'price-asc': arr.sort((a,b)=>parsePrice(a)-parsePrice(b)); break;
-        case 'price-desc': arr.sort((a,b)=>parsePrice(b)-parsePrice(a)); break;
-        case 'name': arr.sort((a,b)=>a.name.localeCompare(b.name,'ru')); break;
+    switch (activeSort) {
+        case 'price-asc': arr.sort((a, b) => parsePrice(a.price) - parsePrice(b.price)); break;
+        case 'price-desc': arr.sort((a, b) => parsePrice(b.price) - parsePrice(a.price)); break;
+        case 'name': arr.sort((a, b) => a.name.localeCompare(b.name, 'ru')); break;
     }
     return arr;
 }
@@ -904,7 +1198,7 @@ function getFiltered() {
 // =============================================================
 function selectCategory(cat) {
     activeCategory = cat;
-    document.querySelectorAll('#chip-row .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat===cat));
+    document.querySelectorAll('#sidebar-cats .sidebar-cat').forEach(c => c.classList.toggle('active', c.dataset.cat === cat));
     render();
 }
 
@@ -912,53 +1206,72 @@ function selectCategory(cat) {
 // AUTOCOMPLETE
 // =============================================================
 function onSearchFocus() {
-    const q = (document.getElementById('search').value||'').toLowerCase().trim();
-    if (q.length>=2) showAC(q);
+    const q = (document.getElementById('search').value || '').toLowerCase().trim();
+    if (q.length >= 2) showAC(q);
 }
 function onSearch() {
     clearTimeout(debounceTimer);
-    const q = (document.getElementById('search').value||'').toLowerCase().trim();
-    if (q.length>=2) showAC(q);
+    const q = (document.getElementById('search').value || '').toLowerCase().trim();
+    if (q.length >= 2) showAC(q);
     else document.getElementById('autocomplete').classList.remove('show');
-    debounceTimer = setTimeout(()=>render(),150);
+    debounceTimer = setTimeout(() => render(), 150);
 }
 function showAC(q) {
     const dd = document.getElementById('autocomplete');
-    const f = allProducts.filter(p=>{
-        const mainFields = [p.name, p.category, p.subcategory, p.grade, p.manufacturer].filter(Boolean).join(' ').toLowerCase();
-        return mainFields.includes(q);
-    });
+    const f = allProducts.filter(p => [p.name, p.category, p.subcategory, p.manufacturer].filter(Boolean).join(' ').toLowerCase().includes(q));
     const seen = new Set();
     const u = [];
-    for (const p of f) { if (!seen.has(p.name)&&u.length<8) { seen.add(p.name); u.push(p); } }
+    for (const p of f) {
+        if (!seen.has(p.name) && u.length < 8) { seen.add(p.name); u.push(p); }
+    }
     if (!u.length) { dd.classList.remove('show'); return; }
-    dd.innerHTML = u.map(p=>{
+    dd.innerHTML = u.map(p => {
         const idx = p.name.toLowerCase().indexOf(q);
-        const name = idx>=0 ? esc(p.name.slice(0,idx))+'<strong>'+esc(p.name.slice(idx,idx+q.length))+'</strong>'+esc(p.name.slice(idx+q.length)) : esc(p.name);
-        return '<div class="autocomplete-item" data-name="'+esc(p.name)+'"><span>'+catIcon(p.category)+'</span><span>'+name+'</span><span class="autocomplete-cat">'+esc(p.category)+'</span></div>';
+        const name = idx >= 0 ?
+            esc(p.name.slice(0, idx)) + '<strong>' + esc(p.name.slice(idx, idx + q.length)) + '</strong>' + esc(p.name.slice(idx + q.length)) :
+            esc(p.name);
+        return '<div class="autocomplete-item" data-name="' + esc(p.name) + '"><span>' + catIcon(p.category) +
+            '</span><span>' + name + '</span><span class="autocomplete-cat">' + esc(p.category) + '</span></div>';
     }).join('');
     dd.classList.add('show');
-    dd.querySelectorAll('.autocomplete-item').forEach(it=>{
-        it.addEventListener('click',()=>{ document.getElementById('search').value=it.dataset.name; dd.classList.remove('show'); render(); });
+    dd.querySelectorAll('.autocomplete-item').forEach(it => {
+        it.addEventListener('click', () => {
+            document.getElementById('search').value = it.dataset.name;
+            dd.classList.remove('show');
+            render();
+        });
     });
 }
 function onSearchKey(e) {
     const dd = document.getElementById('autocomplete');
     if (!dd.classList.contains('show')) return;
     const items = dd.querySelectorAll('.autocomplete-item');
-    let ai = -1; items.forEach((it,i)=>{if(it.classList.contains('active'))ai=i;});
-    if (e.key==='ArrowDown') { e.preventDefault(); ai=Math.min(ai+1,items.length-1); items.forEach((it,i)=>it.classList.toggle('active',i===ai)); }
-    else if (e.key==='ArrowUp') { e.preventDefault(); ai=Math.max(ai-1,0); items.forEach((it,i)=>it.classList.toggle('active',i===ai)); }
-    else if (e.key==='Enter') { e.preventDefault(); if (ai>=0&&items[ai]){document.getElementById('search').value=items[ai].dataset.name;dd.classList.remove('show');render();} }
-    else if (e.key==='Escape') dd.classList.remove('show');
+    let ai = -1;
+    items.forEach((it, i) => { if (it.classList.contains('active')) ai = i; });
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        ai = Math.min(ai + 1, items.length - 1);
+        items.forEach((it, i) => it.classList.toggle('active', i === ai));
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        ai = Math.max(ai - 1, 0);
+        items.forEach((it, i) => it.classList.toggle('active', i === ai));
+    } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (ai >= 0 && items[ai]) {
+            document.getElementById('search').value = items[ai].dataset.name;
+            dd.classList.remove('show');
+            render();
+        }
+    } else if (e.key === 'Escape') dd.classList.remove('show');
 }
 
 // =============================================================
 // STATUS
 // =============================================================
 function statusClass(s) {
-    const st = (s||'').toLowerCase();
-    if (st.includes('нет')||st.includes('отсутствует')) return 'none';
+    const st = (s || '').toLowerCase();
+    if (st.includes('нет') || st.includes('отсутствует')) return 'none';
     if (st.includes('мало')) return 'low';
     return 'available';
 }
@@ -974,110 +1287,151 @@ function render() {
     document.getElementById('filtered-count').textContent = filtered.length;
     document.getElementById('total-count-2').textContent = allProducts.length;
 
+    // Active filter tags
     const af = [];
-    if (activeCategory!=='all') af.push(activeCategory);
-    if (document.getElementById('filter-subcategory').value!=='all') af.push(document.getElementById('filter-subcategory').value);
-    if (document.getElementById('filter-manufacturer').value!=='all') af.push(document.getElementById('filter-manufacturer').value);
-    if (document.getElementById('filter-available').value!=='all') af.push(document.getElementById('filter-available').selectedOptions[0].textContent);
-    const hint = document.getElementById('filters-active');
-    const reset = document.getElementById('reset-btn');
-    if (af.length) { hint.style.display=''; hint.textContent='Фильтры: '+af.join(' · '); reset.style.display=''; }
-    else { hint.style.display='none'; reset.style.display='none'; }
+    if (activeCategory !== 'all') af.push({ label: activeCategory, action: () => selectCategory('all') });
+    if (document.getElementById('filter-subcategory').value !== 'all')
+        af.push({ label: document.getElementById('filter-subcategory').value, action: () => { document.getElementById('filter-subcategory').value = 'all'; render(); } });
+    if (document.getElementById('filter-manufacturer').value !== 'all')
+        af.push({ label: document.getElementById('filter-manufacturer').value, action: () => { document.getElementById('filter-manufacturer').value = 'all'; render(); } });
+    if (document.getElementById('filter-available').value !== 'all')
+        af.push({ label: document.getElementById('filter-available').selectedOptions[0].textContent, action: () => { document.getElementById('filter-available').value = 'all'; render(); } });
 
-    if (!filtered.length) { listEl.style.display='none'; empty.style.display=''; return; }
-    empty.style.display='none';
-    listEl.style.display='';
-    listEl.innerHTML = filtered.map((p,i)=>buildRow(p,i)).join('');
+    const filtEl = document.getElementById('filters-active');
+    const resetBtn = document.getElementById('reset-btn-sidebar');
+    if (af.length) {
+        filtEl.innerHTML = af.map(f =>
+            '<span class="results-filter-tag" onclick="arguments[0].stopPropagation();">' + esc(f.label) +
+            '<span class="tag-x">✕</span></span>'
+        ).join('');
+        // Attach click handlers
+        filtEl.querySelectorAll('.results-filter-tag').forEach((tag, i) => {
+            tag.addEventListener('click', e => { e.stopPropagation(); af[i].action(); });
+        });
+        resetBtn.style.display = '';
+    } else {
+        filtEl.innerHTML = '';
+        resetBtn.style.display = 'none';
+    }
 
-    listEl.querySelectorAll('.list-row').forEach(row=>{
-        row.addEventListener('click', e=>{ if (!e.target.closest('a')) row.classList.toggle('expanded'); });
+    if (!filtered.length) {
+        listEl.style.display = 'none';
+        empty.style.display = '';
+        return;
+    }
+    empty.style.display = 'none';
+    listEl.style.display = '';
+
+    // Build rows, keep header at top
+    const headerHTML = listEl.querySelector('.list-header') ? listEl.querySelector('.list-header').outerHTML : '';
+    listEl.innerHTML = headerHTML + filtered.map((p, i) => buildRow(p, i)).join('');
+
+    listEl.querySelectorAll('.list-row').forEach(row => {
+        row.addEventListener('click', e => {
+            if (e.target.closest('a')) return;
+            if (e.target.closest('.list-row-carat')) {
+                // Explicit carat click — toggle
+                row.classList.toggle('expanded');
+                afterToggle(row);
+                return;
+            }
+            row.classList.toggle('expanded');
+            afterToggle(row);
+        });
     });
+}
+
+function afterToggle(row) {
+    const details = row.querySelector('.list-row-details');
+    if (!details) return;
+    if (row.classList.contains('expanded')) {
+        details.style.maxHeight = details.scrollHeight + 40 + 'px';
+    } else {
+        details.style.maxHeight = '0';
+    }
 }
 
 function buildRow(p, idx) {
     const sc = statusClass(p.status);
     const sl = p.status || 'В наличии';
     const pn = parsePrice(p);
-    const pd = pn>0 ? '<span class="list-row-price">'+esc(p.price)+'</span>' : '<span class="list-row-price list-row-price--request">по запросу</span>';
-    const gradeStr = p.grade ? '<span class="list-row-grade">'+esc(p.grade)+'</span>' : '<span class="list-row-grade" style="color:var(--text-dim)">—</span>';
-    const stockStr = p.stock_formatted || '—';
-    const vcount = p.variant_count || (p.variants ? p.variants.length : 0);
+    const pd = pn > 0 ?
+        '<span class="list-row-price">' + esc(p.price) + '</span>' :
+        '<span class="list-row-price list-row-price--request">по запросу</span>';
 
     // Variants table
-    let variantsBlock = '';
-    if (p.variants && p.variants.length) {
+    const variants = p.variants || [];
+    let variantsHTML = '';
+    if (variants.length) {
         let rows = '';
-        p.variants.forEach(v => {
-            const cutStr = v.cut_length || '—';
-            const priceStr = v.price_formatted || (v.price ? v.price + ' ₽' : 'по запросу');
-            const stockStrV = v.stock_formatted || '—';
-            const gostStr = v.gost || '—';
-            rows += '<tr>'+
-                '<td class="vt-cut">'+esc(cutStr)+'</td>'+
-                '<td class="vt-price">'+esc(priceStr)+'</td>'+
-                '<td class="vt-stock">'+esc(stockStrV)+'</td>'+
-                '<td class="vt-gost">'+esc(gostStr)+'</td>'+
-            '</tr>';
+        variants.forEach(v => {
+            const vPrice = v.price || '—';
+            const vStock = (v.stock !== undefined && v.stock !== null) ? String(v.stock) + ' т' : '—';
+            const vCut = v.cut_length ? String(v.cut_length) + ' м' : '—';
+            const vGost = v.gost || '—';
+            rows += '<tr>' +
+                '<td>' + esc(vCut) + '</td>' +
+                '<td class="td-mono td-right">' + esc(vPrice) + '</td>' +
+                '<td class="td-mono td-right">' + esc(vStock) + '</td>' +
+                '<td>' + esc(vGost) + '</td>' +
+                '</tr>';
         });
-        const heading = vcount > 1
-            ? '📐 Варианты раскроя (' + vcount + ')'
-            : '📐 Характеристика';
-        variantsBlock = '<div class="variants-heading">'+heading+'</div>'+
-            '<table class="variants-table">'+
-                '<thead><tr>'+
-                    '<th>Раскрой (м)</th>'+
-                    '<th style="text-align:right;">Цена</th>'+
-                    '<th style="text-align:right;">Остаток</th>'+
-                    '<th>ГОСТ</th>'+
-                '</tr></thead>'+
-                '<tbody>'+rows+'</tbody>'+
-            '</table>';
-    } else {
-        variantsBlock = '<div style="color:var(--text-dim);font-size:0.78rem;">Характеристики не указаны</div>';
+        variantsHTML = '<div class="variants-block">' +
+            '<div class="variants-heading">📋 Варианты раскроя</div>' +
+            '<table class="variants-table">' +
+            '<thead><tr><th>Раскрой</th><th class="th-right">Цена</th><th class="th-right">Остаток</th><th>ГОСТ</th></tr></thead>' +
+            '<tbody>' + rows + '</tbody>' +
+            '</table></div>';
     }
 
-    // Meta line below variants
-    let metaHtml = '';
-    const metaItems = [];
-    if (p.manufacturer) metaItems.push('<span class="variants-meta-label">Изготовитель:</span><span class="variants-meta-value">'+esc(p.manufacturer)+'</span>');
-    if (p.thickness) metaItems.push('<span class="variants-meta-label">Толщина:</span><span class="variants-meta-value">'+esc(p.thickness)+' мм</span>');
-    if (p.unit) metaItems.push('<span class="variants-meta-label">Ед. изм.:</span><span class="variants-meta-value">'+esc(p.unit)+'</span>');
-    if (metaItems.length) {
-        metaHtml = '<div class="variants-meta">'+metaItems.map(m=>'<div class="variants-meta-item">'+m+'</div>').join('')+'</div>';
+    // Detail chips for extra info — manufacturer, thickness, unit
+    let extraDetails = '';
+    let chips = [];
+    if (p.manufacturer) chips.push('<span class="detail-chip"><span class="detail-chip-label">Изготовитель</span><span class="detail-chip-value">' + esc(p.manufacturer) + '</span></span>');
+    if (p.thickness) chips.push('<span class="detail-chip"><span class="detail-chip-label">Толщина</span><span class="detail-chip-value">' + esc(p.thickness) + ' мм</span></span>');
+    if (p.unit) chips.push('<span class="detail-chip"><span class="detail-chip-label">Ед. изм.</span><span class="detail-chip-value">' + esc(p.unit) + '</span></span>');
+    if (chips.length) extraDetails = '<div class="detail-chips">' + chips.join('') + '</div>';
+
+    if (!variants.length && !extraDetails) {
+        variantsHTML = '<div class="variants-block"><span style="color:var(--text-dim);font-size:0.76rem;">Характеристики не указаны</span></div>';
     }
 
-    const linkHtml = p.link ? '<a class="list-row-link" href="'+esc(p.link)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ atompk.ru</a>' : '';
+    const linkHtml = p.link ?
+        '<a class="list-row-link" href="' + esc(p.link) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ Открыть на atompk.ru</a>' : '';
 
-    return ''+
-    '<div class="list-row">'+
-        '<div class="list-row-main">'+
-            '<div class="list-row-name">'+esc(p.name)+'</div>'+
-            '<div class="list-row-category">'+(p.subcategory?esc(p.subcategory):esc(p.category||''))+'</div>'+
-            pd+
-            gradeStr+
-            '<span class="list-row-stock">'+esc(stockStr)+'</span>'+
-            '<div class="list-row-toggle"><span class="list-row-toggle-arrow">▼</span></div>'+
-        '</div>'+
-        '<div class="list-row-details">'+
-            variantsBlock+
-            metaHtml+
-            linkHtml+
-        '</div>'+
-    '</div>';
+    // Swipe action hints (mobile)
+    const swipeHTML = '<div class="swipe-action swipe-action--left">Детали</div><div class="swipe-action swipe-action--right">Открыть</div>';
+
+    return '<div class="list-row">' + swipeHTML +
+        '<div class="list-row-main">' +
+        '<div class="list-row-name" title="' + esc(p.name) + '">' + esc(p.name) + '</div>' +
+        '<div class="list-row-subcat">' + (p.subcategory ? esc(p.subcategory) : esc(p.category || '')) + '</div>' +
+        pd +
+        '<span class="list-row-status list-row-status--' + sc + '">' + esc(sl) + '</span>' +
+        '<div class="list-row-carat"><span class="carat-arrow">▼</span></div>' +
+        '</div>' +
+        '<div class="list-row-details">' +
+        '<div class="list-row-details-inner">' +
+        variantsHTML +
+        extraDetails +
+        '</div>' +
+        linkHtml +
+        '</div>' +
+        '</div>';
 }
 
 // =============================================================
 // RESET
 // =============================================================
 function resetAllFilters() {
-    document.getElementById('search').value='';
-    document.getElementById('filter-subcategory').value='all';
-    document.getElementById('filter-manufacturer').value='all';
-    document.getElementById('filter-available').value='all';
+    document.getElementById('search').value = '';
+    document.getElementById('filter-subcategory').value = 'all';
+    document.getElementById('filter-manufacturer').value = 'all';
+    document.getElementById('filter-available').value = 'all';
     document.getElementById('autocomplete').classList.remove('show');
-    activeSort='default';
-    document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelector('.sort-btn[data-sort="default"]').classList.add('active');
+    activeSort = 'default';
+    document.querySelectorAll('#sidebar-sorts .sidebar-sort').forEach(b => b.classList.remove('active'));
+    document.querySelector('#sidebar-sorts .sidebar-sort[data-sort="default"]').classList.add('active');
     selectCategory('all');
     render();
 }
@@ -1089,21 +1443,13 @@ function resetAllFilters() {
     const toggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
 
-    function setThemeIcon(theme) {
-        toggle.textContent = theme === 'light' ? '☀️' : '🌙';
-    }
+    function setThemeIcon(theme) { toggle.textContent = theme === 'light' ? '☀️' : '🌙'; }
 
     const saved = localStorage.getItem('atompk-theme');
-    if (saved) {
-        html.setAttribute('data-theme', saved);
-        setThemeIcon(saved);
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        html.setAttribute('data-theme', 'light');
-        setThemeIcon('light');
-    } else {
-        html.setAttribute('data-theme', 'dark');
-        setThemeIcon('dark');
-    }
+    if (saved) { html.setAttribute('data-theme', saved); setThemeIcon(saved); }
+    else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        html.setAttribute('data-theme', 'light'); setThemeIcon('light');
+    } else { html.setAttribute('data-theme', 'dark'); setThemeIcon('dark'); }
 
     toggle.addEventListener('click', () => {
         const current = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';

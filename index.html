@@ -471,7 +471,7 @@
         /* List header row */
         .list-header {
             display: grid;
-            grid-template-columns: 1fr 130px 110px 90px 24px;
+            grid-template-columns: 1fr 130px 110px 90px 32px 24px;
             gap: 12px;
             padding: 12px 16px;
             background: var(--bg-panel);
@@ -499,7 +499,7 @@
 
         .list-row-main {
             display: grid;
-            grid-template-columns: 1fr 130px 110px 90px 24px;
+            grid-template-columns: 1fr 130px 110px 90px 32px 24px;
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
@@ -640,8 +640,6 @@
         .variants-table th:nth-child(1) { width: 120px; }
         .variants-table th:nth-child(2) { width: 100px; }
         .variants-table th:nth-child(3) { width: 90px; }
-        .variants-table th:nth-child(4) { max-width: 200px; }
-        .variants-table td:nth-child(4) { max-width: 200px; }
         .variants-table th.th-right { text-align: right; }
         .variants-table td {
             padding: 6px 8px;
@@ -694,6 +692,191 @@
             transition: all var(--transition);
         }
         .list-row-link:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+        .list-row-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            line-height: 1;
+            font-family: inherit;
+            padding: 0;
+        }
+        .list-row-info:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        /* ============================================================
+           MODAL
+           ============================================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            max-width: 560px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+            position: relative;
+            animation: modalIn 0.2s ease;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--bg-panel);
+            z-index: 2;
+            border-radius: 12px 12px 0 0;
+        }
+        .modal-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.3;
+            padding-right: 12px;
+        }
+        .modal-close {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            line-height: 1;
+            padding: 0;
+        }
+        .modal-close:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: var(--red-bg);
+        }
+        .modal-body {
+            padding: 16px 20px 20px;
+        }
+        .modal-section {
+            margin-bottom: 18px;
+        }
+        .modal-section:last-child { margin-bottom: 0; }
+        .modal-section-title {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .modal-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        .modal-props {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+        .modal-prop {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 6px 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+        }
+        .modal-prop-label {
+            font-size: 0.66rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-dim);
+        }
+        .modal-prop-value {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--text);
+            font-weight: 600;
+            word-break: break-word;
+        }
+        .modal-variants-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.76rem;
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        .modal-variants-table thead { background: var(--bg-card); }
+        .modal-variants-table th {
+            padding: 5px 8px;
+            text-align: left;
+            font-size: 0.64rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-strong);
+            white-space: nowrap;
+        }
+        .modal-variants-table td {
+            padding: 5px 8px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .modal-variants-table tr:last-child td { border-bottom: none; }
+        .modal-variants-table td.td-mono { font-family: var(--font-mono); color: var(--accent-hover); font-weight: 600; }
+        .modal-variants-table td.td-right { text-align: right; }
+
+        @media (max-width: 560px) {
+            .modal-card { max-width: 100%; border-radius: 10px; max-height: 90vh; }
+            .modal-props { grid-template-columns: 1fr; }
+            .modal-body { padding: 12px 14px 16px; }
+            .modal-header { padding: 12px 14px 10px; }
+        }
 
         /* ============================================================
            SKELETON
@@ -946,6 +1129,7 @@
                 <span class="list-header-cell list-header-cell--right">Цена</span>
                 <span class="list-header-cell" style="text-align:center;">Наличие</span>
                 <span></span>
+                <span></span>
             </div>
         </div>
         <div class="empty" id="empty" style="display:none;">
@@ -963,6 +1147,11 @@
     Данные из 1С (CommerceML) · <a href="https://atompk.ru" target="_blank" rel="noopener">atompk.ru</a> ·
     Екатеринбург
 </footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal-card" id="modal-card"></div>
+</div>
 
 <script>
 // =============================================================
@@ -1510,7 +1699,7 @@ function render() {
 
     // Build rows, keep header at top
     const headerHTML = listEl.querySelector('.list-header') ? listEl.querySelector('.list-header').outerHTML : '';
-    listEl.innerHTML = headerHTML + filtered.map((p, i) => buildRow(p, i)).join('');
+    listEl.innerHTML = headerHTML + filtered.map((p, i) => buildRow(p, i, allProducts.indexOf(p))).join('');
 
     listEl.querySelectorAll('.list-row').forEach(row => {
         row.addEventListener('click', e => {
@@ -1537,7 +1726,7 @@ function afterToggle(row) {
     }
 }
 
-function buildRow(p, idx) {
+function buildRow(p, idx, globalIdx) {
     const sc = statusClass(p.status);
     const sl = p.status || 'В наличии';
     const pn = parsePrice(p);
@@ -1554,18 +1743,16 @@ function buildRow(p, idx) {
             const vPrice = v.price || '—';
             const vStock = (v.stock !== undefined && v.stock !== null) ? String(v.stock) + ' т' : '—';
             const vCut = v.cut_length ? String(v.cut_length) + ' м' : '—';
-            const vGost = v.gost || '—';
             rows += '<tr>' +
                 '<td>' + esc(vCut) + '</td>' +
                 '<td class="td-mono td-right">' + esc(vPrice) + '</td>' +
                 '<td class="td-mono td-right">' + esc(vStock) + '</td>' +
-                '<td>' + esc(vGost) + '</td>' +
                 '</tr>';
         });
         variantsHTML = '<div class="variants-block">' +
             '<div class="variants-heading">📋 Варианты раскроя</div>' +
             '<table class="variants-table">' +
-            '<thead><tr><th>Раскрой</th><th class="th-right">Цена</th><th class="th-right">Остаток</th><th>ГОСТ</th></tr></thead>' +
+            '<thead><tr><th>Раскрой</th><th class="th-right">Цена</th><th class="th-right">Остаток</th></tr></thead>' +
             '<tbody>' + rows + '</tbody>' +
             '</table></div>';
     }
@@ -1594,6 +1781,7 @@ function buildRow(p, idx) {
         '<div class="list-row-subcat">' + (p.subcategory ? esc(p.subcategory) : esc(p.category || '')) + '</div>' +
         pd +
         '<span class="list-row-status list-row-status--' + sc + '">' + esc(sl) + '</span>' +
+        '<button class="list-row-info" onclick="event.stopPropagation();openModal(' + globalIdx + ')" title="Подробнее">ℹ</button>' +
         '<div class="list-row-carat"><span class="carat-arrow">▼</span></div>' +
         '</div>' +
         '<div class="list-row-details">' +
@@ -1632,6 +1820,85 @@ function resetAllFilters() {
     updateCategoryCounts();
     render();
 }
+
+// =============================================================
+// MODAL
+// =============================================================
+function openModal(productIdx) {
+    const p = allProducts[productIdx];
+    if (!p) return;
+
+    const variants = p.variants || [];
+    let variantsRows = '';
+    if (variants.length) {
+        variants.forEach(v => {
+            const vPrice = v.price || '—';
+            const vStock = (v.stock !== undefined && v.stock !== null) ? String(v.stock) + ' т' : '—';
+            const vCut = v.cut_length ? String(v.cut_length) + ' м' : '—';
+            variantsRows += '<tr>' +
+                '<td>' + esc(vCut) + '</td>' +
+                '<td class="td-mono td-right">' + esc(vPrice) + '</td>' +
+                '<td class="td-mono td-right">' + esc(vStock) + '</td>' +
+                '</tr>';
+        });
+    }
+
+    // Gather GOSTs from all variants
+    const gosts = [...new Set(variants.map(v => v.gost).filter(Boolean))];
+    const gostValue = gosts.length ? gosts.join(', ') : '—';
+
+    let variantsHTML = '';
+    if (variants.length) {
+        variantsHTML = '<div class="modal-section">' +
+            '<div class="modal-section-title">📋 Варианты раскроя</div>' +
+            '<table class="modal-variants-table">' +
+            '<thead><tr><th>Раскрой</th><th style="text-align:right;">Цена</th><th style="text-align:right;">Остаток</th></tr></thead>' +
+            '<tbody>' + variantsRows + '</tbody>' +
+            '</table></div>';
+    }
+
+    const card = document.getElementById('modal-card');
+    card.innerHTML =
+        '<div class="modal-header">' +
+        '<div class="modal-title">' + esc(p.name) + '</div>' +
+        '<button class="modal-close" onclick="closeModal()">✕</button>' +
+        '</div>' +
+        '<div class="modal-body">' +
+        '<div class="modal-section">' +
+        '<div class="modal-section-title">📋 Характеристики</div>' +
+        '<div class="modal-props">' +
+        '<div class="modal-prop"><span class="modal-prop-label">ГОСТ</span><span class="modal-prop-value">' + esc(gostValue) + '</span></div>' +
+        '<div class="modal-prop"><span class="modal-prop-label">Изготовитель</span><span class="modal-prop-value">' + esc(p.manufacturer || '—') + '</span></div>' +
+        '<div class="modal-prop"><span class="modal-prop-label">Толщина</span><span class="modal-prop-value">' + esc(p.thickness ? p.thickness + ' мм' : '—') + '</span></div>' +
+        '<div class="modal-prop"><span class="modal-prop-label">Марка</span><span class="modal-prop-value">' + esc(p.grade || '—') + '</span></div>' +
+        '<div class="modal-prop"><span class="modal-prop-label">Ед. измерения</span><span class="modal-prop-value">' + esc(p.unit || '—') + '</span></div>' +
+        '<div class="modal-prop"><span class="modal-prop-label">Категория</span><span class="modal-prop-value">' + esc(p.category || '—') + '</span></div>' +
+        '</div>' +
+        '</div>' +
+        variantsHTML +
+        '</div>';
+
+    document.getElementById('modal-overlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+// Init modal: close on overlay click and Escape
+(function initModal() {
+    const overlay = document.getElementById('modal-overlay');
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('show')) {
+            closeModal();
+        }
+    });
+})();
 
 // =============================================================
 // THEME

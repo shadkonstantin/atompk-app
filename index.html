@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог металлопроката — AtomPK</title>
+    <title>Каталог металлопроката</title>
     <style>
         /* ============================================================
            RESET & DESIGN TOKENS — INDUSTRIAL DARK THEME
@@ -117,27 +117,16 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            color: var(--text);
             flex-shrink: 0;
             cursor: pointer;
         }
         .logo-icon { height: 32px; flex-shrink: 0; }
         .logo-icon img { height: 100%; width: auto; display: block; }
-        .logo-title {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: var(--accent);
-            letter-spacing: -0.01em;
-            white-space: nowrap;
-        }
-        .logo-title span { color: var(--text-secondary); font-weight: 500; font-size: 0.72rem; display: block; line-height: 1.2; letter-spacing: 0.04em; }
 
         /* Search in header */
         .header-search {
             flex: 1;
-            max-width: 520px;
+            width: 100%;
             position: relative;
             min-width: 180px;
         }
@@ -472,7 +461,7 @@
             display: grid;
             grid-template-columns: 1fr 130px 110px 90px 24px;
             gap: 12px;
-            padding: 9px 16px;
+            padding: 12px 16px;
             background: var(--bg-panel);
             border-bottom: 1px solid var(--border-strong);
             font-size: 0.68rem;
@@ -501,7 +490,7 @@
             grid-template-columns: 1fr 130px 110px 90px 24px;
             align-items: center;
             gap: 12px;
-            padding: 10px 16px;
+            padding: 12px 16px;
             user-select: none;
             min-height: 46px;
         }
@@ -620,6 +609,7 @@
             border: 1px solid var(--border-strong);
             border-radius: var(--radius-sm);
             overflow: hidden;
+            table-layout: fixed;
         }
         .variants-table thead { background: var(--bg-panel); }
         .variants-table th {
@@ -632,7 +622,13 @@
             font-weight: 700;
             border-bottom: 2px solid var(--border-strong);
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
+        .variants-table th:nth-child(1) { width: 120px; }
+        .variants-table th:nth-child(2) { width: 100px; }
+        .variants-table th:nth-child(3) { width: 90px; }
+        .variants-table th:nth-child(4) { /* ГОСТ — auto */ }
         .variants-table th.th-right { text-align: right; }
         .variants-table td {
             padding: 6px 8px;
@@ -640,22 +636,34 @@
             color: var(--text-secondary);
             vertical-align: top;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .variants-table tr:last-child td { border-bottom: none; }
         .variants-table td.td-mono { font-family: var(--font-mono); color: var(--accent-hover); font-weight: 600; white-space: nowrap; }
         .variants-table td.td-right { text-align: right; }
 
-        .detail-row {
+        .detail-chips {
             display: flex;
-            justify-content: space-between;
-            padding: 5px 10px;
-            font-size: 0.76rem;
-            background: rgba(0,0,0,0.10);
-            border-radius: var(--radius-sm);
-            gap: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+            grid-column: 1 / -1;
+            margin-top: 6px;
         }
-        .detail-label { color: var(--text-dim); flex-shrink: 0; }
-        .detail-value { color: var(--text-secondary); text-align: right; font-family: var(--font-mono); font-size: 0.78rem; }
+        .detail-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            font-size: 0.74rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .detail-chip-label { color: var(--text-dim); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.03em; }
+        .detail-chip-value { font-family: var(--font-mono); color: var(--text); font-weight: 600; font-size: 0.76rem; }
 
         .list-row-link {
             display: inline-flex;
@@ -821,16 +829,16 @@
     <div class="header-inner">
         <button class="sidebar-toggle" id="sidebar-toggle" title="Фильтры" aria-label="Показать/скрыть фильтры">☰</button>
 
-        <a href="#" class="logo" onclick="location.reload()">
+        <div class="logo" onclick="location.reload()">
             <div class="logo-icon"><img src="atompk_logo.png" alt="AtomPK"></div>
-        </a>
+        </div>
 
         <div class="header-search" id="header-search-wrap">
             <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
             </svg>
             <input type="text" id="search"
-                   placeholder="Поиск по названию, категории, ГОСТ…"
+                   placeholder="Поиск..."
                    autocomplete="off">
             <div class="autocomplete" id="autocomplete"></div>
         </div>
@@ -930,7 +938,7 @@
 
 <footer class="footer">
     Данные из 1С (CommerceML) · <a href="https://atompk.ru" target="_blank" rel="noopener">atompk.ru</a> ·
-    АтомПромКомплекс, Екатеринбург
+    Екатеринбург
 </footer>
 
 <script>
@@ -1376,11 +1384,13 @@ function buildRow(p, idx) {
             '</table></div>';
     }
 
-    // Detail cells for extra info
+    // Detail chips for extra info — manufacturer, thickness, unit
     let extraDetails = '';
-    if (p.manufacturer) extraDetails += '<div class="detail-row"><span class="detail-label">Изготовитель</span><span class="detail-value">' + esc(p.manufacturer) + '</span></div>';
-    if (p.thickness) extraDetails += '<div class="detail-row"><span class="detail-label">Толщина</span><span class="detail-value">' + esc(p.thickness) + ' мм</span></div>';
-    if (p.unit) extraDetails += '<div class="detail-row"><span class="detail-label">Ед. изм.</span><span class="detail-value">' + esc(p.unit) + '</span></div>';
+    let chips = [];
+    if (p.manufacturer) chips.push('<span class="detail-chip"><span class="detail-chip-label">Изготовитель</span><span class="detail-chip-value">' + esc(p.manufacturer) + '</span></span>');
+    if (p.thickness) chips.push('<span class="detail-chip"><span class="detail-chip-label">Толщина</span><span class="detail-chip-value">' + esc(p.thickness) + ' мм</span></span>');
+    if (p.unit) chips.push('<span class="detail-chip"><span class="detail-chip-label">Ед. изм.</span><span class="detail-chip-value">' + esc(p.unit) + '</span></span>');
+    if (chips.length) extraDetails = '<div class="detail-chips">' + chips.join('') + '</div>';
 
     if (!variants.length && !extraDetails) {
         variantsHTML = '<div class="variants-block"><span style="color:var(--text-dim);font-size:0.76rem;">Характеристики не указаны</span></div>';

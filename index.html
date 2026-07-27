@@ -179,24 +179,26 @@
         .sidebar-toggle {
             display: flex; align-items: center; justify-content: center;
             width: 36px; height: 36px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border: none;
+            border-radius: 8px;
             background: transparent;
             color: var(--text-secondary);
             cursor: pointer;
             transition: all var(--transition);
-            padding: 0;
+            padding: 0; position:relative;
         }
-        .sidebar-toggle svg { width: 18px; height: 18px; }
-        .sidebar-toggle svg line {
-            stroke: currentColor;
-            stroke-width: 2;
-            stroke-linecap: round;
-            transition: all 0.25s ease;
-            transform-origin: center;
+        .sidebar-toggle span {
+            display:block; width:18px; height:2px;
+            background:currentColor; border-radius:2px;
+            position:absolute; transition:all .25s ease;
         }
-        .sidebar-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-        .sidebar-toggle.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        .sidebar-toggle span:nth-child(1) { top:12px; }
+        .sidebar-toggle span:nth-child(2) { top:17px; }
+        .sidebar-toggle span:nth-child(3) { top:22px; }
+        .sidebar-toggle:hover { color: var(--accent); background: var(--accent-dim); }
+        .sidebar-toggle.active span:nth-child(1) { top:17px; transform:rotate(45deg); }
+        .sidebar-toggle.active span:nth-child(2) { opacity:0; }
+        .sidebar-toggle.active span:nth-child(3) { top:17px; transform:rotate(-45deg); }
         /* Burger → X animation on active */
         .sidebar-toggle.active svg line:nth-child(1) { transform: translateY(4px) rotate(45deg); }
         .sidebar-toggle.active svg line:nth-child(2) { opacity: 0; }
@@ -841,7 +843,7 @@
 <!-- HEADER -->
 <header class="header">
     <div class="header-inner">
-        <button class="sidebar-toggle" id="sidebar-toggle" title="Фильтры" aria-label="Показать/скрыть фильтры"><svg viewBox="0 0 18 14"><line x1="1" y1="1" x2="17" y2="1"/><line x1="1" y1="7" x2="17" y2="7"/><line x1="1" y1="13" x2="17" y2="13"/></svg></button>
+        <button class="sidebar-toggle" id="sidebar-toggle" title="Фильтры" aria-label="Показать/скрыть фильтры"><span></span><span></span><span></span></button>
 
         <div class="logo" onclick="location.reload()">
             <div class="logo-icon"><img src="atompk_logo.png" alt="AtomPK"></div>

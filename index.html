@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог металлопроката — АтомПромКомплекс</title>
+    <title>Каталог металлопроката — AtomPK</title>
     <style>
         /* ============================================================
            RESET & DESIGN TOKENS — INDUSTRIAL DARK THEME
@@ -623,7 +623,7 @@
         }
         .variants-table thead { background: var(--bg-panel); }
         .variants-table th {
-            padding: 8px 10px;
+            padding: 6px 8px;
             text-align: left;
             font-size: 0.66rem;
             text-transform: uppercase;
@@ -631,16 +631,18 @@
             color: var(--text-dim);
             font-weight: 700;
             border-bottom: 2px solid var(--border-strong);
+            white-space: nowrap;
         }
         .variants-table th.th-right { text-align: right; }
         .variants-table td {
-            padding: 7px 10px;
+            padding: 6px 8px;
             border-bottom: 1px solid var(--border-light);
             color: var(--text-secondary);
             vertical-align: top;
+            white-space: nowrap;
         }
         .variants-table tr:last-child td { border-bottom: none; }
-        .variants-table td.td-mono { font-family: var(--font-mono); color: var(--accent-hover); font-weight: 600; }
+        .variants-table td.td-mono { font-family: var(--font-mono); color: var(--accent-hover); font-weight: 600; white-space: nowrap; }
         .variants-table td.td-right { text-align: right; }
 
         .detail-row {
@@ -820,7 +822,7 @@
         <button class="sidebar-toggle" id="sidebar-toggle" title="Фильтры" aria-label="Показать/скрыть фильтры">☰</button>
 
         <a href="#" class="logo" onclick="location.reload()">
-            <div class="logo-icon"><img src="atompk_logo.png" alt="АтомПромКомплекс"></div>
+            <div class="logo-icon"><img src="atompk_logo.png" alt="AtomPK"></div>
         </a>
 
         <div class="header-search" id="header-search-wrap">

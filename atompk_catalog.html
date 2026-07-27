@@ -87,7 +87,7 @@
             overflow: hidden;
         }
         .header-inner {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 10px 16px;
             display: flex;
@@ -143,7 +143,7 @@
            CONTROLS
            ============================================================ */
         .controls {
-            max-width: 800px;
+            max-width: 900px;
             margin: 16px auto 0;
             padding: 0 16px;
             overflow: hidden;
@@ -328,7 +328,7 @@
            LIST LAYOUT
            ============================================================ */
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 0 16px 40px;
             overflow: hidden;
@@ -355,9 +355,9 @@
 
         .list-row-main {
             display: grid;
-            grid-template-columns: 1fr 130px 100px 85px 28px;
+            grid-template-columns: 1fr 95px 110px 90px 85px 28px;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             padding: 10px 16px;
             user-select: none;
             overflow: hidden;
@@ -365,7 +365,7 @@
         }
 
         .list-row-name {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 600;
             color: var(--text);
             line-height: 1.35;
@@ -374,7 +374,7 @@
             white-space: nowrap;
         }
         .list-row-category {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--accent);
             text-transform: uppercase;
             letter-spacing: 0.04em;
@@ -382,23 +382,40 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-align: center;
         }
         .list-row-price {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: var(--accent-hover);
             white-space: nowrap;
             text-align: right;
         }
         .list-row-price--request {
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             color: var(--text-dim);
             font-weight: 400;
             font-style: italic;
         }
+        .list-row-grade {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .list-row-stock {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         .list-row-status {
-            font-size: 0.68rem;
-            padding: 2px 9px;
+            font-size: 0.66rem;
+            padding: 2px 8px;
             border-radius: 10px;
             font-weight: 600;
             letter-spacing: 0.02em;
@@ -442,80 +459,59 @@
         }
         .list-row.expanded .list-row-details {
             max-height: none;
-            padding: 14px 16px;
+            padding: 12px 16px;
         }
-        .list-row-details-inner {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 8px;
-            overflow: hidden;
-        }
-        .detail-cell {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.78rem;
-            padding: 4px 8px;
-            background: rgba(0,0,0,0.15);
-            border-radius: var(--radius-sm);
-            gap: 12px;
-            overflow: hidden;
-        }
-        .detail-label { color: var(--text-dim); flex-shrink: 0; }
-        .detail-value { color: var(--text-secondary); text-align: right; word-break: break-word; }
 
-        /* Specs sub-table in details */
-        .specs-block {
-            grid-column: 1 / -1;
-            margin-top: 4px;
-        }
-        .specs-heading {
-            font-size: 0.7rem;
+        /* Variants table */
+        .variants-heading {
+            font-size: 0.72rem;
             color: var(--accent);
             text-transform: uppercase;
             letter-spacing: 0.04em;
             font-weight: 700;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
-        .specs-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; overflow: hidden; }
-        .specs-table tr { border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .specs-table tr:last-child { border-bottom: none; }
-        .specs-table td { padding: 3px 8px; vertical-align: top; }
-        .specs-table .sl { color: var(--text-dim); width: 45%; font-weight: 500; }
-        .specs-table .sv { color: var(--text-secondary); text-align: right; }
-
-        /* Dimensions block */
-        .dims-block {
-            grid-column: 1 / -1;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 2px;
-            margin-bottom: 4px;
+        .variants-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
             overflow: hidden;
         }
-        .dims-heading {
-            font-size: 0.7rem;
-            color: var(--accent-hover);
+        .variants-table th {
+            text-align: left;
+            padding: 6px 10px;
+            color: var(--text-dim);
+            font-weight: 600;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
-            font-weight: 700;
-            margin-bottom: 2px;
-            width: 100%;
+            letter-spacing: 0.03em;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
-        .dim-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            background: rgba(240,136,62,0.08);
-            border: 1px solid rgba(240,136,62,0.20);
-            border-radius: 6px;
-            font-size: 0.78rem;
-            color: var(--accent-hover);
-            white-space: nowrap;
+        .variants-table td {
+            padding: 7px 10px;
+            vertical-align: top;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
         }
-        .dim-chip-label { color: var(--text-dim); font-size: 0.7rem; }
-        .dim-chip-value { font-weight: 700; }
+        .variants-table tr:last-child td { border-bottom: none; }
+        .variants-table .vt-cut { color: var(--accent-hover); font-weight: 600; white-space: nowrap; }
+        .variants-table .vt-price { color: var(--text); font-weight: 600; white-space: nowrap; text-align: right; }
+        .variants-table .vt-stock { color: var(--text-secondary); white-space: nowrap; text-align: right; }
+        .variants-table .vt-gost { color: var(--text-dim); font-size: 0.74rem; word-break: break-word; }
+
+        /* Meta row below variants */
+        .variants-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.74rem;
+            color: var(--text-dim);
+        }
+        .variants-meta-item { display: flex; gap: 6px; }
+        .variants-meta-label { font-weight: 500; }
+        .variants-meta-value { color: var(--text-secondary); }
 
         .list-row-link {
             display: inline-flex;
@@ -563,8 +559,9 @@
             animation: shimmer 1.6s ease-in-out infinite;
         }
         .sk-line--l { flex: 1; }
-        .sk-line--s { width: 90px; flex-shrink: 0; }
-        .sk-line--xs { width: 60px; flex-shrink: 0; }
+        .sk-line--m { width: 100px; flex-shrink: 0; }
+        .sk-line--s { width: 70px; flex-shrink: 0; }
+        .sk-line--xs { width: 50px; flex-shrink: 0; }
 
         /* ============================================================
            EMPTY STATE
@@ -611,7 +608,6 @@
             .search-input { font-size: 0.88rem; }
             .results-hint { display: none; }
 
-            /* Compact rows on mobile */
             .list-row-main {
                 display: flex;
                 flex-wrap: wrap;
@@ -620,20 +616,22 @@
             }
             .list-row-name {
                 flex: 1 1 100%;
-                font-size: 0.84rem;
+                font-size: 0.82rem;
                 white-space: normal;
             }
             .list-row-category {
                 flex-shrink: 0;
-                font-size: 0.68rem;
+                font-size: 0.66rem;
             }
             .list-row-price {
                 flex-shrink: 0;
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
+            .list-row-grade { flex-shrink: 0; font-size: 0.72rem; }
+            .list-row-stock { flex-shrink: 0; font-size: 0.72rem; }
             .list-row-status {
                 flex-shrink: 0;
-                font-size: 0.64rem;
+                font-size: 0.62rem;
                 padding: 2px 7px;
             }
             .list-row-toggle {
@@ -642,9 +640,10 @@
                 height: 24px;
                 font-size: 0.55rem;
             }
-            .list-row-details-inner {
-                grid-template-columns: 1fr;
-            }
+
+            .variants-table { font-size: 0.74rem; }
+            .variants-table th,
+            .variants-table td { padding: 5px 6px; }
         }
 
         /* Scrollbar */
@@ -665,7 +664,7 @@
         <div class="header-stats">
             <div class="header-stat">
                 <span class="stat-dot"></span>
-                <span>Товаров: <strong id="total-count">—</strong></span>
+                <span>Номенклатур: <strong id="total-count">—</strong></span>
             </div>
             <div class="header-stat">
                 <span class="stat-dot stat-dot--dim"></span>
@@ -683,7 +682,7 @@
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
         </svg>
         <input type="text" class="search-input" id="search"
-               placeholder="Поиск по названию, категории, производителю…"
+               placeholder="Поиск по названию, категории, марке, раскрою, ГОСТ…"
                autocomplete="off">
         <div class="autocomplete" id="autocomplete"></div>
     </div>
@@ -788,7 +787,7 @@ async function loadData() {
 function buildSkeleton() {
     let h = '';
     for (let i=0; i<8; i++) {
-        h += '<div class="skeleton-row"><div class="sk-line sk-line--l"></div><div class="sk-line sk-line--s"></div><div class="sk-line sk-line--xs"></div></div>';
+        h += '<div class="skeleton-row"><div class="sk-line sk-line--l"></div><div class="sk-line sk-line--m"></div><div class="sk-line sk-line--s"></div><div class="sk-line sk-line--xs"></div></div>';
     }
     document.getElementById('skeleton').innerHTML = h;
 }
@@ -811,7 +810,7 @@ function init() {
         b.addEventListener('click', ()=>selectCategory(cat));
         chipRow.appendChild(b);
     });
-    document.getElementById('chip-all').textContent = 'Все товары '+allProducts.length;
+    document.getElementById('chip-all').textContent = 'Все '+allProducts.length;
 
     popSelect('filter-subcategory', [...subcategories].sort());
     popSelect('filter-manufacturer', [...manufacturers].sort());
@@ -855,12 +854,8 @@ function popSelect(id, opts) {
 // FILTERING & SORTING
 // =============================================================
 function parsePrice(p) {
-    if (!p) return 0;
-    // Use price_raw (integer) from XML if available, fallback to string parsing
     if (p.price_raw) return p.price_raw;
-    const s = (typeof p === 'string') ? p : (p.price || '');
-    const n = parseInt(String(s).replace(/[^\d]/g,''),10);
-    return isNaN(n)?0:n;
+    return 0;
 }
 
 function getFiltered() {
@@ -879,14 +874,26 @@ function getFiltered() {
         f = f.filter(p => p.stock_raw > 0 && p.stock_raw < 1);
     }
     if (q) {
-        f = f.filter(p=>[p.name,p.category,p.subcategory,p.manufacturer].filter(Boolean).join(' ').toLowerCase().includes(q));
+        f = f.filter(p => {
+            // Search in name, category, subcategory, grade, manufacturer
+            const mainFields = [p.name, p.category, p.subcategory, p.grade, p.manufacturer].filter(Boolean).join(' ').toLowerCase();
+            if (mainFields.includes(q)) return true;
+            // Also search in variant details: cut_length, gost
+            if (p.variants && p.variants.length) {
+                return p.variants.some(v =>
+                    (v.cut_length||'').toLowerCase().includes(q) ||
+                    (v.gost||'').toLowerCase().includes(q)
+                );
+            }
+            return false;
+        });
     }
 
     // Sort
     const arr = [...f];
     switch(activeSort) {
-        case 'price-asc': arr.sort((a,b)=>parsePrice(a.price)-parsePrice(b.price)); break;
-        case 'price-desc': arr.sort((a,b)=>parsePrice(b.price)-parsePrice(a.price)); break;
+        case 'price-asc': arr.sort((a,b)=>parsePrice(a)-parsePrice(b)); break;
+        case 'price-desc': arr.sort((a,b)=>parsePrice(b)-parsePrice(a)); break;
         case 'name': arr.sort((a,b)=>a.name.localeCompare(b.name,'ru')); break;
     }
     return arr;
@@ -917,7 +924,10 @@ function onSearch() {
 }
 function showAC(q) {
     const dd = document.getElementById('autocomplete');
-    const f = allProducts.filter(p=>[p.name,p.category,p.subcategory,p.manufacturer].filter(Boolean).join(' ').toLowerCase().includes(q));
+    const f = allProducts.filter(p=>{
+        const mainFields = [p.name, p.category, p.subcategory, p.grade, p.manufacturer].filter(Boolean).join(' ').toLowerCase();
+        return mainFields.includes(q);
+    });
     const seen = new Set();
     const u = [];
     for (const p of f) { if (!seen.has(p.name)&&u.length<8) { seen.add(p.name); u.push(p); } }
@@ -989,19 +999,51 @@ function buildRow(p, idx) {
     const sl = p.status || 'В наличии';
     const pn = parsePrice(p);
     const pd = pn>0 ? '<span class="list-row-price">'+esc(p.price)+'</span>' : '<span class="list-row-price list-row-price--request">по запросу</span>';
+    const gradeStr = p.grade ? '<span class="list-row-grade">'+esc(p.grade)+'</span>' : '<span class="list-row-grade" style="color:var(--text-dim)">—</span>';
+    const stockStr = p.stock_formatted || '—';
+    const vcount = p.variant_count || (p.variants ? p.variants.length : 0);
 
-    // Specs table — show ALL fields from details dict
-    const detailKeys = Object.keys(p.details||{}).filter(k => p.details[k]);
-    let specsBlock = '';
-    if (detailKeys.length) {
-        let sh = '<div class="specs-heading">📋 Характеристики</div><table class="specs-table">';
-        detailKeys.forEach(k => {
-            sh += '<tr><td class="sl">'+esc(k)+'</td><td class="sv">'+esc(String(p.details[k]))+'</td></tr>';
+    // Variants table
+    let variantsBlock = '';
+    if (p.variants && p.variants.length) {
+        let rows = '';
+        p.variants.forEach(v => {
+            const cutStr = v.cut_length || '—';
+            const priceStr = v.price_formatted || (v.price ? v.price + ' ₽' : 'по запросу');
+            const stockStrV = v.stock_formatted || '—';
+            const gostStr = v.gost || '—';
+            rows += '<tr>'+
+                '<td class="vt-cut">'+esc(cutStr)+'</td>'+
+                '<td class="vt-price">'+esc(priceStr)+'</td>'+
+                '<td class="vt-stock">'+esc(stockStrV)+'</td>'+
+                '<td class="vt-gost">'+esc(gostStr)+'</td>'+
+            '</tr>';
         });
-        sh += '</table>';
-        specsBlock = '<div class="specs-block">'+sh+'</div>';
+        const heading = vcount > 1
+            ? '📐 Варианты раскроя (' + vcount + ')'
+            : '📐 Характеристика';
+        variantsBlock = '<div class="variants-heading">'+heading+'</div>'+
+            '<table class="variants-table">'+
+                '<thead><tr>'+
+                    '<th>Раскрой (м)</th>'+
+                    '<th style="text-align:right;">Цена</th>'+
+                    '<th style="text-align:right;">Остаток</th>'+
+                    '<th>ГОСТ</th>'+
+                '</tr></thead>'+
+                '<tbody>'+rows+'</tbody>'+
+            '</table>';
     } else {
-        specsBlock = '<div class="specs-block"><span style="color:var(--text-dim);font-size:0.78rem;">Характеристики не указаны</span></div>';
+        variantsBlock = '<div style="color:var(--text-dim);font-size:0.78rem;">Характеристики не указаны</div>';
+    }
+
+    // Meta line below variants
+    let metaHtml = '';
+    const metaItems = [];
+    if (p.manufacturer) metaItems.push('<span class="variants-meta-label">Изготовитель:</span><span class="variants-meta-value">'+esc(p.manufacturer)+'</span>');
+    if (p.thickness) metaItems.push('<span class="variants-meta-label">Толщина:</span><span class="variants-meta-value">'+esc(p.thickness)+' мм</span>');
+    if (p.unit) metaItems.push('<span class="variants-meta-label">Ед. изм.:</span><span class="variants-meta-value">'+esc(p.unit)+'</span>');
+    if (metaItems.length) {
+        metaHtml = '<div class="variants-meta">'+metaItems.map(m=>'<div class="variants-meta-item">'+m+'</div>').join('')+'</div>';
     }
 
     const linkHtml = p.link ? '<a class="list-row-link" href="'+esc(p.link)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ atompk.ru</a>' : '';
@@ -1012,13 +1054,13 @@ function buildRow(p, idx) {
             '<div class="list-row-name">'+esc(p.name)+'</div>'+
             '<div class="list-row-category">'+(p.subcategory?esc(p.subcategory):esc(p.category||''))+'</div>'+
             pd+
-            '<span class="list-row-status list-row-status--'+sc+'">'+esc(sl)+'</span>'+
+            gradeStr+
+            '<span class="list-row-stock">'+esc(stockStr)+'</span>'+
             '<div class="list-row-toggle"><span class="list-row-toggle-arrow">▼</span></div>'+
         '</div>'+
         '<div class="list-row-details">'+
-            '<div class="list-row-details-inner">'+
-                specsBlock+
-            '</div>'+
+            variantsBlock+
+            metaHtml+
             linkHtml+
         '</div>'+
     '</div>';
@@ -1070,7 +1112,6 @@ function resetAllFilters() {
         setThemeIcon(current);
     });
 
-    // Listen for system theme changes
     if (window.matchMedia) {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
             if (!localStorage.getItem('atompk-theme')) {

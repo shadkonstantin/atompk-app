@@ -34,6 +34,7 @@
             --blue:          #60a5fa;
             --blue-bg:       rgba(96,165,250,0.10);
             --header-bg:     rgba(10,14,20,0.92);
+            --detail-expand-bg: rgba(0,0,0,0.15);
             --shadow:        0 4px 20px rgba(0,0,0,0.4);
             --shadow-sm:     0 1px 3px rgba(0,0,0,0.3);
             --radius:        8px;
@@ -66,11 +67,12 @@
             --blue:          #3b82f6;
             --blue-bg:       rgba(59,130,246,0.08);
             --header-bg:     rgba(241,245,249,0.92);
+            --detail-expand-bg: rgba(0,0,0,0.04);
             --shadow:        0 4px 20px rgba(0,0,0,0.08);
             --shadow-sm:     0 1px 3px rgba(0,0,0,0.06);
         }
 
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -251,6 +253,7 @@
             margin: 0 auto;
             display: flex;
             min-height: calc(100vh - 53px);
+            overflow-x: hidden;
         }
 
         /* ---- SIDEBAR ---- */
@@ -420,6 +423,7 @@
             flex: 1;
             min-width: 0;
             padding: 16px;
+            overflow-x: hidden;
         }
 
         /* Results bar */
@@ -580,7 +584,7 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.35s ease, padding 0.35s ease;
-            background: rgba(0,0,0,0.15);
+            background: var(--detail-expand-bg);
         }
         .list-row.expanded .list-row-details {
             /* max-height set by JS for smooth animation */
@@ -817,7 +821,6 @@
 
         <a href="#" class="logo" onclick="location.reload()">
             <div class="logo-icon"><img src="atompk_logo.png" alt="АтомПромКомплекс"></div>
-            <div class="logo-title">AtomPK<span>металлопрокат</span></div>
         </a>
 
         <div class="header-search" id="header-search-wrap">

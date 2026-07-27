@@ -694,26 +694,28 @@
         .list-row-link:hover { border-color: var(--accent); background: var(--accent-dim); }
 
         .list-row-info {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            border: 1px solid var(--border);
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            border: none;
             background: transparent;
             color: var(--text-dim);
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 600;
             transition: all var(--transition);
             flex-shrink: 0;
             line-height: 1;
             font-family: inherit;
             padding: 0;
+            opacity: 0.6;
         }
         .list-row-info:hover {
-            border-color: var(--accent);
             color: var(--accent);
             background: var(--accent-dim);
+            opacity: 1;
         }
 
         /* ============================================================

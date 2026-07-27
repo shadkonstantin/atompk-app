@@ -737,7 +737,7 @@
 </div>
 
 <footer class="footer">
-    Данные с сайта <a href="https://atompk.ru" target="_blank" rel="noopener">atompk.ru</a> —
+    Данные из 1С (CommerceML) — <a href="https://atompk.ru" target="_blank" rel="noopener">atompk.ru</a> —
     АтомПромКомплекс, Екатеринбург
 </footer>
 
@@ -854,9 +854,12 @@ function popSelect(id, opts) {
 // =============================================================
 // FILTERING & SORTING
 // =============================================================
-function parsePrice(s) {
-    if (!s) return 0;
-    const n = parseInt(s.replace(/[^\d]/g,''),10);
+function parsePrice(p) {
+    if (!p) return 0;
+    // Use price_raw (integer) from XML if available, fallback to string parsing
+    if (p.price_raw) return p.price_raw;
+    const s = (typeof p === 'string') ? p : (p.price || '');
+    const n = parseInt(String(s).replace(/[^\d]/g,''),10);
     return isNaN(n)?0:n;
 }
 
@@ -871,9 +874,9 @@ function getFiltered() {
     if (sc!=='all') f = f.filter(p=>p.subcategory===sc);
     if (mf!=='all') f = f.filter(p=>p.manufacturer===mf);
     if (av==='available') {
-        f = f.filter(p=>{const s=(p.status||'').toLowerCase(); return s.includes('в наличии')||s.includes('есть')||s.includes('достаточно')||s.includes('много');});
+        f = f.filter(p => p.stock_raw >= 1);
     } else if (av==='low') {
-        f = f.filter(p=>{const s=(p.status||'').toLowerCase(); return s.includes('мало');});
+        f = f.filter(p => p.stock_raw > 0 && p.stock_raw < 1);
     }
     if (q) {
         f = f.filter(p=>[p.name,p.category,p.subcategory,p.manufacturer].filter(Boolean).join(' ').toLowerCase().includes(q));
@@ -945,9 +948,9 @@ function onSearchKey(e) {
 // =============================================================
 function statusClass(s) {
     const st = (s||'').toLowerCase();
-    if (st.includes('в наличии')||st.includes('есть')||st.includes('достаточно')||st.includes('много')) return 'available';
+    if (st.includes('нет')||st.includes('отсутствует')) return 'none';
     if (st.includes('мало')) return 'low';
-    return 'none';
+    return 'available';
 }
 
 // =============================================================
@@ -984,38 +987,22 @@ function render() {
 function buildRow(p, idx) {
     const sc = statusClass(p.status);
     const sl = p.status || 'В наличии';
-    const pn = parsePrice(p.price);
+    const pn = parsePrice(p);
     const pd = pn>0 ? '<span class="list-row-price">'+esc(p.price)+'</span>' : '<span class="list-row-price list-row-price--request">по запросу</span>';
 
-    // Details grid
-    let detailCells = '';
-    if (p.category) detailCells += '<div class="detail-cell"><span class="detail-label">Категория</span><span class="detail-value">'+esc(p.category)+'</span></div>';
-    if (p.subcategory) detailCells += '<div class="detail-cell"><span class="detail-label">Подкатегория</span><span class="detail-value">'+esc(p.subcategory)+'</span></div>';
-    if (p.manufacturer) detailCells += '<div class="detail-cell"><span class="detail-label">Производитель</span><span class="detail-value">'+esc(p.manufacturer)+'</span></div>';
-    if (p.status) detailCells += '<div class="detail-cell"><span class="detail-label">Наличие</span><span class="detail-value">'+esc(p.status)+'</span></div>';
-
-    // Dimensions from name (keys with "(из названия)")
-    let dimsBlock = '';
-    const dimKeys = Object.keys(p.details||{}).filter(k => k.includes('(из названия)'));
-    if (dimKeys.length) {
-        dimsBlock += '<div class="dims-heading">📏 Размеры</div>';
-        dimKeys.forEach(k => {
-            const label = k.replace(' (из названия)', '');
-            dimsBlock += '<div class="dim-chip"><span class="dim-chip-label">'+esc(label)+'</span><span class="dim-chip-value">'+esc(p.details[k])+'</span></div>';
-        });
-        dimsBlock = '<div class="dims-block">'+dimsBlock+'</div>';
-    }
-
-    // Specs table (characteristics from site)
+    // Variants table — show cut lengths, prices, stock
+    const variants = p.variants||[];
     let specsBlock = '';
-    const specKeys = Object.keys(p.details||{}).filter(k => !k.includes('(из названия)'));
-
-    if (specKeys.length) {
-        let sh = '<div class="specs-heading">📋 Характеристики</div><table class="specs-table">';
-        specKeys.forEach(k => {
-            sh += '<tr><td class="sl">'+esc(k)+'</td><td class="sv">'+esc(p.details[k])+'</td></tr>';
+    if (variants.length) {
+        let sh = '<div class="specs-heading">📋 Варианты раскроя</div><table class="specs-table"><tr><th>Раскрой</th><th>Цена</th><th>Остаток</th><th>ГОСТ</th></tr>';
+        variants.forEach(v => {
+            sh += '<tr><td class="sv">'+esc(v.cut_length||'—')+' м</td><td class="sv">'+esc(v.price||'—')+'</td><td class="sv">'+esc(String(v.stock||'—'))+' т</td><td class="sv">'+esc(v.gost||'—')+'</td></tr>';
         });
         sh += '</table>';
+        // Extra fields below table
+        if (p.manufacturer) sh += '<div style="margin-top:8px;font-size:0.8rem;color:var(--text-dim)">Изготовитель: '+esc(p.manufacturer)+'</div>';
+        if (p.thickness) sh += '<div style="font-size:0.8rem;color:var(--text-dim)">Толщина: '+esc(p.thickness)+' мм</div>';
+        if (p.unit) sh += '<div style="font-size:0.8rem;color:var(--text-dim)">Ед. изм.: '+esc(p.unit)+'</div>';
         specsBlock = '<div class="specs-block">'+sh+'</div>';
     } else {
         specsBlock = '<div class="specs-block"><span style="color:var(--text-dim);font-size:0.78rem;">Характеристики не указаны</span></div>';
@@ -1034,8 +1021,6 @@ function buildRow(p, idx) {
         '</div>'+
         '<div class="list-row-details">'+
             '<div class="list-row-details-inner">'+
-                detailCells+
-                dimsBlock+
                 specsBlock+
             '</div>'+
             linkHtml+

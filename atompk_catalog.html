@@ -110,6 +110,7 @@
             padding: 8px 16px;
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 12px;
         }
 
@@ -126,9 +127,10 @@
         /* Search in header */
         .header-search {
             flex: 1;
-            width: 100%;
+            max-width: calc(100% - 200px);
             position: relative;
             min-width: 180px;
+            overflow: hidden;
         }
         .header-search input {
             width: 100%;
@@ -177,17 +179,27 @@
 
         .sidebar-toggle {
             display: flex; align-items: center; justify-content: center;
-            width: 32px; height: 32px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
+            width: 36px; height: 36px;
+            border: none;
+            border-radius: 8px;
             background: transparent;
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 1.1rem;
             transition: all var(--transition);
+            padding: 0; position:relative;
         }
-        .sidebar-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-        .sidebar-toggle.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        .sidebar-toggle span {
+            display:block; width:18px; height:2px;
+            background:currentColor; border-radius:2px;
+            position:absolute; transition:all .25s ease;
+        }
+        .sidebar-toggle span:nth-child(1) { top:12px; }
+        .sidebar-toggle span:nth-child(2) { top:17px; }
+        .sidebar-toggle span:nth-child(3) { top:22px; }
+        .sidebar-toggle:hover { color: var(--accent); background: var(--accent-dim); }
+        .sidebar-toggle.active span:nth-child(1) { top:17px; transform:rotate(45deg); }
+        .sidebar-toggle.active span:nth-child(2) { opacity:0; }
+        .sidebar-toggle.active span:nth-child(3) { top:17px; transform:rotate(-45deg); }
 
         .theme-toggle {
             display: flex; align-items: center; justify-content: center;
@@ -459,7 +471,7 @@
         /* List header row */
         .list-header {
             display: grid;
-            grid-template-columns: 1fr 130px 110px 90px 24px;
+            grid-template-columns: 1fr 130px 110px 90px 40px 32px 24px;
             gap: 12px;
             padding: 12px 16px;
             background: var(--bg-panel);
@@ -487,7 +499,7 @@
 
         .list-row-main {
             display: grid;
-            grid-template-columns: 1fr 130px 110px 90px 24px;
+            grid-template-columns: 1fr 130px 110px 90px 40px 32px 24px;
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
@@ -499,10 +511,11 @@
             font-size: 0.87rem;
             font-weight: 600;
             color: var(--text);
-            line-height: 1.35;
+            line-height: 1.1;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            align-self: center;
         }
         .list-row-subcat {
             font-size: 0.68rem;
@@ -628,16 +641,16 @@
         .variants-table th:nth-child(1) { width: 120px; }
         .variants-table th:nth-child(2) { width: 100px; }
         .variants-table th:nth-child(3) { width: 90px; }
-        .variants-table th:nth-child(4) { /* ГОСТ — auto */ }
         .variants-table th.th-right { text-align: right; }
         .variants-table td {
             padding: 6px 8px;
             border-bottom: 1px solid var(--border-light);
             color: var(--text-secondary);
-            vertical-align: top;
+            vertical-align: middle;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.2;
         }
         .variants-table tr:last-child td { border-bottom: none; }
         .variants-table td.td-mono { font-family: var(--font-mono); color: var(--accent-hover); font-weight: 600; white-space: nowrap; }
@@ -681,6 +694,245 @@
             transition: all var(--transition);
         }
         .list-row-link:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+        .list-row-info {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            line-height: 1;
+            font-family: inherit;
+            padding: 0;
+            opacity: 0.6;
+        }
+        .list-row-info:hover {
+            color: var(--accent);
+            background: var(--accent-dim);
+            opacity: 1;
+        }
+
+        /* Add to cart button in row */
+        .list-row-cart-add {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px; height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            line-height: 1;
+            font-family: inherit;
+            padding: 0;
+            opacity: 0.5;
+        }
+        .list-row-cart-add:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent-dim);
+            opacity: 1;
+        }
+
+        /* Variant-level cart button in variants table */
+        .variant-cart-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            line-height: 1;
+            padding: 0;
+            font-family: inherit;
+        }
+        .variant-cart-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
+        .variants-table th.th-cart { width: 44px; text-align: center; }
+
+        /* ============================================================
+           MODAL
+           ============================================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            max-width: 560px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+            position: relative;
+            animation: modalIn 0.2s ease;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--bg-panel);
+            z-index: 2;
+            border-radius: 12px 12px 0 0;
+        }
+        .modal-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.3;
+            padding-right: 12px;
+        }
+        .modal-close {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            line-height: 1;
+            padding: 0;
+        }
+        .modal-close:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: var(--red-bg);
+        }
+        .modal-body {
+            padding: 16px 20px 20px;
+        }
+        .modal-section {
+            margin-bottom: 18px;
+        }
+        .modal-section:last-child { margin-bottom: 0; }
+        .modal-section-title {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .modal-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        .modal-props {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+        .modal-prop {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 6px 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+        }
+        .modal-prop-label {
+            font-size: 0.66rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-dim);
+        }
+        .modal-prop-value {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--text);
+            font-weight: 600;
+            word-break: break-word;
+        }
+        .modal-variants-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.76rem;
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        .modal-variants-table thead { background: var(--bg-card); }
+        .modal-variants-table th {
+            padding: 5px 8px;
+            text-align: left;
+            font-size: 0.64rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-strong);
+            white-space: nowrap;
+        }
+        .modal-variants-table td {
+            padding: 5px 8px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .modal-variants-table tr:last-child td { border-bottom: none; }
+        .modal-variants-table td.td-mono { font-family: var(--font-mono); color: var(--accent-hover); font-weight: 600; }
+        .modal-variants-table td.td-right { text-align: right; }
+
+        @media (max-width: 560px) {
+            .modal-card { max-width: 100%; border-radius: 10px; max-height: 90vh; }
+            .modal-props { grid-template-columns: 1fr; }
+            .modal-body { padding: 12px 14px 16px; }
+            .modal-header { padding: 12px 14px 10px; }
+        }
 
         /* ============================================================
            SKELETON
@@ -740,6 +992,316 @@
         .footer a:hover { text-decoration: underline; }
 
         /* ============================================================
+           CART ICON IN HEADER
+           ============================================================ */
+        .cart-icon-btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px; height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all var(--transition);
+            padding: 0;
+            flex-shrink: 0;
+        }
+        .cart-icon-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+        .cart-icon-btn.has-items {
+            border-color: rgba(240,136,62,0.4);
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+        .cart-badge {
+            position: absolute;
+            top: -6px; right: -6px;
+            min-width: 18px; height: 18px;
+            border-radius: 9px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            line-height: 1;
+            font-family: var(--font-mono);
+            transition: transform 0.2s ease;
+        }
+        .cart-badge:empty { display: none; }
+        .cart-badge.bump { animation: badgeBump 0.35s ease; }
+        @keyframes badgeBump {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.35); }
+            100% { transform: scale(1); }
+        }
+
+        /* ============================================================
+           CART PANEL — right sidebar
+           ============================================================ */
+        .cart-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .cart-overlay.show { display: block; }
+
+        .cart-panel {
+            position: fixed;
+            top: 0; right: 0;
+            width: 400px;
+            max-width: 90vw;
+            height: 100vh;
+            height: 100dvh;
+            z-index: 600;
+            background: var(--bg-panel);
+            border-left: 1px solid var(--border-strong);
+            box-shadow: -8px 0 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .cart-panel.open { transform: translateX(0); }
+
+        .cart-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .cart-panel-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cart-panel-title .cart-count {
+            font-family: var(--font-mono);
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 600;
+            background: var(--accent-dim);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .cart-panel-close {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            line-height: 1;
+            padding: 0;
+        }
+        .cart-panel-close:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: var(--red-bg);
+        }
+
+        .cart-panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+        }
+        .cart-empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-dim);
+        }
+        .cart-empty-state .cart-empty-icon { font-size: 3rem; opacity: 0.2; margin-bottom: 12px; }
+        .cart-empty-state p { font-size: 0.82rem; }
+
+        .cart-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            margin-bottom: 8px;
+            background: var(--bg-card);
+            transition: background var(--transition);
+        }
+        .cart-item:hover { background: var(--bg-card-hover); }
+        .cart-item-info { flex: 1; min-width: 0; }
+        .cart-item-name {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.3;
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .cart-item-price {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-hover);
+        }
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+        .cart-qty-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: all var(--transition);
+            padding: 0;
+            line-height: 1;
+            font-family: inherit;
+        }
+        .cart-qty-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+        .cart-qty-value {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text);
+            min-width: 24px;
+            text-align: center;
+        }
+        .cart-item-remove {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all var(--transition);
+            padding: 0;
+            line-height: 1;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+        .cart-item-remove:hover {
+            color: var(--red);
+            background: var(--red-bg);
+        }
+        .cart-item-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .cart-panel-footer {
+            flex-shrink: 0;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-strong);
+            background: var(--bg-panel);
+        }
+        .cart-total-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+        }
+        .cart-total-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .cart-total-value {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-hover);
+        }
+        .cart-send-btn {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--radius);
+            background: var(--accent);
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: all var(--transition);
+            font-family: inherit;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .cart-send-btn:hover { background: var(--accent-hover); box-shadow: 0 4px 16px rgba(240,136,62,0.3); }
+        .cart-send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .cart-send-btn .send-icon { font-size: 1.1rem; }
+        .cart-clear-btn {
+            width: 100%;
+            padding: 7px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.76rem;
+            transition: all var(--transition);
+            font-family: inherit;
+            margin-top: 6px;
+        }
+        .cart-clear-btn:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: var(--red-bg);
+        }
+
+        /* ============================================================
            RESPONSIVE — mobile
            ============================================================ */
         @media (max-width: 860px) {
@@ -763,7 +1325,7 @@
             .sidebar-overlay.show { display: block; }
             .main-content { padding: 10px; }
 
-            .header-search { max-width: none; }
+            .header-search { max-width: none; flex-basis: 100%; order: 10; }
             .header-stat { display: none; }
 
             .list-header { display: none; }
@@ -827,7 +1389,7 @@
 <!-- HEADER -->
 <header class="header">
     <div class="header-inner">
-        <button class="sidebar-toggle" id="sidebar-toggle" title="Фильтры" aria-label="Показать/скрыть фильтры">☰</button>
+        <button class="sidebar-toggle" id="sidebar-toggle" title="Фильтры" aria-label="Показать/скрыть фильтры"><span></span><span></span><span></span></button>
 
         <div class="logo" onclick="location.reload()">
             <div class="logo-icon"><img src="atompk_logo.png" alt="AtomPK"></div>
@@ -853,6 +1415,9 @@
                 <span>Категорий <strong id="cat-count">—</strong></span>
             </div>
             <button class="theme-toggle" id="theme-toggle" title="Переключить тему" aria-label="Переключить тему">🌙</button>
+            <button class="cart-icon-btn" id="cart-icon-btn" title="Корзина" aria-label="Корзина">
+                🛒<span class="cart-badge" id="cart-badge"></span>
+            </button>
         </div>
     </div>
 </header>
@@ -883,6 +1448,16 @@
             <div class="sidebar-select-label">Производитель</div>
             <select class="sidebar-select" id="filter-manufacturer">
                 <option value="all">Все производители</option>
+            </select>
+
+            <div class="sidebar-select-label">Толщина</div>
+            <select class="sidebar-select" id="filter-thickness">
+                <option value="all">Все толщины</option>
+            </select>
+
+            <div class="sidebar-select-label">Марка стали</div>
+            <select class="sidebar-select" id="filter-grade">
+                <option value="all">Все марки</option>
             </select>
 
             <div class="sidebar-select-label">Наличие</div>
@@ -923,6 +1498,8 @@
                 <span class="list-header-cell list-header-cell--right">Цена</span>
                 <span class="list-header-cell" style="text-align:center;">Наличие</span>
                 <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
         <div class="empty" id="empty" style="display:none;">
@@ -940,6 +1517,40 @@
     Данные из 1С (CommerceML) · <a href="https://atompk.ru" target="_blank" rel="noopener">atompk.ru</a> ·
     Екатеринбург
 </footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal-card" id="modal-card"></div>
+</div>
+
+<!-- CART PANEL -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-panel" id="cart-panel">
+    <div class="cart-panel-header">
+        <div class="cart-panel-title">
+            🛒 Корзина
+            <span class="cart-count" id="cart-count">0</span>
+        </div>
+        <button class="cart-panel-close" id="cart-panel-close">✕</button>
+    </div>
+    <div class="cart-panel-body" id="cart-panel-body">
+        <div class="cart-empty-state">
+            <div class="cart-empty-icon">🛒</div>
+            <p>Корзина пуста</p>
+            <p style="font-size:0.72rem;color:var(--text-dim);margin-top:4px;">Нажимайте <span style="color:var(--accent);">🛒</span> в таблице вариантов раскроя, чтобы добавить нужный размер</p>
+        </div>
+    </div>
+    <div class="cart-panel-footer" id="cart-panel-footer" style="display:none;">
+        <div class="cart-total-row">
+            <span class="cart-total-label">Итого:</span>
+            <span class="cart-total-value" id="cart-total">0 ₽</span>
+        </div>
+        <button class="cart-send-btn" id="cart-send-btn" onclick="sendOrder()">
+            <span class="send-icon">📤</span> Отправить заявку
+        </button>
+        <button class="cart-clear-btn" onclick="clearCart()">🗑 Очистить корзину</button>
+    </div>
+</div>
 
 <script>
 // =============================================================
@@ -1032,6 +1643,8 @@ function init() {
     categories = new Set(allProducts.map(p => p.category).filter(Boolean));
     subcategories = new Set(allProducts.map(p => p.subcategory).filter(Boolean));
     manufacturers = new Set(allProducts.map(p => p.manufacturer).filter(Boolean));
+    const thicknesses = new Set(allProducts.map(p => p.thickness).filter(Boolean));
+    const grades = new Set(allProducts.map(p => p.grade).filter(Boolean));
 
     // Populate sidebar categories
     const sidebarCats = document.getElementById('sidebar-cats');
@@ -1049,6 +1662,8 @@ function init() {
 
     popSelect('filter-subcategory', [...subcategories].sort());
     popSelect('filter-manufacturer', [...manufacturers].sort());
+    popSelect('filter-thickness', [...thicknesses].sort());
+    popSelect('filter-grade', [...grades].sort());
 
     document.getElementById('total-count').textContent = allProducts.length;
     document.getElementById('cat-count').textContent = categories.size;
@@ -1063,9 +1678,11 @@ function init() {
     document.getElementById('search').addEventListener('input', onSearch);
     document.getElementById('search').addEventListener('focus', onSearchFocus);
     document.getElementById('search').addEventListener('keydown', onSearchKey);
-    document.getElementById('filter-subcategory').addEventListener('change', render);
-    document.getElementById('filter-manufacturer').addEventListener('change', render);
-    document.getElementById('filter-available').addEventListener('change', render);
+    document.getElementById('filter-subcategory').addEventListener('change', onFilterChange);
+    document.getElementById('filter-manufacturer').addEventListener('change', onFilterChange);
+    document.getElementById('filter-thickness').addEventListener('change', onFilterChange);
+    document.getElementById('filter-grade').addEventListener('change', onFilterChange);
+    document.getElementById('filter-available').addEventListener('change', onFilterChange);
 
     document.querySelectorAll('#sidebar-sorts .sidebar-sort').forEach(b => {
         b.addEventListener('click', () => {
@@ -1157,6 +1774,11 @@ function initSwipe() {
 // =============================================================
 // FILTERING & SORTING
 // =============================================================
+function onFilterChange() {
+    updateCascadeOptions();
+    render();
+}
+
 function parsePrice(p) {
     if (!p) return 0;
     if (p.price_raw) return p.price_raw;
@@ -1169,12 +1791,16 @@ function getFiltered() {
     const q = (document.getElementById('search').value || '').toLowerCase().trim();
     const sc = document.getElementById('filter-subcategory').value;
     const mf = document.getElementById('filter-manufacturer').value;
+    const th = document.getElementById('filter-thickness').value;
+    const gr = document.getElementById('filter-grade').value;
     const av = document.getElementById('filter-available').value;
 
     let f = allProducts;
     if (activeCategory !== 'all') f = f.filter(p => p.category === activeCategory);
     if (sc !== 'all') f = f.filter(p => p.subcategory === sc);
     if (mf !== 'all') f = f.filter(p => p.manufacturer === mf);
+    if (th !== 'all') f = f.filter(p => String(p.thickness) === th);
+    if (gr !== 'all') f = f.filter(p => String(p.grade) === gr);
     if (av === 'available') {
         f = f.filter(p => p.stock_raw >= 1);
     } else if (av === 'low') {
@@ -1194,11 +1820,155 @@ function getFiltered() {
 }
 
 // =============================================================
+// CASCADING FILTERS
+// =============================================================
+
+// Get filtered products excluding one filter (so we can build options for that filter)
+function getFilteredExcluding(excludeFilter) {
+    const q = (document.getElementById('search').value || '').toLowerCase().trim();
+    const sc = document.getElementById('filter-subcategory').value;
+    const mf = document.getElementById('filter-manufacturer').value;
+    const th = document.getElementById('filter-thickness').value;
+    const gr = document.getElementById('filter-grade').value;
+    const av = document.getElementById('filter-available').value;
+
+    let f = allProducts;
+    if (excludeFilter !== 'category' && activeCategory !== 'all') f = f.filter(p => p.category === activeCategory);
+    if (excludeFilter !== 'subcategory' && sc !== 'all') f = f.filter(p => p.subcategory === sc);
+    if (excludeFilter !== 'manufacturer' && mf !== 'all') f = f.filter(p => p.manufacturer === mf);
+    if (excludeFilter !== 'thickness' && th !== 'all') f = f.filter(p => String(p.thickness) === th);
+    if (excludeFilter !== 'grade' && gr !== 'all') f = f.filter(p => String(p.grade) === gr);
+    if (excludeFilter !== 'available') {
+        if (av === 'available') f = f.filter(p => p.stock_raw >= 1);
+        else if (av === 'low') f = f.filter(p => p.stock_raw > 0 && p.stock_raw < 1);
+    }
+    if (q) {
+        f = f.filter(p => [p.name, p.category, p.subcategory, p.manufacturer].filter(Boolean).join(' ').toLowerCase().includes(q));
+    }
+    return [...f];
+}
+
+// Rebuild a select element with options from filtered products
+function rebuildSelect(selectId, products, keyFn) {
+    const sel = document.getElementById(selectId);
+    const currentVal = sel.value;
+    const uniqueVals = new Set();
+    products.forEach(p => {
+        const v = keyFn(p);
+        if (v != null && v !== '') uniqueVals.add(String(v));
+    });
+    const sorted = [...uniqueVals].sort();
+
+    // Clear all existing option elements
+    while (sel.options.length > 0) sel.remove(0);
+
+    // Add "all" option
+    const allOpt = document.createElement('option');
+    allOpt.value = 'all';
+    allOpt.textContent = sel === document.getElementById('filter-available') ? 'Любое наличие' : 'Все ' + (sel.dataset.label || '');
+    sel.appendChild(allOpt);
+
+    // For availability, add fixed options
+    if (selectId === 'filter-available') {
+        const opt1 = document.createElement('option');
+        opt1.value = 'available'; opt1.textContent = '✓ В наличии';
+        sel.appendChild(opt1);
+        const opt2 = document.createElement('option');
+        opt2.value = 'low'; opt2.textContent = '⚠ Мало';
+        sel.appendChild(opt2);
+    } else {
+        sorted.forEach(v => {
+            const opt = document.createElement('option');
+            opt.value = v;
+            opt.textContent = v;
+            sel.appendChild(opt);
+        });
+    }
+
+    // Restore previous selection if still valid
+    if (currentVal !== 'all' && [...sel.options].some(o => o.value === currentVal)) {
+        sel.value = currentVal;
+    } else {
+        sel.value = 'all';
+    }
+}
+
+// Rebuild select using its own label hint
+function rebuildSelectSimple(selectId, label, products, keyFn) {
+    const sel = document.getElementById(selectId);
+    const currentVal = sel.value;
+    const uniqueVals = new Set();
+    products.forEach(p => {
+        const v = keyFn(p);
+        if (v != null && v !== '') uniqueVals.add(String(v));
+    });
+    const sorted = [...uniqueVals].sort();
+
+    while (sel.options.length > 0) sel.remove(0);
+
+    const allOpt = document.createElement('option');
+    allOpt.value = 'all';
+    allOpt.textContent = label;
+    sel.appendChild(allOpt);
+
+    sorted.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        sel.appendChild(opt);
+    });
+
+    if (currentVal !== 'all' && [...sel.options].some(o => o.value === currentVal)) {
+        sel.value = currentVal;
+    } else {
+        sel.value = 'all';
+    }
+}
+
+// Update all cascade selects and category counts based on current filter state
+function updateCascadeOptions(excludeChangedFilter) {
+    // Rebuild each select from products filtered WITHOUT its own filter
+    // This way you can always see what other values are possible given current filters
+    const subProd = getFilteredExcluding('subcategory');
+    rebuildSelectSimple('filter-subcategory', 'Все подкатегории', subProd, p => p.subcategory);
+
+    const mfProd = getFilteredExcluding('manufacturer');
+    rebuildSelectSimple('filter-manufacturer', 'Все производители', mfProd, p => p.manufacturer);
+
+    const thProd = getFilteredExcluding('thickness');
+    rebuildSelectSimple('filter-thickness', 'Все толщины', thProd, p => p.thickness);
+
+    const grProd = getFilteredExcluding('grade');
+    rebuildSelectSimple('filter-grade', 'Все марки', grProd, p => p.grade);
+
+    // Update category counts in sidebar
+    updateCategoryCounts();
+}
+
+// Update category button counts based on current non-category filters
+function updateCategoryCounts() {
+    // For each category, count how many products match OTHER filters (excluding category)
+    const nonCatFiltered = getFilteredExcluding('category');
+
+    const allCount = nonCatFiltered.length;
+    document.getElementById('sidebar-cat-all').textContent = allCount;
+
+    document.querySelectorAll('#sidebar-cats .sidebar-cat').forEach(btn => {
+        const cat = btn.dataset.cat;
+        if (cat === 'all') return;
+        const count = nonCatFiltered.filter(p => p.category === cat).length;
+        const countEl = btn.querySelector('.sidebar-cat-count');
+        if (countEl) countEl.textContent = count;
+    });
+}
+
+// =============================================================
 // CATEGORY
 // =============================================================
 function selectCategory(cat) {
     activeCategory = cat;
     document.querySelectorAll('#sidebar-cats .sidebar-cat').forEach(c => c.classList.toggle('active', c.dataset.cat === cat));
+    updateCascadeOptions();
     render();
 }
 
@@ -1294,6 +2064,10 @@ function render() {
         af.push({ label: document.getElementById('filter-subcategory').value, action: () => { document.getElementById('filter-subcategory').value = 'all'; render(); } });
     if (document.getElementById('filter-manufacturer').value !== 'all')
         af.push({ label: document.getElementById('filter-manufacturer').value, action: () => { document.getElementById('filter-manufacturer').value = 'all'; render(); } });
+    if (document.getElementById('filter-thickness').value !== 'all')
+        af.push({ label: 'Толщина: ' + document.getElementById('filter-thickness').value, action: () => { document.getElementById('filter-thickness').value = 'all'; render(); } });
+    if (document.getElementById('filter-grade').value !== 'all')
+        af.push({ label: 'Марка: ' + document.getElementById('filter-grade').value, action: () => { document.getElementById('filter-grade').value = 'all'; render(); } });
     if (document.getElementById('filter-available').value !== 'all')
         af.push({ label: document.getElementById('filter-available').selectedOptions[0].textContent, action: () => { document.getElementById('filter-available').value = 'all'; render(); } });
 
@@ -1324,15 +2098,14 @@ function render() {
 
     // Build rows, keep header at top
     const headerHTML = listEl.querySelector('.list-header') ? listEl.querySelector('.list-header').outerHTML : '';
-    listEl.innerHTML = headerHTML + filtered.map((p, i) => buildRow(p, i)).join('');
+    listEl.innerHTML = headerHTML + filtered.map((p, i) => buildRow(p, i, allProducts.indexOf(p))).join('');
 
     listEl.querySelectorAll('.list-row').forEach(row => {
         row.addEventListener('click', e => {
             if (e.target.closest('a')) return;
+    // Remove carat click handler — + button handles expand now
             if (e.target.closest('.list-row-carat')) {
-                // Explicit carat click — toggle
-                row.classList.toggle('expanded');
-                afterToggle(row);
+                // No-op: carat removed, keep for backward compat
                 return;
             }
             row.classList.toggle('expanded');
@@ -1351,7 +2124,7 @@ function afterToggle(row) {
     }
 }
 
-function buildRow(p, idx) {
+function buildRow(p, idx, globalIdx) {
     const sc = statusClass(p.status);
     const sl = p.status || 'В наличии';
     const pn = parsePrice(p);
@@ -1364,22 +2137,25 @@ function buildRow(p, idx) {
     let variantsHTML = '';
     if (variants.length) {
         let rows = '';
-        variants.forEach(v => {
+        variants.forEach((v, vi) => {
             const vPrice = v.price || '—';
             const vStock = (v.stock !== undefined && v.stock !== null) ? String(v.stock) + ' т' : '—';
-            const vCut = v.cut_length ? String(v.cut_length) + ' м' : '—';
-            const vGost = v.gost || '—';
+            const vCut = v.cut_length ? String(v.cut_length) : '—';
             rows += '<tr>' +
-                '<td>' + esc(vCut) + '</td>' +
+                '<td>' + esc(vCut) + (v.cut_length ? ' м' : '') + '</td>' +
                 '<td class="td-mono td-right">' + esc(vPrice) + '</td>' +
                 '<td class="td-mono td-right">' + esc(vStock) + '</td>' +
-                '<td>' + esc(vGost) + '</td>' +
+                '<td style="text-align:center;"><button class="variant-cart-btn" title="Добавить в корзину"' +
+                ' data-vname="' + esc(p.name) + '"' +
+                ' data-vcut="' + esc(String(v.cut_length || '')) + '"' +
+                ' data-vprice="' + esc(String(vPrice)) + '"' +
+                '>🛒</button></td>' +
                 '</tr>';
         });
         variantsHTML = '<div class="variants-block">' +
             '<div class="variants-heading">📋 Варианты раскроя</div>' +
             '<table class="variants-table">' +
-            '<thead><tr><th>Раскрой</th><th class="th-right">Цена</th><th class="th-right">Остаток</th><th>ГОСТ</th></tr></thead>' +
+            '<thead><tr><th>Раскрой</th><th class="th-right">Цена</th><th class="th-right">Остаток</th><th class="th-cart"></th></tr></thead>' +
             '<tbody>' + rows + '</tbody>' +
             '</table></div>';
     }
@@ -1408,6 +2184,8 @@ function buildRow(p, idx) {
         '<div class="list-row-subcat">' + (p.subcategory ? esc(p.subcategory) : esc(p.category || '')) + '</div>' +
         pd +
         '<span class="list-row-status list-row-status--' + sc + '">' + esc(sl) + '</span>' +
+        '<button class="list-row-cart-add" onclick="event.stopPropagation();event.preventDefault();var r=this.closest(\'.list-row\');r.classList.toggle(\'expanded\');afterToggle(r)" title="Варианты раскроя">+</button>' +
+        '<button class="list-row-info" onclick="event.stopPropagation();openModal(' + globalIdx + ')" title="Подробнее">ℹ</button>' +
         '<div class="list-row-carat"><span class="carat-arrow">▼</span></div>' +
         '</div>' +
         '<div class="list-row-details">' +
@@ -1427,14 +2205,104 @@ function resetAllFilters() {
     document.getElementById('search').value = '';
     document.getElementById('filter-subcategory').value = 'all';
     document.getElementById('filter-manufacturer').value = 'all';
+    document.getElementById('filter-thickness').value = 'all';
+    document.getElementById('filter-grade').value = 'all';
     document.getElementById('filter-available').value = 'all';
     document.getElementById('autocomplete').classList.remove('show');
     activeSort = 'default';
     document.querySelectorAll('#sidebar-sorts .sidebar-sort').forEach(b => b.classList.remove('active'));
     document.querySelector('#sidebar-sorts .sidebar-sort[data-sort="default"]').classList.add('active');
-    selectCategory('all');
+    activeCategory = 'all';
+    document.querySelectorAll('#sidebar-cats .sidebar-cat').forEach(c => c.classList.toggle('active', c.dataset.cat === 'all'));
+
+    // Rebuild all selects from full dataset
+    rebuildSelectSimple('filter-subcategory', 'Все подкатегории', allProducts, p => p.subcategory);
+    rebuildSelectSimple('filter-manufacturer', 'Все производители', allProducts, p => p.manufacturer);
+    rebuildSelectSimple('filter-thickness', 'Все толщины', allProducts, p => p.thickness);
+    rebuildSelectSimple('filter-grade', 'Все марки', allProducts, p => p.grade);
+
+    updateCategoryCounts();
     render();
 }
+
+// =============================================================
+// MODAL
+// =============================================================
+function openModal(productIdx) {
+    const p = allProducts[productIdx];
+    if (!p) return;
+
+    const variants = p.variants || [];
+    let variantsRows = '';
+    if (variants.length) {
+        variants.forEach(v => {
+            const vPrice = v.price || '—';
+            const vStock = (v.stock !== undefined && v.stock !== null) ? String(v.stock) + ' т' : '—';
+            const vCut = v.cut_length ? String(v.cut_length) + ' м' : '—';
+            variantsRows += '<tr>' +
+                '<td>' + esc(vCut) + '</td>' +
+                '<td class="td-mono td-right">' + esc(vPrice) + '</td>' +
+                '<td class="td-mono td-right">' + esc(vStock) + '</td>' +
+                '</tr>';
+        });
+    }
+
+    // Gather GOSTs from all variants
+    const gosts = [...new Set(variants.map(v => v.gost).filter(Boolean))];
+    const gostValue = gosts.length ? gosts.join(', ') : '—';
+
+    let variantsHTML = '';
+    if (variants.length) {
+        variantsHTML = '<div class="modal-section">' +
+            '<div class="modal-section-title">📋 Варианты раскроя</div>' +
+            '<table class="modal-variants-table">' +
+            '<thead><tr><th>Раскрой</th><th style="text-align:right;">Цена</th><th style="text-align:right;">Остаток</th></tr></thead>' +
+            '<tbody>' + variantsRows + '</tbody>' +
+            '</table></div>';
+    }
+
+    const card = document.getElementById('modal-card');
+    card.innerHTML =
+        '<div class="modal-header">' +
+        '<div class="modal-title">' + esc(p.name) + '</div>' +
+        '<button class="modal-close" onclick="closeModal()">✕</button>' +
+        '</div>' +
+        '<div class="modal-body">' +
+        '<div class="modal-section">' +
+        '<div class="modal-section-title">📋 Характеристики</div>' +
+        '<div class="modal-props">' +
+        '<div class="modal-prop"><span class="modal-prop-label">ГОСТ</span><span class="modal-prop-value">' + esc(gostValue) + '</span></div>' +
+        '<div class="modal-prop"><span class="modal-prop-label">Изготовитель</span><span class="modal-prop-value">' + esc(p.manufacturer || '—') + '</span></div>' +
+        '<div class="modal-prop"><span class="modal-prop-label">Толщина</span><span class="modal-prop-value">' + esc(p.thickness ? p.thickness + ' мм' : '—') + '</span></div>' +
+        '<div class="modal-prop"><span class="modal-prop-label">Марка</span><span class="modal-prop-value">' + esc(p.grade || '—') + '</span></div>' +
+        '<div class="modal-prop"><span class="modal-prop-label">Ед. измерения</span><span class="modal-prop-value">' + esc(p.unit || '—') + '</span></div>' +
+        '<div class="modal-prop"><span class="modal-prop-label">Категория</span><span class="modal-prop-value">' + esc(p.category || '—') + '</span></div>' +
+        '</div>' +
+        '</div>' +
+        variantsHTML +
+        '</div>';
+
+    document.getElementById('modal-overlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+// Init modal: close on overlay click and Escape
+(function initModal() {
+    const overlay = document.getElementById('modal-overlay');
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('show')) {
+            closeModal();
+        }
+    });
+})();
 
 // =============================================================
 // THEME
@@ -1467,6 +2335,217 @@ function resetAllFilters() {
             }
         });
     }
+})();
+
+// =============================================================
+// CART — localStorage-based shopping cart (variant-oriented)
+// Cart item: { key, name, cut_length, price, price_str, qty }
+// =============================================================
+const CART_KEY = 'atompk-cart';
+
+let cart = [];
+
+function loadCart() {
+    try {
+        const raw = localStorage.getItem(CART_KEY);
+        cart = raw ? JSON.parse(raw) : [];
+        // Migrate old cart format (no cut_length) — drop old entries
+        cart = cart.filter(c => c.key !== undefined);
+    } catch (e) { cart = []; }
+}
+function saveCart() {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    updateCartBadge();
+    updateCartCount();
+}
+
+function getCartKey(name, cutLength) {
+    return name + '||' + (cutLength || '');
+}
+
+function addVariantToCart(name, cutLength, priceStr) {
+    const key = getCartKey(name, cutLength);
+    const existing = cart.find(c => c.key === key);
+    if (existing) {
+        existing.qty += 1;
+    } else {
+        cart.push({
+            key: key,
+            name: name,
+            cut_length: cutLength || '',
+            price: parsePrice(priceStr),
+            price_str: priceStr || 'по запросу',
+            qty: 1
+        });
+    }
+    saveCart();
+    bumpBadge();
+    renderCart();
+}
+
+function removeFromCart(key) {
+    cart = cart.filter(c => c.key !== key);
+    saveCart();
+    renderCart();
+}
+
+function updateCartQty(key, delta) {
+    const item = cart.find(c => c.key === key);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) {
+        removeFromCart(key);
+        return;
+    }
+    saveCart();
+    renderCart();
+}
+
+function clearCart() {
+    cart = [];
+    saveCart();
+    renderCart();
+}
+
+function cartTotalItems() {
+    return cart.reduce((sum, c) => sum + c.qty, 0);
+}
+
+function cartTotalPrice() {
+    return cart.reduce((sum, c) => sum + c.price * c.qty, 0);
+}
+
+function updateCartBadge() {
+    const badge = document.getElementById('cart-badge');
+    const btn = document.getElementById('cart-icon-btn');
+    const total = cartTotalItems();
+    badge.textContent = total > 0 ? total : '';
+    if (total > 0) {
+        btn.classList.add('has-items');
+    } else {
+        btn.classList.remove('has-items');
+    }
+}
+
+function updateCartCount() {
+    document.getElementById('cart-count').textContent = cartTotalItems();
+    document.getElementById('cart-total').textContent = formatPrice(cartTotalPrice());
+}
+
+function bumpBadge() {
+    const badge = document.getElementById('cart-badge');
+    badge.classList.remove('bump');
+    void badge.offsetWidth; // force reflow
+    badge.classList.add('bump');
+}
+
+function formatPrice(n) {
+    if (n <= 0) return 'по запросу';
+    return n.toLocaleString('ru-RU') + ' ₽';
+}
+
+function openCart() {
+    document.getElementById('cart-panel').classList.add('open');
+    document.getElementById('cart-overlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    renderCart();
+}
+
+function closeCart() {
+    document.getElementById('cart-panel').classList.remove('open');
+    document.getElementById('cart-overlay').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+function renderCart() {
+    const body = document.getElementById('cart-panel-body');
+    const footer = document.getElementById('cart-panel-footer');
+
+    if (cart.length === 0) {
+        body.innerHTML = '<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Корзина пуста</p><p style="font-size:0.72rem;color:var(--text-dim);margin-top:4px;">Нажимайте <span style="color:var(--accent);">🛒</span> в таблице вариантов раскроя, чтобы добавить нужный размер</p></div>';
+        footer.style.display = 'none';
+        return;
+    }
+
+    footer.style.display = '';
+    updateCartCount();
+
+    body.innerHTML = cart.map((item, i) => {
+        const itemTotal = item.price > 0 ? item.price * item.qty : 0;
+        const cutInfo = item.cut_length ? '<div style="font-size:0.72rem;color:var(--text-dim);margin-bottom:2px;">📐 Раскрой: ' + esc(item.cut_length) + '</div>' : '';
+        const escKey = esc(item.key).replace(/'/g, "\\'");
+        return '<div class="cart-item">' +
+            '<div class="cart-item-info">' +
+            '<div class="cart-item-name">' + esc(item.name) + '</div>' +
+            cutInfo +
+            '<div class="cart-item-price">' + esc(item.price_str) + (item.qty > 1 ? ' × ' + item.qty + ' = ' + formatPrice(itemTotal) : '') + '</div>' +
+            '</div>' +
+            '<div class="cart-item-right">' +
+            '<button class="cart-item-remove" onclick="removeFromCart(\'' + escKey + '\')" title="Удалить">🗑</button>' +
+            '<div class="cart-item-controls">' +
+            '<button class="cart-qty-btn" onclick="updateCartQty(\'' + escKey + '\', -1)">−</button>' +
+            '<span class="cart-qty-value">' + item.qty + '</span>' +
+            '<button class="cart-qty-btn" onclick="updateCartQty(\'' + escKey + '\', 1)">+</button>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+    }).join('');
+}
+
+function sendOrder() {
+    if (cart.length === 0) return;
+
+    const total = cartTotalPrice();
+    let text = '🛒 Заявка из каталога AtomPK\n\n';
+    text += '━━━━━━━━━━━━━━━━━\n';
+    cart.forEach((item, i) => {
+        const itemTotal = item.price > 0 ? item.price * item.qty : 0;
+        text += (i + 1) + '. ' + item.name + '\n';
+        if (item.cut_length) text += '   Раскрой: ' + item.cut_length + '\n';
+        text += '   Цена: ' + item.price_str;
+        if (item.qty > 1) text += ' × ' + item.qty + ' = ' + formatPrice(itemTotal);
+        text += '\n';
+    });
+    text += '━━━━━━━━━━━━━━━━━\n';
+    text += 'Итого позиций: ' + cartTotalItems() + '\n';
+    text += 'Итого сумма: ' + formatPrice(total) + '\n';
+
+    // Send via Telegram WebApp if available
+    if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.sendData === 'function') {
+        window.Telegram.WebApp.sendData(text);
+    } else {
+        // Fallback: show in alert for testing outside Telegram
+        alert('Telegram WebApp не обнаружен.\n\nТекст заявки:\n\n' + text);
+    }
+}
+
+// Init cart panel events
+(function initCart() {
+    loadCart();
+    updateCartBadge();
+    updateCartCount();
+
+    document.getElementById('cart-icon-btn').addEventListener('click', openCart);
+    document.getElementById('cart-overlay').addEventListener('click', closeCart);
+    document.getElementById('cart-panel-close').addEventListener('click', closeCart);
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('cart-panel').classList.contains('open')) {
+            closeCart();
+        }
+    });
+
+    // Delegate variant cart button clicks (variant-level add-to-cart)
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.variant-cart-btn');
+        if (!btn) return;
+        e.stopPropagation();
+        e.preventDefault();
+        const name = btn.dataset.vname;
+        const cut = btn.dataset.vcut;
+        const price = btn.dataset.vprice;
+        if (name) addVariantToCart(name, cut, price);
+    });
 })();
 
 // =============================================================

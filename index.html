@@ -471,7 +471,7 @@
         /* List header row */
         .list-header {
             display: grid;
-            grid-template-columns: minmax(0,1fr) 120px 140px 90px repeat(4,32px);
+            grid-template-columns: minmax(0,1fr) 140px 90px repeat(4,32px);
             gap: 12px;
             padding: 12px 16px;
             background: var(--bg-panel);
@@ -499,7 +499,7 @@
 
         .list-row-main {
             display: grid;
-            grid-template-columns: minmax(0,1fr) 120px 140px 90px repeat(4,32px);
+            grid-template-columns: minmax(0,1fr) 140px 90px repeat(4,32px);
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
@@ -1385,7 +1385,17 @@
 
         /* Sales UX */
         .list-row-fav,.list-row-share{width:32px;height:32px;border:0;border-radius:7px;background:transparent;color:var(--text-dim);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;transition:all var(--transition);padding:0}.list-row-fav:hover,.list-row-share:hover{color:var(--accent);background:var(--accent-dim)}.list-row-fav.active{color:#e05263}.list-row-cart-add{transition:transform .22s ease,background .22s ease,color .22s ease}.list-row.expanded .list-row-cart-add{transform:rotate(45deg);color:var(--accent);background:var(--accent-dim)}.variant-cart-btn{width:auto!important;min-width:86px!important;padding:5px 9px!important;border-radius:7px!important;font-size:.68rem!important;gap:4px}.sidebar-fav-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);cursor:pointer}.sidebar-fav-toggle.active{color:#e05263;border-color:rgba(224,82,99,.45);background:rgba(224,82,99,.08)}.recent-list{display:flex;flex-direction:column;gap:4px}.recent-item{border:0;background:transparent;color:var(--text-secondary);text-align:left;font-size:.72rem;line-height:1.3;padding:6px 7px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.recent-item:hover{background:var(--accent-dim);color:var(--accent)}.data-updated{font-size:.7rem;color:var(--text-dim);margin-left:auto;white-space:nowrap}.cart-volume{width:76px;padding:5px 7px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input);color:var(--text);font-family:var(--font-mono)}.cart-estimate-note{margin:6px 0 10px;font-size:.68rem;line-height:1.35;color:var(--text-dim)}
-        @media(max-width:860px){.list-row-main{grid-template-columns:minmax(0,1fr) repeat(4,32px)!important;align-items:center!important;min-height:92px}.list-row-name{grid-column:1/-1!important}.list-row-subcat{grid-column:1/-1!important}.list-row-price{grid-column:1/2!important;text-align:left!important;font-size:.78rem!important}.list-row-status{grid-column:2/3!important}.list-row-cart-add{grid-column:3/4!important}.list-row-info{grid-column:4/5!important}.list-row-fav{grid-column:5/6!important}.list-row-share{position:absolute;right:8px;top:8px}.data-updated{width:100%;margin:4px 0 0}.variant-cart-btn span{display:none}.variant-cart-btn{min-width:32px!important}}
+        @media(max-width:860px){
+          .list-row-main{display:grid!important;grid-template-columns:minmax(0,1fr) auto repeat(4,28px)!important;grid-template-areas:"name name name name name name" "price status plus info fav share";align-items:center!important;column-gap:5px!important;row-gap:8px!important;min-height:0!important;padding:10px 12px!important;position:relative}
+          .list-row-name{grid-area:name!important;min-width:0;padding:0!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;font-size:.8rem!important;line-height:1.25!important}
+          .list-row-price{grid-area:price!important;min-width:0;text-align:left!important;font-size:.7rem!important;line-height:1!important}
+          .list-row-status{grid-area:status!important;font-size:.58rem!important;padding:3px 6px!important;justify-self:start}
+          .list-row-cart-add{grid-area:plus!important;width:28px!important;height:28px!important}
+          .list-row-info{grid-area:info!important;width:28px!important;height:28px!important}
+          .list-row-fav{grid-area:fav!important;width:28px!important;height:28px!important}
+          .list-row-share{grid-area:share!important;position:static!important;width:28px!important;height:28px!important}
+          .data-updated{width:100%;margin:4px 0 0}.variant-cart-btn span{display:none}.variant-cart-btn{min-width:32px!important}
+        }
     </style>
 </head>
 <body>
@@ -1500,7 +1510,6 @@
         <div class="list" id="list" style="display:none;">
             <div class="list-header">
                 <span class="list-header-cell">Наименование</span>
-                <span class="list-header-cell">Подкатегория</span>
                 <span class="list-header-cell list-header-cell--right">Цена</span>
                 <span class="list-header-cell" style="text-align:center;">Наличие</span>
                 <span></span><span></span><span></span><span></span>
@@ -2178,7 +2187,6 @@ function buildRow(p, idx, globalIdx) {
     return '<div class="list-row" data-product-index="' + globalIdx + '">' +
         '<div class="list-row-main">' +
         '<div class="list-row-name" title="' + esc(p.name) + '">' + esc(p.name) + '</div>' +
-        '<div class="list-row-subcat">' + (p.subcategory ? esc(p.subcategory) : esc(p.category || '')) + '</div>' +
         pd +
         '<span class="list-row-status list-row-status--' + sc + '">' + esc(sl) + '</span>' +
         '<button class="list-row-cart-add" onclick="toggleProductRow(event,this,' + globalIdx + ')" title="Показать варианты">+</button>' +

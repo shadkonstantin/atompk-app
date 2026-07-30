@@ -770,6 +770,28 @@
             border-color: var(--accent);
             background: var(--accent-dim);
         }
+        .variant-cart-btn.added {
+            color: var(--green) !important;
+            border-color: var(--green) !important;
+            background: var(--green-bg) !important;
+            animation: cartAddedPulse .5s ease;
+        }
+        @keyframes cartAddedPulse {
+            0% { transform: scale(1); }
+            45% { transform: scale(.82); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .cart-toast {
+            position: fixed; left: 50%; bottom: 24px; z-index: 500;
+            transform: translate(-50%, 16px); opacity: 0;
+            max-width: calc(100vw - 32px); padding: 10px 14px;
+            border: 1px solid var(--green); border-radius: 10px;
+            background: var(--bg-panel); color: var(--text);
+            box-shadow: var(--shadow); font-size: .76rem;
+            pointer-events: none; transition: opacity .2s ease, transform .2s ease;
+        }
+        .cart-toast.show { opacity: 1; transform: translate(-50%, 0); }
         .variants-table th.th-cart { width: 44px; text-align: center; }
 
         /* ============================================================
@@ -1570,10 +1592,10 @@
     </div>
     <div class="cart-panel-footer" id="cart-panel-footer" style="display:none;">
         <div class="cart-total-row">
-            <span class="cart-total-label">Позиций в заявке:</span>
-            <span class="cart-total-value" id="cart-total">0</span>
+            <span class="cart-total-label">Итого:</span>
+            <span class="cart-total-value" id="cart-total">0 ₽</span>
         </div>
-        <div class="cart-estimate-note">Стоимость уточнит менеджер после согласования объёма и наличия.</div>
+        <div class="cart-estimate-note">Расчёт: вес раскроя × цена за тонну. Итог рассчитан по текущей цене каталога.</div>
         <button class="cart-send-btn" id="cart-send-btn" onclick="sendOrder()">
             <span class="send-icon">📤</span> Отправить заявку
         </button>
@@ -2170,6 +2192,7 @@ function buildRow(p, idx, globalIdx) {
                 ' data-vname="' + esc(p.name) + '"' +
                 ' data-vcut="' + esc(String(v.cut_length || '')) + '"' +
                 ' data-vprice="' + esc(String(vPrice)) + '"' +
+                ' data-vstock="' + esc(String(v.stock || 0)) + '"' +
                 '>🛒 <span>В заявку</span></button></td>' +
                 '</tr>';
         });
@@ -2361,7 +2384,7 @@ async function shareProduct(i){const p=allProducts[i];if(!p)return;const u=new U
 
 // =============================================================
 // CART — localStorage-based shopping cart (variant-oriented)
-// Cart item: { key, name, cut_length, price, price_str, qty }
+// Cart item: { key, name, cut_length, price, price_str, weight }
 // =============================================================
 const CART_KEY = 'atompk-cart';
 
@@ -2372,7 +2395,7 @@ function loadCart() {
         const raw = localStorage.getItem(CART_KEY);
         cart = raw ? JSON.parse(raw) : [];
         // Migrate old cart format (no cut_length) — drop old entries
-        cart=cart.filter(c=>c.key!==undefined).map(c=>({...c,volume:Number(c.volume||c.qty||1)}));
+        cart=cart.filter(c=>c.key!==undefined).map(c=>({...c,weight:Number(c.weight||c.stock||c.volume||c.qty||0)}));
     } catch (e) { cart = []; }
 }
 function saveCart() {
@@ -2385,24 +2408,18 @@ function getCartKey(name, cutLength) {
     return name + '||' + (cutLength || '');
 }
 
-function addVariantToCart(name, cutLength, priceStr) {
-    const key = getCartKey(name, cutLength);
-    const existing = cart.find(c => c.key === key);
-    if (existing) {
-        existing.volume=Number(existing.volume||1)+0.1;
-    } else {
-        cart.push({
-            key: key,
-            name: name,
-            cut_length: cutLength || '',
-            price: parsePrice(priceStr),
-            price_str: priceStr || 'по запросу',
-            volume: 1
-        });
-    }
-    saveCart();
-    bumpBadge();
-    renderCart();
+function addVariantToCart(name,cutLength,priceStr,stockValue,button){
+    const key=getCartKey(name,cutLength),price=parsePrice(priceStr);
+    const weight=Math.max(0,Number(String(stockValue||0).replace(',','.'))||0);
+    const existing=cart.find(c=>c.key===key);
+    const item={key,name,cut_length:cutLength||'',price,price_str:priceStr||'по запросу',weight};
+    if(existing)Object.assign(existing,item);else cart.push(item);
+    saveCart();bumpBadge();renderCart();showAddedFeedback(button,name,weight);
+}
+function showAddedFeedback(button,name,weight){
+    if(button){const old=button.innerHTML;button.classList.add('added');button.innerHTML='✓ <span>Добавлено</span>';button.disabled=true;setTimeout(()=>{button.classList.remove('added');button.innerHTML=old;button.disabled=false},950)}
+    let toast=document.getElementById('cart-toast');if(!toast){toast=document.createElement('div');toast.id='cart-toast';toast.className='cart-toast';document.body.appendChild(toast)}
+    toast.textContent='✓ В корзину добавлено: '+formatStock(weight);toast.classList.add('show');clearTimeout(toast._timer);toast._timer=setTimeout(()=>toast.classList.remove('show'),1800);
 }
 
 function removeFromCart(key) {
@@ -2411,8 +2428,6 @@ function removeFromCart(key) {
     renderCart();
 }
 
-function updateCartVolume(key,value){const item=cart.find(c=>c.key===key);if(!item)return;item.volume=Math.max(.1,Number(value)||.1);saveCart()}
-
 function clearCart() {
     cart = [];
     saveCart();
@@ -2420,7 +2435,7 @@ function clearCart() {
 }
 
 function cartTotalItems(){return cart.length}
-function cartTotalPrice(){return 0}
+function cartTotalPrice(){return cart.reduce((sum,c)=>sum+(Number(c.price)||0)*(Number(c.weight)||0),0)}
 
 function updateCartBadge() {
     const badge = document.getElementById('cart-badge');
@@ -2436,7 +2451,7 @@ function updateCartBadge() {
 
 function updateCartCount() {
     document.getElementById('cart-count').textContent = cartTotalItems();
-    document.getElementById('cart-total').textContent=String(cart.length);
+    document.getElementById('cart-total').textContent=formatPrice(cartTotalPrice());
 }
 
 function bumpBadge() {
@@ -2464,9 +2479,19 @@ function closeCart() {
     document.body.style.overflow = '';
 }
 
-function renderCart(){const body=document.getElementById('cart-panel-body'),footer=document.getElementById('cart-panel-footer');if(!cart.length){body.innerHTML='<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Корзина пуста</p><p style="font-size:.72rem;color:var(--text-dim);margin-top:4px">Выберите конкретный раскрой и нажмите «В заявку»</p></div>';footer.style.display='none';return}footer.style.display='';updateCartCount();body.innerHTML=cart.map(item=>{const cut=item.cut_length?'<div style="font-size:.72rem;color:var(--text-dim)">📐 Раскрой: '+esc(item.cut_length)+'</div>':'',key=esc(item.key).replace(/'/g,"\\'");return '<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">'+esc(item.name)+'</div>'+cut+'<div class="cart-item-price">'+esc(item.price_str)+'</div><label style="font-size:.68rem;color:var(--text-dim)">Желаемый объём, т: <input class="cart-volume" type="number" min="0.1" step="0.1" value="'+Number(item.volume||1).toFixed(1)+'" onchange="updateCartVolume(\''+key+'\',this.value)"></label></div><div class="cart-item-right"><button class="cart-item-remove" onclick="removeFromCart(\''+key+'\')" title="Удалить">🗑</button></div></div>'}).join('')}
+function renderCart(){
+    const body=document.getElementById('cart-panel-body'),footer=document.getElementById('cart-panel-footer');
+    if(!cart.length){body.innerHTML='<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Корзина пуста</p><p style="font-size:.72rem;color:var(--text-dim);margin-top:4px">Выберите конкретный раскрой и нажмите «В заявку»</p></div>';footer.style.display='none';return}
+    footer.style.display='';updateCartCount();
+    body.innerHTML=cart.map(item=>{const cut=item.cut_length?'<div style="font-size:.72rem;color:var(--text-dim)">📐 Раскрой: '+esc(item.cut_length)+'</div>':'',key=esc(item.key).replace(/'/g,"\\'"),weight=Number(item.weight)||0,subtotal=(Number(item.price)||0)*weight;return '<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">'+esc(item.name)+'</div>'+cut+'<div style="font-size:.78rem;color:var(--text);margin-top:5px">Вес раскроя: <strong>'+esc(formatStock(weight))+'</strong></div><div class="cart-item-price" style="font-size:.68rem;color:var(--text-dim)">Цена за тонну: '+esc(item.price_str)+'</div><div style="font-size:.82rem;color:var(--accent);font-weight:700;margin-top:4px">Стоимость: '+esc(formatPrice(subtotal))+'</div></div><div class="cart-item-right"><button class="cart-item-remove" onclick="removeFromCart(\''+key+'\')" title="Удалить">🗑</button></div></div>'}).join('');
+}
 
-function sendOrder(){if(!cart.length)return;let text='🛒 Заявка из каталога металлопроката\n\n';cart.forEach((item,i)=>{text+=(i+1)+'. '+item.name+'\n';if(item.cut_length)text+='   Раскрой: '+item.cut_length+'\n';text+='   Цена: '+item.price_str+'\n   Желаемый объём: '+Number(item.volume||1).toLocaleString('ru-RU')+' т\n'});text+='\nСтоимость и наличие уточняет менеджер.';if(window.Telegram&&window.Telegram.WebApp&&typeof window.Telegram.WebApp.sendData==='function')window.Telegram.WebApp.sendData(text);else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>alert('Заявка скопирована. Отправьте её менеджеру.'));else alert(text)}
+function sendOrder(){
+    if(!cart.length)return;let text='🛒 Заявка из каталога металлопроката\n\n';
+    cart.forEach((item,i)=>{const weight=Number(item.weight)||0,subtotal=(Number(item.price)||0)*weight;text+=(i+1)+'. '+item.name+'\n';if(item.cut_length)text+='   Раскрой: '+item.cut_length+'\n';text+='   Вес: '+formatStock(weight)+'\n   Цена за тонну: '+item.price_str+'\n   Стоимость: '+formatPrice(subtotal)+'\n'});
+    text+='\nИтого: '+formatPrice(cartTotalPrice());
+    if(window.Telegram&&window.Telegram.WebApp&&typeof window.Telegram.WebApp.sendData==='function')window.Telegram.WebApp.sendData(text);else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>alert('Заявка скопирована. Отправьте её менеджеру.'));else alert(text)
+}
 
 // Init cart panel events
 (function initCart() {
@@ -2492,8 +2517,9 @@ function sendOrder(){if(!cart.length)return;let text='🛒 Заявка из к�
         e.preventDefault();
         const name = btn.dataset.vname;
         const cut = btn.dataset.vcut;
-        const price = btn.dataset.vprice;
-        if (name) addVariantToCart(name, cut, price);
+        const price=btn.dataset.vprice;
+        const stock=btn.dataset.vstock;
+        if(name)addVariantToCart(name,cut,price,stock,btn);
     });
 })();
 

@@ -471,7 +471,7 @@
         /* List header row */
         .list-header {
             display: grid;
-            grid-template-columns: 1fr 130px 110px 90px 40px 32px 24px;
+            grid-template-columns: minmax(0,1fr) 120px 140px 90px repeat(4,32px);
             gap: 12px;
             padding: 12px 16px;
             background: var(--bg-panel);
@@ -487,7 +487,7 @@
 
         /* Zebra rows */
         .list-row {
-            cursor: pointer;
+            cursor: default;
             transition: background var(--transition);
             overflow: hidden;
             position: relative;
@@ -499,7 +499,7 @@
 
         .list-row-main {
             display: grid;
-            grid-template-columns: 1fr 130px 110px 90px 40px 32px 24px;
+            grid-template-columns: minmax(0,1fr) 120px 140px 90px repeat(4,32px);
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
@@ -1382,6 +1382,10 @@
             .sidebar-overlay { display: none !important; }
             .sidebar-toggle { display: flex; }
         }
+
+        /* Sales UX */
+        .list-row-fav,.list-row-share{width:32px;height:32px;border:0;border-radius:7px;background:transparent;color:var(--text-dim);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;transition:all var(--transition);padding:0}.list-row-fav:hover,.list-row-share:hover{color:var(--accent);background:var(--accent-dim)}.list-row-fav.active{color:#e05263}.list-row-cart-add{transition:transform .22s ease,background .22s ease,color .22s ease}.list-row.expanded .list-row-cart-add{transform:rotate(45deg);color:var(--accent);background:var(--accent-dim)}.variant-cart-btn{width:auto!important;min-width:86px!important;padding:5px 9px!important;border-radius:7px!important;font-size:.68rem!important;gap:4px}.sidebar-fav-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);cursor:pointer}.sidebar-fav-toggle.active{color:#e05263;border-color:rgba(224,82,99,.45);background:rgba(224,82,99,.08)}.recent-list{display:flex;flex-direction:column;gap:4px}.recent-item{border:0;background:transparent;color:var(--text-secondary);text-align:left;font-size:.72rem;line-height:1.3;padding:6px 7px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.recent-item:hover{background:var(--accent-dim);color:var(--accent)}.data-updated{font-size:.7rem;color:var(--text-dim);margin-left:auto;white-space:nowrap}.cart-volume{width:76px;padding:5px 7px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input);color:var(--text);font-family:var(--font-mono)}.cart-estimate-note{margin:6px 0 10px;font-size:.68rem;line-height:1.35;color:var(--text-dim)}
+        @media(max-width:860px){.list-row-main{grid-template-columns:minmax(0,1fr) repeat(4,32px)!important;align-items:center!important;min-height:92px}.list-row-name{grid-column:1/-1!important}.list-row-subcat{grid-column:1/-1!important}.list-row-price{grid-column:1/2!important;text-align:left!important;font-size:.78rem!important}.list-row-status{grid-column:2/3!important}.list-row-cart-add{grid-column:3/4!important}.list-row-info{grid-column:4/5!important}.list-row-fav{grid-column:5/6!important}.list-row-share{position:absolute;right:8px;top:8px}.data-updated{width:100%;margin:4px 0 0}.variant-cart-btn span{display:none}.variant-cart-btn{min-width:32px!important}}
     </style>
 </head>
 <body>
@@ -1468,6 +1472,8 @@
             </select>
         </div>
 
+        <div class="sidebar-section"><button class="sidebar-fav-toggle" id="favorite-filter" onclick="toggleFavoriteFilter()"><span>♥ Избранное</span><strong id="favorite-count">0</strong></button></div>
+        <div class="sidebar-section" id="recent-section" style="display:none;"><div class="sidebar-heading">Недавно просмотренные</div><div class="recent-list" id="recent-list"></div></div>
         <div class="sidebar-section">
             <div class="sidebar-heading">Сортировка</div>
             <div class="sidebar-sorts" id="sidebar-sorts">
@@ -1487,7 +1493,7 @@
     <main class="main-content">
         <div class="results-bar">
             <span>Показано <strong id="filtered-count">0</strong> из <span id="total-count-2">—</span></span>
-            <div class="results-filters" id="filters-active"></div>
+            <div class="results-filters" id="filters-active"></div><span class="data-updated" id="data-updated" style="display:none;"></span>
         </div>
 
         <div class="skeleton-list" id="skeleton"></div>
@@ -1497,9 +1503,7 @@
                 <span class="list-header-cell">Подкатегория</span>
                 <span class="list-header-cell list-header-cell--right">Цена</span>
                 <span class="list-header-cell" style="text-align:center;">Наличие</span>
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span><span></span>
             </div>
         </div>
         <div class="empty" id="empty" style="display:none;">
@@ -1542,9 +1546,10 @@
     </div>
     <div class="cart-panel-footer" id="cart-panel-footer" style="display:none;">
         <div class="cart-total-row">
-            <span class="cart-total-label">Итого:</span>
-            <span class="cart-total-value" id="cart-total">0 ₽</span>
+            <span class="cart-total-label">Позиций в заявке:</span>
+            <span class="cart-total-value" id="cart-total">0</span>
         </div>
+        <div class="cart-estimate-note">Стоимость уточнит менеджер после согласования объёма и наличия.</div>
         <button class="cart-send-btn" id="cart-send-btn" onclick="sendOrder()">
             <span class="send-icon">📤</span> Отправить заявку
         </button>
@@ -1563,6 +1568,9 @@ let manufacturers = new Set();
 let activeCategory = 'all';
 let activeSort = 'default';
 let debounceTimer = null;
+const FAVORITES_KEY='atompk-favorites',RECENT_KEY='atompk-recent';
+let favorites=new Set(JSON.parse(localStorage.getItem(FAVORITES_KEY)||'[]'));
+let recentProducts=JSON.parse(localStorage.getItem(RECENT_KEY)||'[]'),favoriteOnly=false;
 
 const CAT_ICONS = {
     'Листовой прокат': '📐',
@@ -1617,7 +1625,8 @@ async function loadData() {
     try {
         const r = await fetch('atompk_products.json');
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        allProducts = await r.json();
+        const lastModified=r.headers.get('Last-Modified'); allProducts=await r.json();
+        if(lastModified){const d=new Date(lastModified),el=document.getElementById('data-updated');el.textContent='Данные обновлены: '+d.toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});el.style.display='';}
         init();
     } catch (e) {
         document.getElementById('skeleton').innerHTML =
@@ -1664,6 +1673,8 @@ function init() {
     popSelect('filter-manufacturer', [...manufacturers].sort());
     popSelect('filter-thickness', [...thicknesses].sort());
     popSelect('filter-grade', [...grades].sort());
+    // Сразу показываем актуальные количества в каскадных фильтрах.
+    updateCascadeOptions();
 
     document.getElementById('total-count').textContent = allProducts.length;
     document.getElementById('cat-count').textContent = categories.size;
@@ -1697,8 +1708,8 @@ function init() {
         if (!e.target.closest('#header-search-wrap')) document.getElementById('autocomplete').classList.remove('show');
     });
 
-    // Init swipe on mobile
-    initSwipe();
+    renderRecent();updateFavoriteUI();
+    const linked=new URLSearchParams(location.search).get('product');if(linked)setTimeout(()=>focusProduct(linked),0);
 }
 
 function popSelect(id, opts) {
@@ -1795,7 +1806,8 @@ function getFiltered() {
     const gr = document.getElementById('filter-grade').value;
     const av = document.getElementById('filter-available').value;
 
-    let f = allProducts;
+    let f=allProducts;
+    if(favoriteOnly)f=f.filter(p=>favorites.has(p.name));
     if (activeCategory !== 'all') f = f.filter(p => p.category === activeCategory);
     if (sc !== 'all') f = f.filter(p => p.subcategory === sc);
     if (mf !== 'all') f = f.filter(p => p.manufacturer === mf);
@@ -1832,7 +1844,8 @@ function getFilteredExcluding(excludeFilter) {
     const gr = document.getElementById('filter-grade').value;
     const av = document.getElementById('filter-available').value;
 
-    let f = allProducts;
+    let f=allProducts;
+    if(favoriteOnly)f=f.filter(p=>favorites.has(p.name));
     if (excludeFilter !== 'category' && activeCategory !== 'all') f = f.filter(p => p.category === activeCategory);
     if (excludeFilter !== 'subcategory' && sc !== 'all') f = f.filter(p => p.subcategory === sc);
     if (excludeFilter !== 'manufacturer' && mf !== 'all') f = f.filter(p => p.manufacturer === mf);
@@ -1852,12 +1865,8 @@ function getFilteredExcluding(excludeFilter) {
 function rebuildSelect(selectId, products, keyFn) {
     const sel = document.getElementById(selectId);
     const currentVal = sel.value;
-    const uniqueVals = new Set();
-    products.forEach(p => {
-        const v = keyFn(p);
-        if (v != null && v !== '') uniqueVals.add(String(v));
-    });
-    const sorted = [...uniqueVals].sort();
+    const counts=new Map();products.forEach(p=>{const v=keyFn(p);if(v!=null&&v!=='')counts.set(String(v),(counts.get(String(v))||0)+1);});
+    const sorted=[...counts.keys()].sort();
 
     // Clear all existing option elements
     while (sel.options.length > 0) sel.remove(0);
@@ -1880,7 +1889,7 @@ function rebuildSelect(selectId, products, keyFn) {
         sorted.forEach(v => {
             const opt = document.createElement('option');
             opt.value = v;
-            opt.textContent = v;
+            opt.textContent = v + ' (' + counts.get(v) + ')';
             sel.appendChild(opt);
         });
     }
@@ -1897,12 +1906,8 @@ function rebuildSelect(selectId, products, keyFn) {
 function rebuildSelectSimple(selectId, label, products, keyFn) {
     const sel = document.getElementById(selectId);
     const currentVal = sel.value;
-    const uniqueVals = new Set();
-    products.forEach(p => {
-        const v = keyFn(p);
-        if (v != null && v !== '') uniqueVals.add(String(v));
-    });
-    const sorted = [...uniqueVals].sort();
+    const counts=new Map();products.forEach(p=>{const v=keyFn(p);if(v!=null&&v!=='')counts.set(String(v),(counts.get(String(v))||0)+1);});
+    const sorted=[...counts.keys()].sort();
 
     while (sel.options.length > 0) sel.remove(0);
 
@@ -1914,7 +1919,7 @@ function rebuildSelectSimple(selectId, label, products, keyFn) {
     sorted.forEach(v => {
         const opt = document.createElement('option');
         opt.value = v;
-        opt.textContent = v;
+        opt.textContent = v + ' (' + counts.get(v) + ')';
         sel.appendChild(opt);
     });
 
@@ -2059,6 +2064,9 @@ function render() {
 
     // Active filter tags
     const af = [];
+    const searchValue=(document.getElementById('search').value||'').trim();
+    if(searchValue)af.push({label:'Поиск: '+searchValue,action:()=>{document.getElementById('search').value='';updateCascadeOptions();render();}});
+    if(favoriteOnly)af.push({label:'Избранное',action:()=>toggleFavoriteFilter(false)});
     if (activeCategory !== 'all') af.push({ label: activeCategory, action: () => selectCategory('all') });
     if (document.getElementById('filter-subcategory').value !== 'all')
         af.push({ label: document.getElementById('filter-subcategory').value, action: () => { document.getElementById('filter-subcategory').value = 'all'; render(); } });
@@ -2100,19 +2108,7 @@ function render() {
     const headerHTML = listEl.querySelector('.list-header') ? listEl.querySelector('.list-header').outerHTML : '';
     listEl.innerHTML = headerHTML + filtered.map((p, i) => buildRow(p, i, allProducts.indexOf(p))).join('');
 
-    listEl.querySelectorAll('.list-row').forEach(row => {
-        row.addEventListener('click', e => {
-            if (e.target.closest('a')) return;
-            if (e.target.closest('.list-row-carat')) {
-                // Explicit carat click — toggle
-                row.classList.toggle('expanded');
-                afterToggle(row);
-                return;
-            }
-            row.classList.toggle('expanded');
-            afterToggle(row);
-        });
-    });
+
 }
 
 function afterToggle(row) {
@@ -2130,7 +2126,7 @@ function buildRow(p, idx, globalIdx) {
     const sl = p.status || 'В наличии';
     const pn = parsePrice(p);
     const pd = pn > 0 ?
-        '<span class="list-row-price">' + esc(p.price) + '</span>' :
+        '<span class="list-row-price">от ' + esc(formatUnitPrice(pn)) + '</span>' :
         '<span class="list-row-price list-row-price--request">по запросу</span>';
 
     // Variants table
@@ -2139,8 +2135,8 @@ function buildRow(p, idx, globalIdx) {
     if (variants.length) {
         let rows = '';
         variants.forEach((v, vi) => {
-            const vPrice = v.price || '—';
-            const vStock = (v.stock !== undefined && v.stock !== null) ? String(v.stock) + ' т' : '—';
+            const vPrice=parsePrice(v.price)>0?formatUnitPrice(parsePrice(v.price)):'по запросу';
+            const vStock=formatStock(v.stock);
             const vCut = v.cut_length ? String(v.cut_length) : '—';
             rows += '<tr>' +
                 '<td>' + esc(vCut) + (v.cut_length ? ' м' : '') + '</td>' +
@@ -2150,7 +2146,7 @@ function buildRow(p, idx, globalIdx) {
                 ' data-vname="' + esc(p.name) + '"' +
                 ' data-vcut="' + esc(String(v.cut_length || '')) + '"' +
                 ' data-vprice="' + esc(String(vPrice)) + '"' +
-                '>🛒</button></td>' +
+                '>🛒 <span>В заявку</span></button></td>' +
                 '</tr>';
         });
         variantsHTML = '<div class="variants-block">' +
@@ -2179,15 +2175,16 @@ function buildRow(p, idx, globalIdx) {
     // Swipe action hints (mobile)
     const swipeHTML = '<div class="swipe-action swipe-action--left">Детали</div><div class="swipe-action swipe-action--right">Открыть</div>';
 
-    return '<div class="list-row">' + swipeHTML +
+    return '<div class="list-row" data-product-index="' + globalIdx + '">' +
         '<div class="list-row-main">' +
         '<div class="list-row-name" title="' + esc(p.name) + '">' + esc(p.name) + '</div>' +
         '<div class="list-row-subcat">' + (p.subcategory ? esc(p.subcategory) : esc(p.category || '')) + '</div>' +
         pd +
         '<span class="list-row-status list-row-status--' + sc + '">' + esc(sl) + '</span>' +
-        '<button class="list-row-cart-add" onclick="event.stopPropagation();event.preventDefault();var r=this.closest(\'.list-row\');r.classList.toggle(\'expanded\');afterToggle(r)" title="Варианты раскроя">+</button>' +
-        '<button class="list-row-info" onclick="event.stopPropagation();openModal(' + globalIdx + ')" title="Подробнее">ℹ</button>' +
-        '<div class="list-row-carat"><span class="carat-arrow">▼</span></div>' +
+        '<button class="list-row-cart-add" onclick="toggleProductRow(event,this,' + globalIdx + ')" title="Показать варианты">+</button>' +
+        '<button class="list-row-info" onclick="event.stopPropagation();addRecent(' + globalIdx + ');openModal(' + globalIdx + ')" title="Подробнее">ℹ</button>' +
+        '<button class="list-row-fav' + (favorites.has(p.name)?' active':'') + '" onclick="event.stopPropagation();toggleFavorite(' + globalIdx + ')" title="В избранное">' + (favorites.has(p.name)?'♥':'♡') + '</button>' +
+        '<button class="list-row-share" onclick="event.stopPropagation();shareProduct(' + globalIdx + ')" title="Поделиться">↗</button>' +
         '</div>' +
         '<div class="list-row-details">' +
         '<div class="list-row-details-inner">' +
@@ -2213,7 +2210,7 @@ function resetAllFilters() {
     activeSort = 'default';
     document.querySelectorAll('#sidebar-sorts .sidebar-sort').forEach(b => b.classList.remove('active'));
     document.querySelector('#sidebar-sorts .sidebar-sort[data-sort="default"]').classList.add('active');
-    activeCategory = 'all';
+    activeCategory='all';favoriteOnly=false;updateFavoriteUI();
     document.querySelectorAll('#sidebar-cats .sidebar-cat').forEach(c => c.classList.toggle('active', c.dataset.cat === 'all'));
 
     // Rebuild all selects from full dataset
@@ -2236,28 +2233,15 @@ function openModal(productIdx) {
     const variants = p.variants || [];
     let variantsRows = '';
     if (variants.length) {
-        variants.forEach(v => {
-            const vPrice = v.price || '—';
-            const vStock = (v.stock !== undefined && v.stock !== null) ? String(v.stock) + ' т' : '—';
-            const vCut = v.cut_length ? String(v.cut_length) + ' м' : '—';
-            variantsRows += '<tr>' +
-                '<td>' + esc(vCut) + '</td>' +
-                '<td class="td-mono td-right">' + esc(vPrice) + '</td>' +
-                '<td class="td-mono td-right">' + esc(vStock) + '</td>' +
-                '</tr>';
-        });
+        variants.forEach(v=>{const vPrice=parsePrice(v.price)>0?formatUnitPrice(parsePrice(v.price)):'по запросу',vStock=formatStock(v.stock),vCut=v.cut_length?String(v.cut_length)+' м':'—';variantsRows+='<tr><td>'+esc(vCut)+'</td><td class="td-mono td-right">'+esc(vPrice)+'</td><td class="td-mono td-right">'+esc(vStock)+'</td><td>'+esc(v.gost||'—')+'</td></tr>';});
     }
-
-    // Gather GOSTs from all variants
-    const gosts = [...new Set(variants.map(v => v.gost).filter(Boolean))];
-    const gostValue = gosts.length ? gosts.join(', ') : '—';
 
     let variantsHTML = '';
     if (variants.length) {
         variantsHTML = '<div class="modal-section">' +
             '<div class="modal-section-title">📋 Варианты раскроя</div>' +
             '<table class="modal-variants-table">' +
-            '<thead><tr><th>Раскрой</th><th style="text-align:right;">Цена</th><th style="text-align:right;">Остаток</th></tr></thead>' +
+            '<thead><tr><th>Раскрой</th><th style="text-align:right;">Цена за тонну</th><th style="text-align:right;">Остаток</th><th>ГОСТ</th></tr></thead>' +
             '<tbody>' + variantsRows + '</tbody>' +
             '</table></div>';
     }
@@ -2272,7 +2256,6 @@ function openModal(productIdx) {
         '<div class="modal-section">' +
         '<div class="modal-section-title">📋 Характеристики</div>' +
         '<div class="modal-props">' +
-        '<div class="modal-prop"><span class="modal-prop-label">ГОСТ</span><span class="modal-prop-value">' + esc(gostValue) + '</span></div>' +
         '<div class="modal-prop"><span class="modal-prop-label">Изготовитель</span><span class="modal-prop-value">' + esc(p.manufacturer || '—') + '</span></div>' +
         '<div class="modal-prop"><span class="modal-prop-label">Толщина</span><span class="modal-prop-value">' + esc(p.thickness ? p.thickness + ' мм' : '—') + '</span></div>' +
         '<div class="modal-prop"><span class="modal-prop-label">Марка</span><span class="modal-prop-value">' + esc(p.grade || '—') + '</span></div>' +
@@ -2304,6 +2287,21 @@ function closeModal() {
         }
     });
 })();
+
+// =============================================================
+// SALES UX HELPERS
+// =============================================================
+function formatUnitPrice(n){return Number(n).toLocaleString('ru-RU')+' ₽/т'}
+function formatStock(v){const n=Number(String(v??'').replace(',','.'));return Number.isFinite(n)?n.toLocaleString('ru-RU',{maximumFractionDigits:2})+' т':'—'}
+function toggleProductRow(e,btn,idx){e.stopPropagation();const row=btn.closest('.list-row');row.classList.toggle('expanded');afterToggle(row);if(row.classList.contains('expanded'))addRecent(idx)}
+function saveFavorites(){localStorage.setItem(FAVORITES_KEY,JSON.stringify([...favorites]))}
+function toggleFavorite(i){const p=allProducts[i];if(!p)return;favorites.has(p.name)?favorites.delete(p.name):favorites.add(p.name);saveFavorites();updateFavoriteUI();render()}
+function toggleFavoriteFilter(force){favoriteOnly=typeof force==='boolean'?force:!favoriteOnly;updateFavoriteUI();updateCascadeOptions();render()}
+function updateFavoriteUI(){const b=document.getElementById('favorite-filter'),c=document.getElementById('favorite-count');if(b)b.classList.toggle('active',favoriteOnly);if(c)c.textContent=favorites.size}
+function addRecent(i){const p=allProducts[i];if(!p)return;recentProducts=[p.name,...recentProducts.filter(x=>x!==p.name)].slice(0,8);localStorage.setItem(RECENT_KEY,JSON.stringify(recentProducts));renderRecent()}
+function renderRecent(){const sec=document.getElementById('recent-section'),list=document.getElementById('recent-list');if(!sec||!list)return;const valid=recentProducts.filter(n=>allProducts.some(p=>p.name===n));sec.style.display=valid.length?'':'none';list.innerHTML=valid.map(n=>'<button class="recent-item" data-name="'+esc(n)+'" title="'+esc(n)+'">'+esc(n)+'</button>').join('');list.querySelectorAll('.recent-item').forEach(b=>b.onclick=()=>focusProduct(b.dataset.name))}
+function focusProduct(name){const idx=allProducts.findIndex(p=>p.name===name);if(idx<0)return;document.getElementById('search').value=name;favoriteOnly=false;updateFavoriteUI();render();requestAnimationFrame(()=>{const row=document.querySelector('.list-row[data-product-index="'+idx+'"]');if(row){row.classList.add('expanded');afterToggle(row);row.scrollIntoView({behavior:'smooth',block:'center'});addRecent(idx)}})}
+async function shareProduct(i){const p=allProducts[i];if(!p)return;const u=new URL(location.href);u.search='';u.searchParams.set('product',p.name);try{if(navigator.share)await navigator.share({title:p.name,text:p.name,url:u.toString()});else{await navigator.clipboard.writeText(u.toString());alert('Ссылка скопирована')}}catch(e){}}
 
 // =============================================================
 // THEME
@@ -2351,7 +2349,7 @@ function loadCart() {
         const raw = localStorage.getItem(CART_KEY);
         cart = raw ? JSON.parse(raw) : [];
         // Migrate old cart format (no cut_length) — drop old entries
-        cart = cart.filter(c => c.key !== undefined);
+        cart=cart.filter(c=>c.key!==undefined).map(c=>({...c,volume:Number(c.volume||c.qty||1)}));
     } catch (e) { cart = []; }
 }
 function saveCart() {
@@ -2368,7 +2366,7 @@ function addVariantToCart(name, cutLength, priceStr) {
     const key = getCartKey(name, cutLength);
     const existing = cart.find(c => c.key === key);
     if (existing) {
-        existing.qty += 1;
+        existing.volume=Number(existing.volume||1)+0.1;
     } else {
         cart.push({
             key: key,
@@ -2376,7 +2374,7 @@ function addVariantToCart(name, cutLength, priceStr) {
             cut_length: cutLength || '',
             price: parsePrice(priceStr),
             price_str: priceStr || 'по запросу',
-            qty: 1
+            volume: 1
         });
     }
     saveCart();
@@ -2390,17 +2388,7 @@ function removeFromCart(key) {
     renderCart();
 }
 
-function updateCartQty(key, delta) {
-    const item = cart.find(c => c.key === key);
-    if (!item) return;
-    item.qty += delta;
-    if (item.qty <= 0) {
-        removeFromCart(key);
-        return;
-    }
-    saveCart();
-    renderCart();
-}
+function updateCartVolume(key,value){const item=cart.find(c=>c.key===key);if(!item)return;item.volume=Math.max(.1,Number(value)||.1);saveCart()}
 
 function clearCart() {
     cart = [];
@@ -2408,13 +2396,8 @@ function clearCart() {
     renderCart();
 }
 
-function cartTotalItems() {
-    return cart.reduce((sum, c) => sum + c.qty, 0);
-}
-
-function cartTotalPrice() {
-    return cart.reduce((sum, c) => sum + c.price * c.qty, 0);
-}
+function cartTotalItems(){return cart.length}
+function cartTotalPrice(){return 0}
 
 function updateCartBadge() {
     const badge = document.getElementById('cart-badge');
@@ -2430,7 +2413,7 @@ function updateCartBadge() {
 
 function updateCartCount() {
     document.getElementById('cart-count').textContent = cartTotalItems();
-    document.getElementById('cart-total').textContent = formatPrice(cartTotalPrice());
+    document.getElementById('cart-total').textContent=String(cart.length);
 }
 
 function bumpBadge() {
@@ -2458,67 +2441,9 @@ function closeCart() {
     document.body.style.overflow = '';
 }
 
-function renderCart() {
-    const body = document.getElementById('cart-panel-body');
-    const footer = document.getElementById('cart-panel-footer');
+function renderCart(){const body=document.getElementById('cart-panel-body'),footer=document.getElementById('cart-panel-footer');if(!cart.length){body.innerHTML='<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Корзина пуста</p><p style="font-size:.72rem;color:var(--text-dim);margin-top:4px">Выберите конкретный раскрой и нажмите «В заявку»</p></div>';footer.style.display='none';return}footer.style.display='';updateCartCount();body.innerHTML=cart.map(item=>{const cut=item.cut_length?'<div style="font-size:.72rem;color:var(--text-dim)">📐 Раскрой: '+esc(item.cut_length)+'</div>':'',key=esc(item.key).replace(/'/g,"\\'");return '<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">'+esc(item.name)+'</div>'+cut+'<div class="cart-item-price">'+esc(item.price_str)+'</div><label style="font-size:.68rem;color:var(--text-dim)">Желаемый объём, т: <input class="cart-volume" type="number" min="0.1" step="0.1" value="'+Number(item.volume||1).toFixed(1)+'" onchange="updateCartVolume(\''+key+'\',this.value)"></label></div><div class="cart-item-right"><button class="cart-item-remove" onclick="removeFromCart(\''+key+'\')" title="Удалить">🗑</button></div></div>'}).join('')}
 
-    if (cart.length === 0) {
-        body.innerHTML = '<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Корзина пуста</p><p style="font-size:0.72rem;color:var(--text-dim);margin-top:4px;">Нажимайте <span style="color:var(--accent);">🛒</span> в таблице вариантов раскроя, чтобы добавить нужный размер</p></div>';
-        footer.style.display = 'none';
-        return;
-    }
-
-    footer.style.display = '';
-    updateCartCount();
-
-    body.innerHTML = cart.map((item, i) => {
-        const itemTotal = item.price > 0 ? item.price * item.qty : 0;
-        const cutInfo = item.cut_length ? '<div style="font-size:0.72rem;color:var(--text-dim);margin-bottom:2px;">📐 Раскрой: ' + esc(item.cut_length) + '</div>' : '';
-        const escKey = esc(item.key).replace(/'/g, "\\'");
-        return '<div class="cart-item">' +
-            '<div class="cart-item-info">' +
-            '<div class="cart-item-name">' + esc(item.name) + '</div>' +
-            cutInfo +
-            '<div class="cart-item-price">' + esc(item.price_str) + (item.qty > 1 ? ' × ' + item.qty + ' = ' + formatPrice(itemTotal) : '') + '</div>' +
-            '</div>' +
-            '<div class="cart-item-right">' +
-            '<button class="cart-item-remove" onclick="removeFromCart(\'' + escKey + '\')" title="Удалить">🗑</button>' +
-            '<div class="cart-item-controls">' +
-            '<button class="cart-qty-btn" onclick="updateCartQty(\'' + escKey + '\', -1)">−</button>' +
-            '<span class="cart-qty-value">' + item.qty + '</span>' +
-            '<button class="cart-qty-btn" onclick="updateCartQty(\'' + escKey + '\', 1)">+</button>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
-    }).join('');
-}
-
-function sendOrder() {
-    if (cart.length === 0) return;
-
-    const total = cartTotalPrice();
-    let text = '🛒 Заявка из каталога AtomPK\n\n';
-    text += '━━━━━━━━━━━━━━━━━\n';
-    cart.forEach((item, i) => {
-        const itemTotal = item.price > 0 ? item.price * item.qty : 0;
-        text += (i + 1) + '. ' + item.name + '\n';
-        if (item.cut_length) text += '   Раскрой: ' + item.cut_length + '\n';
-        text += '   Цена: ' + item.price_str;
-        if (item.qty > 1) text += ' × ' + item.qty + ' = ' + formatPrice(itemTotal);
-        text += '\n';
-    });
-    text += '━━━━━━━━━━━━━━━━━\n';
-    text += 'Итого позиций: ' + cartTotalItems() + '\n';
-    text += 'Итого сумма: ' + formatPrice(total) + '\n';
-
-    // Send via Telegram WebApp if available
-    if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.sendData === 'function') {
-        window.Telegram.WebApp.sendData(text);
-    } else {
-        // Fallback: show in alert for testing outside Telegram
-        alert('Telegram WebApp не обнаружен.\n\nТекст заявки:\n\n' + text);
-    }
-}
+function sendOrder(){if(!cart.length)return;let text='🛒 Заявка из каталога металлопроката\n\n';cart.forEach((item,i)=>{text+=(i+1)+'. '+item.name+'\n';if(item.cut_length)text+='   Раскрой: '+item.cut_length+'\n';text+='   Цена: '+item.price_str+'\n   Желаемый объём: '+Number(item.volume||1).toLocaleString('ru-RU')+' т\n'});text+='\nСтоимость и наличие уточняет менеджер.';if(window.Telegram&&window.Telegram.WebApp&&typeof window.Telegram.WebApp.sendData==='function')window.Telegram.WebApp.sendData(text);else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>alert('Заявка скопирована. Отправьте её менеджеру.'));else alert(text)}
 
 // Init cart panel events
 (function initCart() {

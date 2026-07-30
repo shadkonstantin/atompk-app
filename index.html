@@ -1394,7 +1394,22 @@
           .list-row-info{grid-area:info!important;width:28px!important;height:28px!important}
           .list-row-fav{grid-area:fav!important;width:28px!important;height:28px!important}
           .list-row-share{grid-area:share!important;position:static!important;width:28px!important;height:28px!important}
-          .data-updated{width:100%;margin:4px 0 0}.variant-cart-btn span{display:none}.variant-cart-btn{min-width:32px!important}
+          .data-updated{width:100%;margin:4px 0 0}
+          .list-row.expanded .list-row-details{padding:0 10px!important}
+          .variants-block{width:100%;min-width:0;overflow:hidden}
+          .variants-heading{padding:8px 2px 6px}
+          .variants-table{display:block!important;width:100%!important;table-layout:auto!important;border:0!important}
+          .variants-table thead{display:none!important}
+          .variants-table tbody{display:flex!important;flex-direction:column;gap:6px;width:100%}
+          .variants-table tr{display:grid!important;grid-template-columns:minmax(0,1fr) auto 34px;grid-template-areas:"cut price cart" "stock stock cart";align-items:center;column-gap:8px;row-gap:4px;width:100%;padding:8px 8px;border:1px solid var(--border-light);border-radius:8px;background:var(--bg-card);box-sizing:border-box}
+          .variants-table td{display:block!important;width:auto!important;max-width:none!important;padding:0!important;border:0!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.25}
+          .variants-table td:nth-child(1){grid-area:cut;font-size:.7rem}
+          .variants-table td:nth-child(2){grid-area:price;text-align:right!important;font-size:.72rem}
+          .variants-table td:nth-child(3){grid-area:stock;text-align:left!important;font-size:.66rem;color:var(--text-dim)}
+          .variants-table td:nth-child(3)::before{content:"Остаток: ";font-family:var(--font-ui);font-weight:400;color:var(--text-dim)}
+          .variants-table td:nth-child(4){grid-area:cart;display:flex!important;align-items:center;justify-content:center;overflow:visible}
+          .variant-cart-btn{display:inline-flex!important;width:32px!important;height:32px!important;min-width:32px!important;padding:0!important;border-color:var(--accent)!important;background:var(--accent-dim)!important;color:var(--accent)!important;opacity:1!important}
+          .variant-cart-btn span{display:none}
         }
     </style>
 </head>
